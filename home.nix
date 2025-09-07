@@ -77,4 +77,15 @@
   #home.file.".config/hypr/hyprland.conf".source = ./hyprland.conf;
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+
+  programs.git ={
+   enable = true;
+   userName = "Avanix"
+   userEmail = "avanix26@protonmail.com";
+   extraConfig = {
+    init.defaultBranch = "main";
+    safe.directory = "/home/avanonyme/.dotfiles";
+   };
+  };
 }

@@ -17,6 +17,8 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  
+  nixpkgs.config.allowUnfree = true;
 
   networking.hostName = "nixos"; # Define your hostname.
  #  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -97,15 +99,34 @@
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
+    brave
+    bat #modern replace for cat
+    btop #ressources monitoring
+    celluloid #media player
+    dunst #notif daemon
    # foot
+    feh #image viewer
+    flameshot #screenshot
+    gh #github in the terminal
+    gimp #image editing
+    git 
+    lutris #open gaming
+    mangohud #terminal performance
+    nomacs #image editing
     neovim
+    neofetch #sys info
+    obsidian
     home-manager
-    btop
-    git
-   # tealdeer
+    qemu #virtualization
+    rofi #window manager
+    steam #games
+    synergy #same keyboard for local network
+    tldr #tldr
    # xclip
-    bat
+    unzip
+    variety
     tree
+
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

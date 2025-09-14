@@ -91,7 +91,7 @@
   };
 
   # Install firefox.
-  programs.firefox.enable = true;
+  #programs.firefox.enabe = true;
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   # List packages installed in system profile. To search, run:

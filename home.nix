@@ -81,7 +81,7 @@
 
   programs.git ={
    enable = true;
-   userName = "Avanix"
+   userName = "avanonyme"
    userEmail = "avanix26@protonmail.com";
    extraConfig = {
     init.defaultBranch = "main";

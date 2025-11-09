@@ -2,18 +2,26 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
-
-#let
-#  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz;
-#in
+{ config, pkgs, lib ,... }:
+let
+ home-manager = builtins.fetchTarball { 
+  url = "https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz";
+  sha256 = "02j4a4df9z2zk95d985vcwb5i4vdriyrkx61ah9xwqyqjciw98rb";
+ };
+in
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-#      (import "${nixos-manager}/nixos")   
+      ./hardware-configuration.nix 
+      (import "${home-manager}/nixos")
     ];
 
+  #home manager setup
+  home-manager.useUserPackages = true;
+  home-manager.useGlobalPkgs = true;
+  home-manager.backupFileExtension = "backup";
+  home-manager.users.avanonyme = import ./home.nix;
+  
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -27,6 +35,17 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
+  #set static ipv4 address
+  networking.interfaces.eth0.ipv4.addresses = [
+   {
+    address = "175.142.7.2";
+    prefixLength = 24;
+   }
+  ];
+  networking.defaultGateway = "175.142.7.1";
+  networking.nameservers = ["175.142.7.1"];
+
+
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -35,12 +54,6 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.UTF-8";
- 
-  #shell pkgs
-  environment.shells = with pkgs; [zsh];
-  users.defaultUserShell = pkgs.zsh;
-  programs.zsh.enable = true;
-
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -55,6 +68,20 @@
     variant = "";
   };
 
+ #Enable Hyperland compositor
+ programs.hyprland = { 
+  #enable for some system-level changes
+  enable = true;
+  # enable if you want to start hyprland through UWSM
+  withUWSM = true;
+  xwayland.enable = true; #XWayland can be disabled
+ };
+ 
+ #Enable Emacs daemon
+ services.emacs = {
+  enable = true;
+  package = pkgs.emacs;
+ };
   # Configure console keymap
   console.keyMap = "cf";
 
@@ -79,6 +106,9 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
     services.libinput.enable = true;
+  # Enable usb services
+    services.gvfs.enable = true;
+    services.udisks2.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.avanonyme = {
@@ -89,45 +119,31 @@
     #  thunderbird
     ];
   };
+ 
+  #Install steam global (changes hardware settings so need global install)
+  programs.steam = {
+   enable = true;
+   remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  };
 
-  # Install firefox.
-  #programs.firefox.enabe = true;
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "steam"
+    "steam-original"
+    "steam-unwrapped"
+    "steam-run"
+  ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
+ environment.systemPackages = with pkgs; [
     brave
-    bat #modern replace for cat
-    btop #ressources monitoring
-    celluloid #media player
-    dunst #notif daemon
-   # foot
-    feh #image viewer
-    flameshot #screenshot
-    gh #github in the terminal
-    gimp #image editing
-    git 
-    lutris #open gaming
-    mangohud #terminal performance
-    nomacs #image editing
+    vim
+    wget
     neovim
-    neofetch #sys info
-    obsidian
-    home-manager
-    qemu #virtualization
-    rofi #window manager
-    steam #games
-    synergy #same keyboard for local network
-    tldr #tldr
-   # xclip
-    unzip
-    variety
-    tree
-
   ];
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

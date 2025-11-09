@@ -1,91 +1,87 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, lib,... }:
+ # this file is being progressively replaced by other files (sh.nix and programs,nix)
 {
   imports = [
-   ./sh.nix
-   ./hyprland.nix
+ #  ./sh.nix
+ #  ./hyprland.nix
   ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "avanonyme";
   home.homeDirectory = "/home/avanonyme";
+  home.stateVersion = "25.05"; # do not change (keep coherent with configuration.nix)
 
-  # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
-  home.stateVersion = "25.05"; # Please read the comment before changing.
+  programs.zsh = {
+   enable = true;
+   shellAliases = {
+    nrs = "nixos-rebuild switch";
+   };
+   envExtra = "export PS1=`%{$(tput setaf 47)%}%n%{$(tput setaf 156)%}@%{$(tput setaf 227)%}%m %{$(tput setaf 231)%}%1~ %{$(tput sgr0)%}$`";
+
+ 
+  };
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
+  home.packages = with pkgs; [
+   bat #moder replacemement for cat
+   btop #resources monitoring
+   bitwarden-desktop
+   celluloid #media player
+   dunst #notif daemon
+   feh #image viewer
+   flameshot #screenshot
+   gh #github in the terminal
+   gimp #image editing
+   git
+   kitty #terminal
+   lutris #open gaming
+   mangohud #terminal performance
+   nomacs #image editing
+   neovim
+   neofetch #sys info
+   obsidian
+   transmission_4-qt
+   qemu #virtualization
+   synergy #same keyboard for local network
+   tldr
+   unzip
+   variety
+   tree
 
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
   };
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a
-  # shell provided by Home Manager. If you don't want to manage your shell
-  # through Home Manager then you have to manually source 'hm-session-vars.sh'
-  # located at either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/avanonyme/etc/profile.d/hm-session-vars.sh
-  #
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-  };
+  # shell provided by Home Manager.
+
   #home.file.".config/hypr/hyprland.conf".source = ./hyprland.conf;
   # Let Home Manager install and manage itself.
+
   programs.home-manager.enable = true;
 
 
   programs.git ={
    enable = true;
-   userName = "avanonyme"
+   userName = "avanonyme";
    userEmail = "avanix26@protonmail.com";
    extraConfig = {
     init.defaultBranch = "main";
     safe.directory = "/home/avanonyme/.dotfiles";
    };
   };
+# services.transmission = { 
+#    enable = true; #Enable transmission daemon
+#    openRPCPort = true; #Open firewall for RPC
+#    settings = { #Override default settings
+#      rpc-bind-address = "0.0.0.0"; #Bind to own IP
+#      rpc-whitelist = "127.0.0.1,10.0.0.1"; #Whitelist your remote machine (10.0.0.1 in this example)
+#    };
+#  };
+
 }

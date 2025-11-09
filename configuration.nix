@@ -34,21 +34,19 @@ in
   };
   # hardware.opengl has beed changed to hardware.graphics
 
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = ["nvidiaLegacy470"];
   # services.xserver.videoDrivers = ["amdgpu"];
-
   hardware.nvidia.modesetting.enable = true;
-
-  hardware.nvidia.prime = {
-    sync.enable = true;
+  hardware.nvidia.open = false;
+ # hardware.nvidia.prime = {
+    #dedicated
+    #nvidiaBusId = "1@0:0:0"; 
+   # sync.enable = true;
 
     # integrated
-    amdgpuBusId = "PCI:6:0:0"
+    #amdgpuBusId = "PCI:6:0:0";
     # intelBusId = "PCI:0:0:0";
-
-    # dedicated
-    nvidiaBusId = "PCI:1:0:0";
-  };
+  #};
 
 
 ### Networking

@@ -24,9 +24,34 @@ in
   
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  
+
   nixpkgs.config.allowUnfree = true;
+
+  #graphics
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+  # hardware.opengl has beed changed to hardware.graphics
+
+  services.xserver.videoDrivers = ["nvidia"];
+  # services.xserver.videoDrivers = ["amdgpu"];
+
+  hardware.nvidia.modesetting.enable = true;
+
+  hardware.nvidia.prime = {
+    sync.enable = true;
+
+    # integrated
+    amdgpuBusId = "PCI:6:0:0"
+    # intelBusId = "PCI:0:0:0";
+
+    # dedicated
+    nvidiaBusId = "PCI:1:0:0";
+  };
+
+
+### Networking
 
   networking.hostName = "nixos"; # Define your hostname.
  #  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -120,19 +145,24 @@ in
     ];
   };
  
-  #Install steam global (changes hardware settings so need global install)
+  #Install steam global (changes hardware settings so need global install?)
   programs.steam = {
    enable = true;
    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+
+   gamescopeSession.enable = true;
   };
 
+  programs.gamemode.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "steam"
     "steam-original"
     "steam-unwrapped"
     "steam-run"
   ];
+
+  #Packages
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   # List packages installed in system profile. To search, run:
@@ -142,6 +172,7 @@ in
     vim
     wget
     neovim
+    mangohud
   ];
 
 

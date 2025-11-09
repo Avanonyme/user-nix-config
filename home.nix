@@ -36,10 +36,10 @@
    git
    kitty #terminal
    lutris #open gaming
-   mangohud #terminal performance
    nomacs #image editing
    neovim
    neofetch #sys info
+   protonup
    obsidian
    transmission_4-qt
    qemu #virtualization
@@ -65,6 +65,10 @@
 
   programs.home-manager.enable = true;
 
+  home.sessionVariables = {
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS =
+      "\\\${HOME}/.steam/root/compatibilitytools.d";
+  };
 
   programs.git ={
    enable = true;

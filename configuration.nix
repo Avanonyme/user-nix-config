@@ -23,7 +23,13 @@ in
   home-manager.users.avanonyme = import ./home.nix;
   
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.useOSProber = true;
+  boot.loader.grub.efiSupport = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/EFI";
 
   nixpkgs.config.allowUnfree = true;
 
@@ -90,15 +96,6 @@ in
     layout = "ca";
     variant = "";
   };
-
- #Enable Hyperland compositor
- programs.hyprland = { 
-  #enable for some system-level changes
-  enable = true;
-  # enable if you want to start hyprland through UWSM
-  withUWSM = true;
-  xwayland.enable = true; #XWayland can be disabled
- };
  
  #Enable Emacs daemon
  services.emacs = {
@@ -112,7 +109,7 @@ in
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

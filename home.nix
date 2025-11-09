@@ -36,6 +36,7 @@
    git
    kitty #terminal
    lutris #open gaming
+   minecraft
    nomacs #image editing
    neovim
    neofetch #sys info

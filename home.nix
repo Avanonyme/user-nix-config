@@ -23,7 +23,9 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
+  nixpkgs.config.allowBroken = true;
   home.packages = with pkgs; [
+   atlauncher #minecraft launcher
    bat #moder replacemement for cat
    btop #resources monitoring
    bitwarden-desktop
@@ -36,7 +38,6 @@
    git
    kitty #terminal
    lutris #open gaming
-   minecraft
    nomacs #image editing
    neovim
    neofetch #sys info
@@ -44,6 +45,7 @@
    obsidian
    transmission_4-qt
    qemu #virtualization
+   steam-run #compatibility issues FHSUserEnv for Lutris
    synergy #same keyboard for local network
    tldr
    unzip

@@ -6,7 +6,7 @@
 let
  home-manager = builtins.fetchTarball { 
   url = "https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz";
-  sha256 = "02j4a4df9z2zk95d985vcwb5i4vdriyrkx61ah9xwqyqjciw98rb";
+  sha256 = "0q3lv288xlzxczh6lc5lcw0zj9qskvjw3pzsrgvdh8rl8ibyq75s";
  };
 in
 {
@@ -32,28 +32,29 @@ in
   boot.loader.efi.efiSysMountPoint = "/boot/EFI";
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowBroken = true;
 
   #graphics
+  services.xserver.enable = true;
+  services.xserver.videoDrivers = ["nvidia"];
+
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
+  }; #hardware.opengl has been changed to hardware.graphics
+
+  nixpkgs.config.nvidia.acceptLicense = true;
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    open = false;  # Important: Disable Nouveau driver
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
   };
-  # hardware.opengl has beed changed to hardware.graphics
-
-  services.xserver.videoDrivers = ["nvidiaLegacy470"];
-  # services.xserver.videoDrivers = ["amdgpu"];
-  hardware.nvidia.modesetting.enable = true;
-  hardware.nvidia.open = false;
- # hardware.nvidia.prime = {
-    #dedicated
-    #nvidiaBusId = "1@0:0:0"; 
-   # sync.enable = true;
-
-    # integrated
-    #amdgpuBusId = "PCI:6:0:0";
-    # intelBusId = "PCI:0:0:0";
-  #};
-
+#blacklist nouveau so that id doesnt install instead of legacy
+  boot.blacklistedKernelModules = [ "nouveau" ];
+  
 
 ### Networking
 
@@ -83,9 +84,6 @@ in
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.UTF-8";
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
@@ -145,9 +143,8 @@ in
    enable = true;
    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-
    gamescopeSession.enable = true;
-  };
+   };
 
   programs.gamemode.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [

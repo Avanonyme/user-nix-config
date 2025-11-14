@@ -2,24 +2,16 @@
  # this file is being progressively replaced by other files (sh.nix and programs,nix)
 {
   imports = [
- #  ./sh.nix
- #  ./hyprland.nix
+     ./sh.nix
+     ./niri.nix
+     ./stylix.nix
   ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "avanonyme";
   home.homeDirectory = "/home/avanonyme";
   home.stateVersion = "25.05"; # do not change (keep coherent with configuration.nix)
-
-  programs.zsh = {
-   enable = true;
-   shellAliases = {
-    nrs = "nixos-rebuild switch";
-   };
-   envExtra = "export PS1=`%{$(tput setaf 47)%}%n%{$(tput setaf 156)%}@%{$(tput setaf 227)%}%m %{$(tput setaf 231)%}%1~ %{$(tput sgr0)%}$`";
-
  
-  };
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -41,16 +33,18 @@
    nomacs #image editing
    neovim
    neofetch #sys info
-   protonup
+   mako #notif daemon for wayland
+   protonup #proton/wine management
    obsidian
-   transmission_4-qt
+   transmission_4-qt #torrent client
    qemu #virtualization
-   steam-run #compatibility issues FHSUserEnv for Lutris
+   slurp #wayland screenshot area selection
    synergy #same keyboard for local network
    tldr
    unzip
-   variety
-   tree
+   tree #directory visualisation
+   vlc #media player
+   wl-clipboard #wayland clipboard management
 
   ];
 
@@ -82,6 +76,7 @@
     safe.directory = "/home/avanonyme/.dotfiles";
    };
   };
+
 # services.transmission = { 
 #    enable = true; #Enable transmission daemon
 #    openRPCPort = true; #Open firewall for RPC

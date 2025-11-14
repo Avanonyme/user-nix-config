@@ -15,12 +15,6 @@ in
       ./hardware-configuration.nix 
       (import "${home-manager}/nixos")
     ];
-
-  #home manager setup
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
-  home-manager.backupFileExtension = "backup";
-  home-manager.users.avanonyme = import ./home.nix;
   
   # Bootloader.
    #blacklist nouveau so that it doesnt install instead of legacy
@@ -41,29 +35,9 @@ in
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = true;
 
-  #graphics
-  services.xserver.enable = true;
-  services.xserver.videoDrivers = ["nvidia"];
-
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  }; #hardware.opengl has been changed to hardware.graphics
-
-  nixpkgs.config.nvidia.acceptLicense = true;
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;  # Important: Disable Nouveau driver
-    nvidiaSettings = true;
- #   package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
-  };
- 
-
 ### Networking
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixos-avano"; # Define your hostname.
  #  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -90,9 +64,55 @@ in
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  # Graphics and GPU settings
+  services.xserver.enable = true;
+  services.xserver.videoDrivers = ["nvidia"];
+
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  }; #hardware.opengl has been changed to hardware.graphics
+
+  nixpkgs.config.nvidia.acceptLicense = true;
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    open = false;  # Important: Disable open-source driver
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+  };
+
+
+  # Desktop Environment.
+  programs.niri.enable = true;
+
+  stylix.enable = true;
+  # you can choose after running 'nix build nixpkgs#base16-schemes'cd result'nix run nixpkgs#eza -- --tree'
+  #stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+  #for now we hardcode the scheme
+  stylix.base16Scheme = {
+    base00 = "282828";
+    base01 = "3c3836";
+    base02 = "504945";
+    base03 = "665c54";
+    base04 = "bdae93";
+    base05 = "d5c4a1";
+    base06 = "ebdbb2";
+    base07 = "fbf1c7";
+    base08 = "fb4934";
+    base09 = "fe8019";
+    base0A = "fabd2f";
+    base0B = "b8bb26";
+    base0C = "8ec07c";
+    base0D = "83a598";
+    base0E = "d3869b";
+    base0F = "d65d0e";
+  };
+  #this has to be declared
+  stylix.image = ./images/stylix-background.png;
+  #more option at https://nix-community.github.io/stylix/
+
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -120,7 +140,7 @@ in
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
 
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
@@ -133,6 +153,12 @@ in
     services.gvfs.enable = true;
     services.udisks2.enable = true;
 
+  #home manager setup
+  home-manager.useUserPackages = true;
+  home-manager.useGlobalPkgs = true;
+  home-manager.backupFileExtension = "backup";
+  home-manager.users.avanonyme = import ./users/avanonyme/home.nix;
+  ###Users
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.avanonyme = {
     isNormalUser = true;
@@ -142,24 +168,7 @@ in
     #  thunderbird
     ];
   };
- 
-  #Install steam global (changes hardware settings so need global install?)
-  programs.steam = {
-   enable = true;
-   remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-   gamescopeSession.enable = true;
-   };
-
-  programs.gamemode.enable = true;
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "steam"
-    "steam-original"
-    "steam-unwrapped"
-    "steam-run"
-  ];
-
-  #Packages
+  ###Packages
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   # List packages installed in system profile. To search, run:
@@ -171,7 +180,21 @@ in
     neovim
     mangohud
     linux-firmware
+    steam
+    steam-original
+    steam-unwrapped
+    steam-run
+    xwayland-satellite
+
   ];
+  #Install steam global (changes hardware settings so need global install?)
+  programs.steam = {
+   enable = true;
+   remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+   gamescopeSession.enable = true;
+   };
+  programs.gamemode.enable = true;
 
 
   # Some programs need SUID wrappers, can be configured further or are

@@ -5,6 +5,8 @@
   nixpkgs = {
    url = "github:NixOS/nixpkgs/nixos-25.05";
   };
+  stylix.url = "github:danth/stylix";
+
   home-manager.url = "github:nix-community/home-manager/release-25.05";
   home-manager.inputs.nixpkgs.follows = "nixpkgs";
  };
@@ -18,12 +20,16 @@
   nixosConfigurations = {
    nixos  = lib.nixosSystem{
    inherit system;
-   modules = [ ./configuration.nix];
+   modules = [
+     ./configuration.nix
+     inputs.stylix.nixosModule.stylix
+   
+   ];
   };  
  };
   homeConfigurations = {
     avanonyme  = home-manager.lib.homeManagerConfiguration{
     inherit pkgs;
-    modules = [ ./home.nix ];
+    modules = [ ./users/avanonyme/home.nix ];
    };};};
 }

@@ -1,50 +1,25 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
+{pkgs, ...}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
-{ config, pkgs, lib ,... }:
-let
- home-manager = builtins.fetchTarball { 
-  url = "https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz";
-  sha256 = "0q3lv288xlzxczh6lc5lcw0zj9qskvjw3pzsrgvdh8rl8ibyq75s";
- };
-in
-{
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix 
-      (import "${home-manager}/nixos")
-    ];
-  
   # Bootloader.
-   #blacklist nouveau so that it doesnt install instead of legacy
-  boot.blacklistedKernelModules = [ "nouveau" ];
-  boot.extraModprobeConfig = ''
-  blacklist nouveau
-  options nouveau modeset=0
-'';
-  
-  boot.loader.systemd-boot.enable = false;
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "nodev";
+  boot.loader.grub.device = "/dev/vda";
   boot.loader.grub.useOSProber = true;
-  boot.loader.grub.efiSupport = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/EFI";
-
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.allowBroken = true;
-
-### Networking
 
   networking.hostName = "nixos-avano"; # Define your hostname.
- #  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  #set static ipv4 address
+  
+  # Set static ipv4 address
   networking.interfaces.eth0.ipv4.addresses = [
    {
     address = "175.142.7.2";
@@ -119,65 +94,29 @@ in
     layout = "ca";
     variant = "";
   };
- 
- #Enable Emacs daemon
- services.emacs = {
-  enable = true;
-  package = pkgs.emacs;
- };
-  # Configure console keymap
-  console.keyMap = "cf";
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-    services.libinput.enable = true;
-  # Enable usb services
-    services.gvfs.enable = true;
-    services.udisks2.enable = true;
-
-  #home manager setup
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
-  home-manager.backupFileExtension = "backup";
-  home-manager.users.avanonyme = import ./users/avanonyme/home.nix;
-  ###Users
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.avanonyme = {
     isNormalUser = true;
-    description = "Avanonyme";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-    #  thunderbird
-    ];
+    description = "avanonyme";
+    extraGroups = ["networkmanager" "wheel"];
+    packages = with pkgs; [];
   };
-  ###Packages
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
- environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; [
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
+    alacritty
     brave
-    vim
+    git
     wget
     neovim
+    niri
     mangohud
     linux-firmware
     steam
@@ -185,17 +124,7 @@ in
     steam-unwrapped
     steam-run
     xwayland-satellite
-
   ];
-  #Install steam global (changes hardware settings so need global install?)
-  programs.steam = {
-   enable = true;
-   remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-   gamescopeSession.enable = true;
-   };
-  programs.gamemode.enable = true;
-
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -208,8 +137,17 @@ in
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
- services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "no";
+    allowSFTP = true;
+  };
 
+  #backup window manager if niri fails
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
@@ -223,5 +161,4 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
-
 }

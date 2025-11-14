@@ -9,7 +9,7 @@
 
   # Bootloader.
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/vda";
+  boot.loader.grub.device = "/dev/sdc";
   boot.loader.grub.useOSProber = true;
 
   networking.hostName = "nixos-avano"; # Define your hostname.
@@ -43,9 +43,9 @@
   services.xserver.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
 
-  hardware.graphics = {
+  hardware.opengl = {
     enable = true;
-    enable32Bit = true;
+    driSupport32Bit = true;
   }; #hardware.opengl has been changed to hardware.graphics
 
   nixpkgs.config.nvidia.acceptLicense = true;
@@ -55,38 +55,9 @@
     powerManagement.finegrained = false;
     open = false;  # Important: Disable open-source driver
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+#    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
   };
 
-
-  # Desktop Environment.
-  programs.niri.enable = true;
-
-  stylix.enable = true;
-  # you can choose after running 'nix build nixpkgs#base16-schemes'cd result'nix run nixpkgs#eza -- --tree'
-  #stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
-  #for now we hardcode the scheme
-  stylix.base16Scheme = {
-    base00 = "282828";
-    base01 = "3c3836";
-    base02 = "504945";
-    base03 = "665c54";
-    base04 = "bdae93";
-    base05 = "d5c4a1";
-    base06 = "ebdbb2";
-    base07 = "fbf1c7";
-    base08 = "fb4934";
-    base09 = "fe8019";
-    base0A = "fabd2f";
-    base0B = "b8bb26";
-    base0C = "8ec07c";
-    base0D = "83a598";
-    base0E = "d3869b";
-    base0F = "d65d0e";
-  };
-  #this has to be declared
-  stylix.image = ./images/stylix-background.png;
-  #more option at https://nix-community.github.io/stylix/
 
 
   # Configure keymap in X11
@@ -120,11 +91,42 @@
     mangohud
     linux-firmware
     steam
-    steam-original
-    steam-unwrapped
+#    steam-original
+#    steam-unwrapped
     steam-run
     xwayland-satellite
   ];
+
+
+  # Desktop Environment.
+  programs.niri.enable = true;
+
+#  stylix.enable = true;
+  # you can choose after running 'nix build nixpkgs#base16-schemes'cd result'nix run nixpkgs#eza -- --tree'
+  #stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+  #for now we hardcode the scheme
+#  stylix.base16Scheme = {
+#    base00 = "282828";
+#    base01 = "3c3836";
+#    base02 = "504945";
+#    base03 = "665c54";
+#    base04 = "bdae93";
+#    base05 = "d5c4a1";
+#    base06 = "ebdbb2";
+#    base07 = "fbf1c7";
+#    base08 = "fb4934";
+#    base09 = "fe8019";
+#    base0A = "fabd2f";
+#    base0B = "b8bb26";
+#    base0C = "8ec07c";
+#    base0D = "83a598";
+#    base0E = "d3869b";
+#    base0F = "d65d0e";
+#  };
+  #this has to be declared
+#  stylix.image = ./images/stylix-background.png;
+  #more option at https://nix-community.github.io/stylix/
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

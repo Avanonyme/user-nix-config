@@ -23,6 +23,13 @@ in
   home-manager.users.avanonyme = import ./home.nix;
   
   # Bootloader.
+   #blacklist nouveau so that it doesnt install instead of legacy
+  boot.blacklistedKernelModules = [ "nouveau" ];
+  boot.extraModprobeConfig = ''
+  blacklist nouveau
+  options nouveau modeset=0
+'';
+  
   boot.loader.systemd-boot.enable = false;
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "nodev";
@@ -50,11 +57,9 @@ in
     powerManagement.finegrained = false;
     open = false;  # Important: Disable Nouveau driver
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+ #   package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
   };
-#blacklist nouveau so that id doesnt install instead of legacy
-  boot.blacklistedKernelModules = [ "nouveau" ];
-  
+ 
 
 ### Networking
 
@@ -165,6 +170,7 @@ in
     wget
     neovim
     mangohud
+    linux-firmware
   ];
 
 

@@ -1,7 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{pkgs, ...}: {
+{pkgs, config, ...}: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -15,8 +15,9 @@
    #this is a UEFI system
    boot.loader.grub.enable = false;
    boot.loader.systemd-boot.enable = true;
-   boot.loader.efi.canTouchEfiVariables = true;
-
+   boot.loader.efi.canTouchEfiVariables = true; 
+ 
+  boot.kernelPackages = pkgs.linuxPackages_6_6;
 
   networking.hostName = "nixos-avano"; # Define your hostname.
   # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
@@ -26,14 +27,14 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
   
   # Set static ipv4 address
-  networking.interfaces.eth0.ipv4.addresses = [
-   {
-    address = "175.142.7.2";
-    prefixLength = 24;
-   }
-  ];
-  networking.defaultGateway = "175.142.7.1";
-  networking.nameservers = ["175.142.7.1"];
+ # networking.interfaces.eth0.ipv4.addresses = [
+ #  {
+ #   address = "175.142.1.2";
+ #   prefixLength = 24;
+ #  }
+ # ];
+ # networking.defaultGateway = "175.142.1.1";
+ # networking.nameservers = ["175.142.1.1"];
 
 
   # Enable networking
@@ -46,9 +47,11 @@
   i18n.defaultLocale = "en_CA.UTF-8";
 
   # Graphics and GPU settings
-  services.xserver.enable = true;
-  services.xserver.videoDrivers = ["nvidia"];
-
+  services.xserver = {
+    enable = true;
+    videoDrivers = ["nvidia"];
+    windowManager.qtile.enable = true;
+  };
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -61,10 +64,11 @@
     powerManagement.finegrained = false;
     open = false;  # Important: Disable open-source driver
     nvidiaSettings = true;
-#    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
   };
 
 
+  #Display Manager LightDM
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -105,7 +109,7 @@
 
 
   # Desktop Environment.
-  programs.niri.enable = true;
+#  programs.niri.enable = true;
 
 #  stylix.enable = true;
   # you can choose after running 'nix build nixpkgs#base16-schemes'cd result'nix run nixpkgs#eza -- --tree'
@@ -152,10 +156,10 @@
   };
 
   #backup window manager if niri fails
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-  };
+#  programs.hyprland = {
+#    enable = true;
+#    xwayland.enable = true;
+#  };
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];

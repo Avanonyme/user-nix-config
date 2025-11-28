@@ -8,9 +8,15 @@
   ];
 
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sdc";
-  boot.loader.grub.useOSProber = true;
+ # boot.loader.grub.enable = true;
+ # boot.loader.grub.device = "/dev/disk/by-id/ata-Samsung_SSD_850_EVO_M.2_500GB_S33DNX0HA09894W";
+ # boot.loader.grub.useOSProber = true;
+   
+   #this is a UEFI system
+   boot.loader.grub.enable = false;
+   boot.loader.systemd-boot.enable = true;
+   boot.loader.efi.canTouchEfiVariables = true;
+
 
   networking.hostName = "nixos-avano"; # Define your hostname.
   # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
@@ -43,9 +49,9 @@
   services.xserver.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
   }; #hardware.opengl has been changed to hardware.graphics
 
   nixpkgs.config.nvidia.acceptLicense = true;

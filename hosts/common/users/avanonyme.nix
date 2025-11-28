@@ -21,9 +21,9 @@
     packages = [inputs.home-manager.packages.${pkgs.system}.default];
 # initialHashedPassword
 # openssh.authroizedKeys.keys = [];
+   };
     home-manager.users.avanonyme = 
      import avanonyme/${config.networking.hostName}.nix;
-  };
 
 
 }

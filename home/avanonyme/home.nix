@@ -2,7 +2,7 @@
 # 
 # home-manager init ./
 
-{ config, lib, pkgs, ... }:
+{ config, lib, outputs, pkgs, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -10,6 +10,27 @@
   home.username = lib.mkDefault "avanonyme";
   home.homeDirectory = lib.mkDefault "/home/${config.home.username}";
 
+  nixpkgs = {
+   overlays = [
+    outputs.overlays.additions
+    ouputs.overlays.modifications
+    outputs.overlays.stable-packages
+   ];
+   config = {
+    allowUnfree = true;
+    allowUnfreePredicate = _: true;
+
+   };
+  };
+
+  nix = {
+   package = lib.mkDefault pkgs.nix;
+   settings = {
+    experimental-features = ["nix-command" "flakes"];
+    warn-dirty = false;
+   };
+  };
+  
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -18,7 +39,9 @@
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
   home.stateVersion = "25.05"; # Please read the comment before changing.
-  nixpkgs.config.allowUnfree =  true;
+
+  
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs;[

@@ -100,6 +100,7 @@
     niri
     mangohud
     linux-firmware
+    rio
     steam
 #    steam-original
 #    steam-unwrapped

@@ -50,7 +50,7 @@
       "avanonyme@nixos-avano" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages."x86_64-linux";
         extraSpecialArgs = {inherit inputs outputs;};
-        modules = [./home/avanonyme/nixos-avano.nix];
+        modules = [./home/avanonyme/home.nix];
       };
     };
   };

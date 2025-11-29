@@ -11,11 +11,12 @@
   home.homeDirectory = lib.mkDefault "/home/${config.home.username}";
 
   nixpkgs = {
-   overlays = [
-    outputs.overlays.additions
-    ouputs.overlays.modifications
-    outputs.overlays.stable-packages
-   ];
+  #outputs is not recognised
+  # overlays = [
+  #  outputs.overlays.additions
+  #  ouputs.overlays.modifications
+  #  outputs.overlays.stable-packages
+  # ];
    config = {
     allowUnfree = true;
     allowUnfreePredicate = _: true;
@@ -38,7 +39,7 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "25.05"; # Please read the comment before changing.
+  home.stateVersion = "24.05"; # Please read the comment before changing.
 
   
 

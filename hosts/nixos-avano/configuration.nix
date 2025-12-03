@@ -88,7 +88,7 @@
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  # List packages installed in system profile. To search, run:
+  # List packages installed in system profile. To steaarch, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
@@ -109,39 +109,21 @@
   ];
 
 
-  # Desktop Environment.
-#  programs.niri.enable = true;
-
-#  stylix.enable = true;
-  # you can choose after running 'nix build nixpkgs#base16-schemes'cd result'nix run nixpkgs#eza -- --tree'
-  #stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
-  #for now we hardcode the scheme
-#  stylix.base16Scheme = {
-#    base00 = "282828";
-#    base01 = "3c3836";
-#    base02 = "504945";
-#    base03 = "665c54";
-#    base04 = "bdae93";
-#    base05 = "d5c4a1";
-#    base06 = "ebdbb2";
-#    base07 = "fbf1c7";
-#    base08 = "fb4934";
-#    base09 = "fe8019";
-#    base0A = "fabd2f";
-#    base0B = "b8bb26";
-#    base0C = "8ec07c";
-#    base0D = "83a598";
-#    base0E = "d3869b";
-#    base0F = "d65d0e";
-#  };
-  #this has to be declared
-#  stylix.image = ./images/stylix-background.png;
-  #more option at https://nix-community.github.io/stylix/
-
+  #steam at system level for all users
+  # note that future gaming users will use minimal desktop env defined in home manager
+  programs.steam = {
+   enable = true;#
+   extraPackages = [pkgs.jdk];
+   remotePlay.openFirewall = true;
+   dedicatedServer.openFirewall = true;
+   localNetworkGameTransfers.openFirewall = true;
+   gamescopeSession.enable = true;
+  };
+  
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  # programs.mtr.enable = true;
+  # programs.mtr.enable = true
   # programs.gnupg.agent = {
   #   enable = true;
   #   enableSSHSupport = true;

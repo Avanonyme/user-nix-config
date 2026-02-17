@@ -1,4 +1,5 @@
 { den, ... }:
+# default example user
 {
   # user aspect
   den.aspects.tux = {

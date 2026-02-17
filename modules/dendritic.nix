@@ -5,8 +5,8 @@
     (inputs.den.flakeModules.dendritic or { })
   ];
 
-  # other inputs may be defined at a m odule using them.
-  flake-file.inputs = {
+  # other inputs may be defined at a module using them.
+  flake-file.inputs = { #inputs specific to flake-file module
     den.url = "github:vic/den";
     flake-file.url = "github:vic/flake-file";
     home-manager = {

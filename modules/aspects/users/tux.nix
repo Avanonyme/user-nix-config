@@ -1,5 +1,5 @@
 { den, ... }:
-# default example user
+# gaming user
 {
   # user aspect
   den.aspects.tux = {

@@ -1,4 +1,4 @@
-{inputs, ...}:
+{den, inputs, ...}:
 {
   # 1 define inputs, and add to flake.nix
  flake-file.inputs.reticulum-flake = {
@@ -7,13 +7,14 @@
  };
   
   # 2. Configure tailscale media server
-  den.aspects.media-server = {pkgs,lib,config,...}: {
+  den.aspects.media-server = {pkgs,lib,...}: {
     imports = [
       "${inputs.reticulum-flake}/parts/media-server.nix"
     ];
     mediaServer = {
       enable=true;
-      openFirewall = true;
+      mediaPath = "/home/${user}/media";#TODO: change to correct path/dynamic
+      openFirewall = false; #use Caddy
     };
     caddyProxy = {
       enable = true;

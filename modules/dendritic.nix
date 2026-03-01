@@ -9,11 +9,25 @@
   flake-file.inputs = { #inputs specific to flake-file module
     den.url = "github:vic/den";
     flake-file.url = "github:vic/flake-file";
+    
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
+    darwin = {
+      url = "github:nix-darwin/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    ## these stable inputs are for wsl
+    #nixpkgs-stable.url = "github:nixos/nixpkgs/release-25.05";
+    #home-manager-stable.url = "github:nix-community/home-manager/release-25.05";
+    #home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable";
+
+    #nixos-wsl = {
+    #  url = "github:nix-community/nixos-wsl";
+    #  inputs.nixpkgs.follows = "nixpkgs-stable";
+    #  inputs.flake-compat.follows = "";
 
   };
 }

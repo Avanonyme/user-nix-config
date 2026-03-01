@@ -28,6 +28,6 @@
     #  url = "github:nix-community/nixos-wsl";
     #  inputs.nixpkgs.follows = "nixpkgs-stable";
     #  inputs.flake-compat.follows = "";
-
+    
   };
 }

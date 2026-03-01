@@ -13,7 +13,7 @@
   };
 
   den.aspects.niri = {
-    nixos = {pkgs, lib, ...}: {
+    nixos = { host, ...}: {
         imports = [inputs.niri.nixosModules.niri];
         
         programs.niri.enable = true;
@@ -22,15 +22,14 @@
       environment.systemPackages = with pkgs; [
         wl-clipboard
         cliphist
-        swww
-        fuzzel
         grim
         slurp
+        xwayland-satellite
     ];
 
     };
 
-    homeManager = { pkgs, lib, ... }: {
+    homeManager = { user , ... }: {
       imports = [ inputs.niri.homeModules.niri ];
       programs.niri = {
         enable = true;

@@ -7,7 +7,7 @@
  };
   
   # 2. Configure tailscale media server
-  den.aspects.media-server = {pkgs,lib,...}: {
+  den.aspects.media-server = {host,...}: {
     imports = [
       "${inputs.reticulum-flake}/parts/media-server.nix"
     ];

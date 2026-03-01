@@ -1,6 +1,6 @@
 { inputs, den, ... }:
 {
-  # create an `vm` (example!) namespace. (flake exposed)
+  # create an `vm` (example!) namespace.
   imports = [ (inputs.den.namespace "vm" false) ];
 
   # you can have more than one namespace (false = not flake exposed)
@@ -9,6 +9,7 @@
   # you can also merge many namespaces from remote flakes.
   # keep in mind a namespace is defined only once, so give it an array:
   # imports = [ (inputs.den.namespace "ours" [inputs.ours inputs.theirs]) ];
+  imports = [ (inputs.den.namespace "community" [ true inputs.den.denful.vix])]
 
   # this line enables den angle brackets syntax in modules.
   _module.args.__findFile = den.lib.__findFile;

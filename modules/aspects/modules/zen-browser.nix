@@ -11,11 +11,11 @@
   };
 
   den.aspects.zen-browser = {
-    nixos = {pkgs,...}: {
+    nixos = {pkgs, host,...}: { #check if pkgs comes from module system or pure context
       imports = [inputs.zen-browser.nixosModules.twilight];
       programs.zen-browser.enable = true;
     };
-    homeManager = {pkgs,...}: 
+    homeManager = {pkgs, user,...}: 
     let
       system = pkgs.stdenv.hostPlatform.system;
       addons = inputs.firefox-addons.packages.${system};

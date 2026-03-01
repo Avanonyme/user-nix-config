@@ -9,7 +9,7 @@
     ];
 
     homeManager =
-      { pkgs, ... }:
+      { pkgs, user, ... }:
       {
         home.packages = [ pkgs.htop ];
       };

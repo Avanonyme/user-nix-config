@@ -11,7 +11,7 @@
       den.aspects.zen-browser
       ];
 
-    nixos = { pkgs, ... }: {
+    nixos = { host, ... }: {
       imports = [ inputs.noctalia-shell.nixosModules.default ];
 
       # Enable Noctalia shell systemd service
@@ -29,7 +29,7 @@
     };
 
     # per-user
-    homeManager = { pkgs, ... }: {
+    homeManager = { user, ... }: {
       imports = [ inputs.noctalia-shell.homeModules.default ];
             
       # Enable Noctalia shell user configuration
@@ -55,41 +55,43 @@
 
         # Color configuration (Catppuccin Mocha inspired)
         colors = {
-          # Warm amber — lantern light, solar energy, sunlight through canopy
-          mPrimary = "#a5bd0b";
+          # Warm golden amber — solar energy, lantern light
+          mPrimary = "#dab064";
 
-          # Vivid leaf green — living vegetation, growing things
-          mSecondary = "#58b040";
+          # Soft leaf green — living canopy, mid-range vegetation
+          mSecondary = "#82bf79";
 
-          # Terracotta sunset coral — clay architecture, warm dusk sky
-          mTertiary = "#925016";
+          # Earthy terracotta — clay, bark, warm soil
+          mTertiary = "#975c3a";
 
-          # Deep forest night — base surface, replaces cold blue-black
-          mSurface = "#0d1a0f";
+          # Deep forest teal — base surface, darkest inhabited tone
+          mSurface = "#254343";
 
-          # Forest understory — elevated/card surfaces
-          mSurfaceVariant = "#182c1c";
+          # Elevated teal — card/panel surface, one step above base
+          mSurfaceVariant = "#2f4e50";
 
-          # Warm parchment text — replaces cold lavender
-          mOnSurface = "#ddd4b0";
+          # Warm cream — primary text, parchment in sunlight
+          mOnSurface = "#fdf8d8";
 
-          # Muted canopy light — subdued/secondary text
-          mOnSurfaceVariant = "#8aaa78";
+          # Muted sage — secondary/subdued text
+          mOnSurfaceVariant = "#abbf9c";
 
-          # Forest edge — borders and dividers, replaces cold grey
-          mOutline = "#2c4230";
+          # Dark teal — borders and dividers
+          mOutline = "#4a6463";
 
-          # Shadow under canopy — deeper than surface
-          mShadow = "#050d06";
+          # Deepest forest dark — shadow, beneath canopy floor
+          mShadow = "#233f40";
 
-          # Brick red — still readable as error but earthier than neon pink
-          mError = "#ab3629";
+          # Deep crimson — error, still earthy but urgent
+          mError = "#901e3f";
 
-          # All "on-X" reuse mSurface — dark text on lit accent backgrounds
-          mOnError = "#0d1a0f";
-          mOnPrimary = "#0d1a0f";
-          mOnSecondary = "#0d1a0f";
-          mOnTertiary = "#0d1a0f";
+          # Cream on crimson — legible on dark error
+          mOnError = "#fdf8d8";
+
+          # Dark on lit accents
+          mOnPrimary   = "#233f40";
+          mOnSecondary = "#233f40";
+          mOnTertiary  = "#233f40";
         };
       };
     };

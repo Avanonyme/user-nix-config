@@ -29,7 +29,7 @@
 
     };
 
-    homeManager = { user , ... }: {
+    homeManager = { user, ... }: {
       imports = [ inputs.niri.homeModules.niri ];
       programs.niri = {
         enable = true;

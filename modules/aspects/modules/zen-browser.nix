@@ -11,10 +11,6 @@
   };
 
   den.aspects.zen-browser = {
-    nixos = {pkgs, host,...}: { #check if pkgs comes from module system or pure context
-      imports = [inputs.zen-browser.nixosModules.twilight];
-      programs.zen-browser.enable = true;
-    };
     homeManager = {pkgs, user,...}: 
     let
       system = pkgs.stdenv.hostPlatform.system;
@@ -48,18 +44,18 @@
       profiles."default" = {
         containersForce=true;
         extensions.packages = with addons; [
-          uBlockOrigin
-          Decentraleyes
-          DarkReader
-          CookieAutoDelete
-          censor-tracker
-          dearrow
-          proton-vpn
+         # uBlockOrigin
+         # Decentraleyes
+         # DarkReader
+         # CookieAutoDelete
+         # censor-tracker
+         # dearrow
+         # proton-vpn
           bitwarden
-          unpaywall 
+         # unpaywall 
           zen-internet
-          zotero-connector
-          youtube-recommended-video
+         # zotero-connector
+         # youtube-recommended-video
         ];
 
       };

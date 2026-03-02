@@ -1,17 +1,17 @@
-{den, inputs,...}:
+{den, inputs, __findFile, ...}:
 {
   # host aspect
   den.aspects.boreal = { #following den (flake-aspects) convention, den.aspects.≤aspect≥.≤class≥
+     includes = [
+          <vix/hostname> #define Hostname
+          <vix/networking> # networking configuration
+          (den.aspects.nvidia)
+          
+        ];
     # host NixOS configuration
     nixos =
       { pkgs, lib, ... }:
       {
-        include = [
-          <vix/hostname> #define Hostname
-          <vix/networking> # networking configuration
-          den.aspects.nvidia
-          
-        ];
         # Bootloader.
         boot.loader.grub.enable = true;
         boot.loader.grub.device = "/dev/vda";
@@ -45,7 +45,11 @@
 
         # Select internationalisation properties.
         i18n.defaultLocale = "en_CA.UTF-8";
-              
+        
+	#allow unfree packages
+	nixpkgs.config.allowUnfree = true;
+	 nix.settings.experimental-features = ["nix-command" "flakes"];
+
         environment.systemPackages = with pkgs; [ 
             vim
             git

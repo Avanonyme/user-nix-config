@@ -1,23 +1,21 @@
 # darwin
-{den, inputs, ...}:
+{den, inputs, __findFile, ...}:
 {
   den.aspects.arctic = {
-    nixos =
-    { pkgs, ... }:
-    {
-    include = [ 
+     includes = [ 
       <vix/darwin>
       <vix/dev-laptop>
     ];
 
 
+    nixos =
+    { pkgs, ... }:
+    {
+ 
     };
     homeManager =
     { pkgs, ... }:
     {
-      include = [ 
-        <den/noctalia-desktop>
-      ];
     };
   };
 }

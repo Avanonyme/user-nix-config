@@ -1,6 +1,6 @@
 {den, inputs, ...}:
 {
-  flake-file.inputs.noctalia-shell = {
+  flake-file.inputs.noctalia= {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -12,7 +12,7 @@
       ];
 
     nixos = { host, pkgs, ... }: {
-      imports = [ inputs.noctalia-shell.nixosModules.default ];
+      imports = [ inputs.noctalia.nixosModules.default ];
 
       # Enable Noctalia shell systemd service
       services.noctalia-shell = {
@@ -30,7 +30,7 @@
 
     # per-user
     homeManager = { user, ... }: {
-      imports = [ inputs.noctalia-shell.homeModules.default ];
+      imports = [ inputs.noctalia.homeModules.default ];
             
       # Enable Noctalia shell user configuration
       programs.noctalia-shell = {

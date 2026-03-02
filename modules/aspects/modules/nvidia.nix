@@ -1,4 +1,4 @@
-{den, inputs,...}:
+{den, config, inputs,...}:
 {
   den.aspects.nvidia = {
     nixos = {pkgs, host, ...}: {

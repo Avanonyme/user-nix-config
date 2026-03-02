@@ -4,7 +4,7 @@
   den.aspects.boreal = { #following den (flake-aspects) convention, den.aspects.≤aspect≥.≤class≥
     # host NixOS configuration
     nixos =
-      { pkgs, ... }:
+      { pkgs, lib, ... }:
       {
         include = [
           <vix/hostname> #define Hostname

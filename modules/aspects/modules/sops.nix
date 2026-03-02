@@ -1,4 +1,4 @@
-{den, inputs,...}:
+{den, config, inputs,...}:
 {
   # 1. define inputs, and add to flake.nix
   flake-file.inputs.sops-nix = {

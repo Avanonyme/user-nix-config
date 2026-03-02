@@ -13,7 +13,8 @@
     ];
     mediaServer = {
       enable=true;
-      mediaPath = "/home/${user}/media";#TODO: change to correct path/dynamic
+      mediaPath = "/media";
+      #mediaPath = "/home/${user}/media";#TODO: change to correct path/dynamic
       openFirewall = false; #use Caddy
     };
     caddyProxy = {

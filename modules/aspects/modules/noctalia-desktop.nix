@@ -11,7 +11,7 @@
       den.aspects.zen-browser
       ];
 
-    nixos = { host, ... }: {
+    nixos = { host, pkgs, ... }: {
       imports = [ inputs.noctalia-shell.nixosModules.default ];
 
       # Enable Noctalia shell systemd service

@@ -6,7 +6,7 @@
   ];
 
   # other inputs may be defined at a module using them.
-  flake-file.inputs = { #inputs specific to flake-file module
+  flake-file.inputs = { #general inputs
     den.url = "github:vic/den";
     flake-file.url = "github:vic/flake-file";
     
@@ -18,6 +18,9 @@
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    #community
+    vix.url = "github:vic/vix";
 
     ## these stable inputs are for wsl
     #nixpkgs-stable.url = "github:nixos/nixpkgs/release-25.05";

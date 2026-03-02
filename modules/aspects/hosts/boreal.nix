@@ -5,7 +5,7 @@
      includes = [
           <vix/hostname> #define Hostname
           <vix/networking> # networking configuration
-          (den.aspects.nvidia)
+          den.aspects.nvidia
           
         ];
     # host NixOS configuration
@@ -13,9 +13,11 @@
       { pkgs, lib, ... }:
       {
         # Bootloader.
-        boot.loader.grub.enable = true;
-        boot.loader.grub.device = "/dev/vda";
-        boot.loader.grub.useOSProber = true;
+         boot.loader.grub.enable = true;
+         boot.loader.grub.device = "/dev/sda1";
+         boot.loader.grub.useOSProber = true;
+        # boot.loader.systemd-boot.enable = true;
+	# boot.loader.efi.canTouchEfiVariables = true;
 
         #Kernel; more options in nvidia aspect
         boot.kernelModules = [ "kvm-intel" ];
@@ -53,7 +55,7 @@
         environment.systemPackages = with pkgs; [ 
             vim
             git
-            wgets
+            wget
           ];
 
         # List services that you want to enable:

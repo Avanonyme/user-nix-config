@@ -1,13 +1,26 @@
-{den , ...}:
+{den, ...}:
 {
  den.aspects.avanonyme = {
     includes = [
       den.provides.primary-user
       (den.provides.user-shell "fish")
       (den.provides.tty-autologin "root")
-      den.aspects.noctalia-desktop
-      
+     # den.aspects.noctalia-desktop
     ];
+    nixos ={lib, ...}: 
+    {
+     services.xserver = {
+	enable =true;
+	desktopManager = {
+	 xterm.enable =false;
+	 xfce.enable = true;
+	};
+     };
+     services.displayManager = {
+      defaultSession = lib.mkDefault "xfce";
+      enable = true;
+     };
+    };
 
     homeManager =
       { pkgs, user, ... }:

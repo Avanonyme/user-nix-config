@@ -29,10 +29,11 @@
 
     };
 
-    homeManager = { user, ... }: {
+    homeManager = {lib, pkgs, user, ... }: {
       imports = [ inputs.niri.homeModules.niri ];
       programs.niri = {
-        enable = true;
+        #enable = true;
+	
         settings = {
           # Input configuration
           input = {

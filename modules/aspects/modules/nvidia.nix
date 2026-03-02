@@ -1,7 +1,7 @@
 {den, config, inputs,...}:
 {
   den.aspects.nvidia = {
-    nixos = {pkgs, host, ...}: {
+    nixos = {pkgs,config, host, ...}: {
 
       # Initrd modules for NVIDIA support
       boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" "nvidia" "i915" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];

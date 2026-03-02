@@ -1,6 +1,6 @@
 { vm, ... }:
 {
-  vm.vmui.provides = {
+  vm.vm-ui.provides = {
     gui.includes = [
       vm.vm-ui
       vm.vm-bootable._.gui

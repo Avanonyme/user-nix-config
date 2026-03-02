@@ -6,7 +6,6 @@
     # vic's dendritic libraries https://dendrix.oeiuwq.com/Dendritic-Ecosystem.html#vics-dendritic-libraries
     import-tree.url = "github:vic/import-tree";
     den.url = "github:vic/den";
-    vix.url = "github:vic/vix";
     flake-aspects.url = "github:vic/flake-aspects";
     flake-file.url = "github:vic/flake-file";
     flake-parts = {

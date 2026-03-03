@@ -8,7 +8,6 @@
   den.aspects.noctalia-desktop = {
     includes = [
       den.aspects.niri
-     # den.aspects.zen-browser
       ];
 
     nixos = { host, pkgs, ... }: {
@@ -53,7 +52,7 @@
           };
         };
 
-        # Color configuration (Catppuccin Mocha inspired)
+        # Color configuration (Solarpunk inspired)
         colors = {
           # Warm golden amber — solar energy, lantern light
           mPrimary = "#dab064";

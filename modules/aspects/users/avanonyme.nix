@@ -2,9 +2,6 @@
 {
  den.aspects.avanonyme = {
     includes = [
-      den.provides.primary-user
-     (den.provides.user-shell "fish")
-     (den.provides.tty-autologin "root")
       den.aspects.noctalia-desktop
       den.aspects.zen-browser
     ];

@@ -3,6 +3,7 @@
   # deadnix: skip # enable <den/brackets> syntax for demo.
   __findFile ? __findFile,
   den,
+  pkgs,
   ...
 }:
 {
@@ -12,6 +13,7 @@
     darwin.system.stateVersion = 6;
     nixos.system.stateVersion = "25.05";
     homeManager.home.stateVersion = "25.05";
+
   };
 
   # These are functions that produce configs
@@ -24,7 +26,7 @@
 
     # Disable booting when running on CI on all NixOS hosts.
     (if config ? _module.args.CI then <vm/ci-no-boot> else { })
-
+   
     # NOTE: be cautious when adding fully parametric functions to defaults.
     # defaults are included on EVERY host/user/home, and IF you are not careful
     # you could be duplicating config values. For example:

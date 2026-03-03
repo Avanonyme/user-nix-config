@@ -3,51 +3,52 @@
  den.aspects.avanonyme = {
     includes = [
       den.provides.primary-user
-      (den.provides.user-shell "fish")
-      (den.provides.tty-autologin "root")
-     # den.aspects.noctalia-desktop
+     (den.provides.user-shell "fish")
+     (den.provides.tty-autologin "root")
+      den.aspects.noctalia-desktop
+      den.aspects.zen-browser
     ];
     nixos ={lib, ...}: 
     {
-     services.xserver = {
-	enable =true;
-	desktopManager = {
-	 xterm.enable =false;
-	 xfce.enable = true;
-	};
-     };
-     services.displayManager = {
-      defaultSession = lib.mkDefault "xfce";
-      enable = true;
-     };
+ #    services.xserver = {
+#	enable =true;
+#	desktopManager = {
+#	 xterm.enable =false;
+#	 xfce.enable = true;
+#	};
+ #    };
+ #    services.displayManager = {
+ #     defaultSession = lib.mkDefault "xfce";
+ #     enable = true;
+ #    };
+	nixpkgs.config.allowUnfree = true;
     };
 
     homeManager =
       { pkgs, user, ... }:
       {
-        home.packages = [
-   	# bat #moder replacemement for cat
-   	# btop #resources monitoring
-	# bitwarden-desktop
-   	# celluloid #media player
-   	# dunst #notif daemon
-   	# feh #image viewer
-   	# gh #github in the terminal
-   	# gimp #image editing
-   	# git
+        home.packages = with pkgs; [
+   	 bat #moder replacemement for cat
+   	 btop #resources monitoring
+	 bitwarden-desktop
+   	 celluloid #media player
+   	 dunst #notif daemon
+   	 feh #image viewer
+   	 gh #github in the terminal
+   	 gimp #image editing
    	# lutris #open gaming
-   	# nomacs #image editing
-   	# neovim
-   	# neofetch #sys info
-   	# protonup #proton/wine management
+   	 nomacs #image editing
+   	 neovim
+   	 neofetch #sys info
+   	 protonup-ng #proton/wine management
    	# obsidian
-   	# transmission_4-qt #torrent client
-	# qemu #virtualization
-   	# synergy #same keyboard for local network
-   	# tldr
-   	# unzip
-   	# tree #directory visualisation
-   	# vlc #media player
+   	 transmission_4-qt #torrent client
+	 qemu #virtualization
+   	 synergy #same keyboard for local network
+   	 tldr
+   	 unzip
+   	 tree #directory visualisation
+   	 vlc #media player
 
 	];
 

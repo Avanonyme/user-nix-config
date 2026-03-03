@@ -14,9 +14,9 @@
 
   den.aspects.niri = {
     nixos = { host, pkgs, ...}: {
-        imports = [inputs.niri.nixosModules.niri];
+    #    imports = [inputs.niri.nixosModules.niri];
         
-        programs.niri.enable = true;
+    #    programs.niri.enable = true;
 
       # Essential utilities
       environment.systemPackages = with pkgs; [
@@ -32,7 +32,7 @@
     homeManager = {lib, pkgs, user, ... }: {
       imports = [ inputs.niri.homeModules.niri ];
       programs.niri = {
-        #enable = true;
+        enable = true;
 	
         settings = {
           # Input configuration

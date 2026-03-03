@@ -13,11 +13,11 @@
       { pkgs, lib, ... }:
       {
         # Bootloader.
-         boot.loader.grub.enable = true;
-         boot.loader.grub.device = "/dev/sda1";
-         boot.loader.grub.useOSProber = true;
-        # boot.loader.systemd-boot.enable = true;
-	# boot.loader.efi.canTouchEfiVariables = true;
+          boot.loader.grub.enable = false;
+        # boot.loader.grub.device = "/dev/sda1";
+        # boot.loader.grub.useOSProber = true;
+          boot.loader.systemd-boot.enable = true;
+	  boot.loader.efi.canTouchEfiVariables = true;
 
         #Kernel; more options in nvidia aspect
         boot.kernelModules = [ "kvm-intel" ];
@@ -27,7 +27,7 @@
 
         #TODO: move to a disko filesystem aspect
         fileSystems."/" =
-          { device = "/dev/disk/by-uuid/b3fbba01-1206-44d9-9b15-72e6313b4f72";
+          { device = "/dev/disk/by-uuid/1717c128-b9fa-45ce-9e75-f1e163387351";
             fsType = "ext4";
           };
 
@@ -44,7 +44,12 @@
 
         # Set your time zone.
         time.timeZone = "America/Toronto";
-
+	
+	fonts.packages = with pkgs; [
+     	  ubuntu-classic
+     	  liberation_ttf
+    	 ]; 
+   
         # Select internationalisation properties.
         i18n.defaultLocale = "en_CA.UTF-8";
         
@@ -56,6 +61,7 @@
             vim
             git
             wget
+	    
           ];
 
         # List services that you want to enable:

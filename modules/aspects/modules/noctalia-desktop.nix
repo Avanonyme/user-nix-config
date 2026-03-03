@@ -8,7 +8,7 @@
   den.aspects.noctalia-desktop = {
     includes = [
       den.aspects.niri
-      den.aspects.zen-browser
+     # den.aspects.zen-browser
       ];
 
     nixos = { host, pkgs, ... }: {

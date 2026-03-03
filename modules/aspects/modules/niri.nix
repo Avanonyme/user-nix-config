@@ -24,11 +24,14 @@
             doCheck = false;
           });
      };
-     
+    services.displayManager.gdm = {
+  enable = true;
+  wayland = true;
+}; 
      #XDG desktop Portal
      xdg.portal = {
 	enable = true;
-	extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+	extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
      };
     environment.variables = lib.mkIf (config.hardware.nvidia.modesetting.enable or false) {
       LIBVA_DRIVER_NAME = "nvidia";
@@ -46,6 +49,8 @@
         xwayland-satellite
 	ghostty
 	thunar
+	swww
+	fuzzel
     ];
 
     };

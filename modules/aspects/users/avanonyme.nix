@@ -1,9 +1,10 @@
-{den, ...}:
+{den, vix, ...}:
 {
  den.aspects.avanonyme = {
     includes = [
       den.aspects.noctalia-desktop
       den.aspects.zen-browser
+			<vix/admin>
     ];
     nixos ={lib, ...}: 
     {

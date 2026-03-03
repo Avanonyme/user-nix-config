@@ -14,31 +14,36 @@
 
   den.aspects.niri = {
     nixos = { host, pkgs, lib, config, ...}: {
-     imports = [inputs.niri.nixosModules.niri];
+      imports = [inputs.niri.nixosModules.niri];
         
-     programs.niri = {
-	enable = true;
-	#Disable test to avoid "too many open files" error during Nix build
+      programs.niri = {
+        enable = true;
+        #Disable test to avoid "too many open files" error during Nix build
         package =
           inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-stable.overrideAttrs (_: {
-            doCheck = false;
+              doCheck = false;
           });
-     };
-    services.displayManager.gdm = {
-  enable = true;
-  wayland = true;
-}; 
-     #XDG desktop Portal
-     xdg.portal = {
-	enable = true;
-	extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-     };
-    environment.variables = lib.mkIf (config.hardware.nvidia.modesetting.enable or false) {
-      LIBVA_DRIVER_NAME = "nvidia";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      NVD_BACKEND = "direct";
-      ELECTRON_OZONE_PLATFORM_HINT = "auto";
-    };
+      };
+      #to prevent black screen
+      services.displayManager.sessionPackages = [
+        inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-stable
+      ];
+      services.displayManager.gdm = {
+        enable = true;
+        wayland = false; #let's try forcing gdm to use X11 for nvidia support
+      }; 
+      #XDG desktop Portal
+      xdg.portal = {
+        enable = true;
+        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+      };
+
+      environment.variables = lib.mkIf (config.hardware.nvidia.modesetting.enable or false) {
+        LIBVA_DRIVER_NAME = "nvidia";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        NVD_BACKEND = "direct";
+        ELECTRON_OZONE_PLATFORM_HINT = "auto";
+      };
 
       # Essential utilities
       environment.systemPackages = with pkgs; [
@@ -47,11 +52,11 @@
         grim
         slurp
         xwayland-satellite
-	ghostty
-	thunar
-	swww
-	fuzzel
-    ];
+        ghostty
+        thunar
+        swww
+        fuzzel
+      ];
 
     };
 

@@ -13,7 +13,7 @@
 
       # Graphics and GPU settings
       services.xserver.enable = true;
-      services.xserver.videoDrivers = ["nvidia"];
+      services.xserver.videoDrivers = ["nvidia" "amdgpu"];
 
       hardware.graphics = {
         enable = true;
@@ -22,6 +22,16 @@
 
       nixpkgs.config.nvidia.acceptLicense = true;
       hardware.nvidia = {
+        prime = {
+          sync.enable = true;
+          
+          #main
+          amdgpuBusId = "PCI:4:0:0";
+
+          #legacy
+          nvidiaBusId = "PCI:1:0:0";
+
+        };
         modesetting.enable = true;
         powerManagement.enable = false;
         powerManagement.finegrained = false;

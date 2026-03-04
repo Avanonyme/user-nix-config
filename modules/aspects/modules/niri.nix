@@ -25,13 +25,13 @@
           });
       };
       #to prevent black screen
-      services.displayManager.sessionPackages = [
-        inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-stable
-      ];
-      services.displayManager.gdm = {
-        enable = true;
-        wayland = false; #let's try forcing gdm to use X11 for nvidia support
-      }; 
+      #services.displayManager.sessionPackages = [
+      #  inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-stable
+      #];
+      #services.displayManager.gdm = {
+      #  enable = true;
+      #  wayland = false; #let's try forcing gdm to use X11 for nvidia support
+      #}; 
       #XDG desktop Portal
       xdg.portal = {
         enable = true;

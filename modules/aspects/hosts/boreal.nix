@@ -18,8 +18,9 @@
         # boot.loader.grub.useOSProber = true;
           boot.loader.systemd-boot.enable = true;
 	  boot.loader.efi.canTouchEfiVariables = true;
-
+	  
         #Kernel; more options in nvidia aspect
+	boot.initrd.kernelModules = ["amdgpu"];
         boot.kernelModules = [ "kvm-intel" ];
 
         #a priori this is not needed (defined in den.nix with host/user/home)
@@ -45,6 +46,7 @@
 
 	#set graphics
 	services.xserver.videoDrivers = ["amdgpu"];
+	hardware.firmware = [ pkgs.linux-firmware ]; #for Error: Direct firmware load failure
 	hardware.graphics = {
 	  enable = true;
 	  enable32Bit = true;

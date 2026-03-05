@@ -52,15 +52,26 @@
 	];
 
 
+#	programs.git = {
+#         enable = true;
+#   	 userName = "avanonyme";
+#   	 userEmail = "avanix26@protonmail.com";
+#   	 extraConfig = {
+#    	  init.defaultBranch = "main";
+#    	  safe.directory = "/home/avanonyme/.dotfiles";
+#   	 };
+#        };
 	programs.git = {
-   	 enable = true;
-   	 userName = "avanonyme";
-   	 userEmail = "avanix26@protonmail.com";
-   	 extraConfig = {
-    	  init.defaultBranch = "main";
-    	  safe.directory = "/home/avanonyme/.dotfiles";
-   	 };
-        };
+	 enable = true;
+	 settings = {
+	  user.Name = "avanonyme";
+	  user.Email = "avanix26@protonmail.com";
+	  extraConfig = {
+	    init.defaultBranch = "main";
+	    safe.directory = "/home/avanonyme/.dotfiles";
+	  };
+	 };
+	};
 
     # user can provide NixOS configurations
     # to any host it is included on

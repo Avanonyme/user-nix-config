@@ -5,7 +5,7 @@
      includes = [
           <vix/hostname> #define Hostname
           <vix/networking> # networking configuration
-          den.aspects.nvidia
+#          den.aspects.nvidia
           
         ];
     # host NixOS configuration
@@ -41,7 +41,14 @@
         #];
         #networking.defaultGateway = "175.142.7.1";
         #networking.nameservers = ["175.142.7.1"];
+	
 
+	#set graphics
+	services.xserver.videoDrivers = ["amdgpu"];
+	hardware.graphics = {
+	  enable = true;
+	  enable32Bit = true;
+	};
         # Set your time zone.
         time.timeZone = "America/Toronto";
 	

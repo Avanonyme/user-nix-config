@@ -1,12 +1,13 @@
- {den, inputs,...}:{ 
+ {den, inputs, config, ...}:{ 
  # ─────────────────────────────────────────────────────────────────────────
   # NAMED MODULE EXPORT
   # ─────────────────────────────────────────────────────────────────────────
-  den.aspects.gaming = {
 
-    nixos = {pkgs, host, config, ... }: {
+ den.aspects.gaming = {
 
-      config.allowUnfree = true;
+    config.allowUnfree = true;
+
+    nixos = {pkgs, host, ... }: {
 
       # Steam with Proton support
       programs.steam = {

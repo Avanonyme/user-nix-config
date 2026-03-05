@@ -1,10 +1,11 @@
-{den, vix, ...}:
+{den, __findFile, ...}:
 {
  den.aspects.avanonyme = {
     includes = [
       den.aspects.noctalia-desktop
       den.aspects.zen-browser
-			<vix/admin>
+      den.aspects.gaming
+      <vix/admin>
     ];
     nixos ={lib, ...}: 
     {

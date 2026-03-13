@@ -53,7 +53,10 @@
 	  user.Email = "avanix26@protonmail.com";
 	  extraConfig = {
 	    init.defaultBranch = "main";
-	    safe.directory = "/home/avanonyme/.dotfiles";
+	    safe.directory = [
+				"/home/avanonyme/.dotfiles"
+				"/home/avanonyme/vault"
+			];
 	  };
 	 };
 	};

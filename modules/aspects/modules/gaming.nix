@@ -44,6 +44,8 @@
       environment.systemPackages = with pkgs; [
         # Launchers
         faugus-launcher
+        #lutris #open gaming
+
         
         # Proton/Wine
         protonup-qt

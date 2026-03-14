@@ -33,10 +33,18 @@
         wayland = true;
       }; 
       #XDG desktop Portal
-      xdg.portal = {
-        enable = true;
-        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-      };
+       xdg.portal = {
+   	enable = true;
+    	extraPortals = with pkgs; [
+      		xdg-desktop-portal-gtk
+      		xdg-desktop-portal-gnome
+   	 ];
+        configPackages = with pkgs; [
+      		xdg-desktop-portal-gtk
+      		xdg-desktop-portal-gnome
+      		niri
+    	];
+  };
 
       environment.variables = lib.mkIf (config.hardware.nvidia.modesetting.enable or false) {
         LIBVA_DRIVER_NAME = "nvidia";

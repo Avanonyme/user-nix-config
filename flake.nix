@@ -30,6 +30,10 @@
       url = "github:sodiboo/niri-flake";
     };
     nix-darwin.url = "github:LnL7/nix-darwin";
+    nixflix = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:kiriwalawren/nixflix";
+    };
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
     nixpkgs-lib.follows = "nixpkgs";
     noctalia = {

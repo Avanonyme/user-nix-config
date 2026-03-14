@@ -9,7 +9,10 @@
     ];
     nixos ={lib, ...}: 
     {
-			nixpkgs.config.allowUnfree = true;
+    	nixpkgs.config.allowUnfree = true;
+	home-manager.useGlobalPkgs = true; #force home-manager to use our pkgs
+	home-manager.useUserPackages = true; #pkgs are installed through nixos user
+		                                   
     };
 
     homeManager =
@@ -33,6 +36,7 @@
 				unzip
 				tree #directory visualisation
 				vlc #media player
+				vscodium #code editor
 
 			];
 

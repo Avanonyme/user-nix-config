@@ -1,17 +1,28 @@
 {
   vix.networking.nixos =
-    { lib, pkgs, ... }:
+    { lib, pkgs, config,... }:
     {
       networking.networkmanager.enable = true;
       networking.useDHCP = lib.mkDefault true;
 
-      #enable tailscale
-      networking.firewall.enable = true; # Ensure firewall is enabled
-      networking.firewall.allowedUDPPorts = [ 41641 ];
-      networking.trustedInterfaces = [ "tailscale0" ]; # Or add "tailscale0" to your existing list
+      services.tailscale.enable =  true;
       environment.systemPackages = with pkgs; [
       	tailscale
       ];
-      services.tailscale.enable = true;
+
+      networking.firewall = {
+        # enable the firewall
+        enable = true;
+
+        # always allow traffic from your Tailscale network
+        trustedInterfaces = [ "tailscale0" ];
+
+        # allow the Tailscale UDP port through the firewall
+        allowedUDPPorts = [ config.services.tailscale.port ];
+
+        # let you SSH in over the public internet
+        allowedTCPPorts = [ 22 ];
+      };
+
     };
 }

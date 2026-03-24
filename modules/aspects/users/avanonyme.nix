@@ -26,6 +26,7 @@
 				feh #image viewer
 				gh #github in the terminal
 				gimp #image editing
+				pitivi #video editing 
 				neovim
 				neofetch #sys info
 				obsidian
@@ -40,16 +41,6 @@
 
 			];
 
-
-#	programs.git = {
-#         enable = true;
-#   	 userName = "avanonyme";
-#   	 userEmail = "avanix26@protonmail.com";
-#   	 extraConfig = {
-#    	  init.defaultBranch = "main";
-#    	  safe.directory = "/home/avanonyme/.dotfiles";
-#   	 };
-#        };
 	programs.git = {
 	 enable = true;
 	 settings = {

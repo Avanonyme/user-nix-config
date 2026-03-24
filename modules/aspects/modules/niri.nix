@@ -33,17 +33,17 @@
         wayland = true;
       }; 
       #XDG desktop Portal
-       xdg.portal = {
-   	enable = true;
-    	extraPortals = with pkgs; [
+      xdg.portal = {
+   	    enable = true;
+        config.niri."org.freedesktop.impl.portal.FileChooser" = "nautilus";
+    	  extraPortals = with pkgs; [
       		xdg-desktop-portal-gtk
-      		xdg-desktop-portal-gnome
-   	 ];
+          xdg-desktop-portal-gnome
+   	    ];
         configPackages = with pkgs; [
       		xdg-desktop-portal-gtk
       		xdg-desktop-portal-gnome
-      		niri
-    	];
+    	  ];
   };
 
       environment.variables = lib.mkIf (config.hardware.nvidia.modesetting.enable or false) {
@@ -53,6 +53,7 @@
         ELECTRON_OZONE_PLATFORM_HINT = "auto";
       };
 
+      services.udisks2.enable = true;
       # Essential utilities
       environment.systemPackages = with pkgs; [
         wl-clipboard
@@ -60,10 +61,17 @@
         grim
         slurp
         xwayland-satellite
-        ghostty
-        thunar
+        ghostty #terminal
         swww
-        fuzzel
+        fuzzel #app launcher
+
+        #filesystem manager
+        nautilus
+        gvfs        # virtual filesystem (USB, MTP, SMB, etc.)
+        udiskie     # auto-mounts drives on plug-in
+        thunar
+        thunar-volman           # Thunar plugin for volume management
+        xfce.tumbler            # thumbnail service 
       ];
 
     };

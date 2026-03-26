@@ -10,9 +10,9 @@
     nixos ={lib, ...}: 
     {
     	nixpkgs.config.allowUnfree = true;
-	home-manager.useGlobalPkgs = true; #force home-manager to use our pkgs
-	home-manager.useUserPackages = true; #pkgs are installed through nixos user
-		                                   
+		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
+		home-manager.useUserPackages = true; #pkgs are installed through nixos user
+											
     };
 
     homeManager =
@@ -28,7 +28,7 @@
 				gimp #image editing
 				pitivi #video editing 
 				neovim
-				neofetch #sys info
+				fastfetch #sys info
 				obsidian
 				transmission_4-qt #torrent client
 				#qemu #virtualization

@@ -1,5 +1,5 @@
 {
-  vix.macos-keys.nixos =
+  core.macos-keys.nixos =
     {
       lib,
       pkgs,

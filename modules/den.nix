@@ -1,21 +1,22 @@
 {
-# boreal desktop host
-den.hosts.x86_64-linux.boreal.users.avanonyme = { 
-    classes = ["homeManager"];
+
+# meta-config for all users
+den.schema.user = {...}: {
+    classes = lib.mkDefault [ "homeManager" ];
 };
 
-den.hosts.x86_64-linux.boreal.users.tux = { 
-    classes = ["homeManager"];
-}; #gaming user
-# arctic laptop
-den.hosts.aarch64-darwin.arctic.users.avanonyme = {
-    classes = ["homeManager"];
- };
+# boreal desktop host
+den.hosts.x86_64-linux.boreal= {
+    users.avanonyme = {};
+
+    users.tux = {};
+ }; #gaming user
+
+# arctic Macos
+den.hosts.aarch64-darwin.arctic.users.avanonyme = { };
 
 #vm host
-den.hosts.x86_64-linux.igloo.users.tux = {
-    classes = ["homeManager"];
-};
+den.hosts.x86_64-linux.igloo.users.avanonyme = { };
 }
 
 /*   hm-aspect-deprecated = ''

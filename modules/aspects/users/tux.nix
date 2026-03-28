@@ -4,14 +4,17 @@
   # user aspect
   den.aspects.tux = {
     includes = [
-      den.provides.primary-user
       (den.provides.user-shell "fish")
+      den.aspects.gaming
+
     ];
 
     homeManager =
       { pkgs, ... }:
       {
-        home.packages = [ pkgs.htop ];
+        home.packages = [ 
+          pkgs.htop 
+        ];
       };
 
     # user can provide NixOS configurations

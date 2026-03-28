@@ -1,5 +1,5 @@
 {
-  vix.networking.nixos =
+  core.networking.nixos =
     { lib, pkgs, config,... }:
     {
       networking.networkmanager.enable = true;

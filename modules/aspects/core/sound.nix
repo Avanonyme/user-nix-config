@@ -1,5 +1,5 @@
 {
-  vix.sound.nixos = {
+  core.sound.nixos = {
     services.pulseaudio.enable = false;
     services.pipewire = {
       enable = true;

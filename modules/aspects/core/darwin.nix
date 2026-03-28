@@ -5,7 +5,7 @@ let
     nix-darwin.url = "github:LnL7/nix-darwin";
   };
 
-  vix.darwin.darwin.imports = [
+  core.darwin.darwin.imports = [
     nix-darwin-pkgs
     darwin-cfg
   ];
@@ -36,5 +36,5 @@ let
   # TODO: link home-manager apps.
 in
 {
-  inherit vix flake-file;
+  inherit core flake-file;
 }

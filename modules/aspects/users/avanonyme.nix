@@ -2,16 +2,23 @@
 {
  den.aspects.avanonyme = {
     includes = [
+			den.provides.primary-user
+      (den.provides.user-shell "fish")
+			den.provides.unfree
+
+			<core/admin>
+
       den.aspects.noctalia-desktop
       den.aspects.zen-browser
       den.aspects.gaming
-      <vix/admin>
+    
     ];
     nixos ={lib, ...}: 
     {
-    	nixpkgs.config.allowUnfree = true;
-		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
-		home-manager.useUserPackages = true; #pkgs are installed through nixos user
+		#normally now this logic is handled by den.provides.unfree
+    #nixpkgs.config.allowUnfree = true;
+		#home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
+		#home-manager.useUserPackages = true; #pkgs are installed through nixos user
 											
     };
 
@@ -20,13 +27,13 @@
 		{
 			home.packages = with pkgs; [
 				bat #moder replacemement for cat
-				btop #resources monitoring
+				htop #resources monitoring
 				bitwarden-desktop
 				dunst #notif daemon
 				feh #image viewer
 				gh #github in the terminal
 				gimp #image editing
-				pitivi #video editing 
+				davinci-resolve #video editing 
 				neovim
 				fastfetch #sys info
 				obsidian

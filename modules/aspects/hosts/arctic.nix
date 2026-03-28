@@ -3,8 +3,8 @@
 {
   den.aspects.arctic = {
      includes = [ 
-      <vix/darwin>
-      <vix/dev-laptop>
+      <core/darwin>
+      <core/dev-laptop>
     ];
 
 

@@ -1,5 +1,5 @@
 {
-  vix.xserver.nixos = {
+  core.xserver.nixos = {
     services.xserver.enable = true;
     services.xserver.xkb = {
       layout = "us";

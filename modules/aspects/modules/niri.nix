@@ -44,7 +44,7 @@
       		xdg-desktop-portal-gtk
       		xdg-desktop-portal-gnome
     	  ];
-  };
+      };
 
       environment.variables = lib.mkIf (config.hardware.nvidia.modesetting.enable or false) {
         LIBVA_DRIVER_NAME = "nvidia";
@@ -63,21 +63,8 @@
         ghostty #terminal
         swww
         fuzzel #app launcher
-
-        #filesystem manager #move to its own aspect
-        nautilus
-        gvfs        # virtual filesystem (USB, MTP, SMB, etc.)
-        udiskie     # auto-mounts drives on plug-in
-
-        thunar
-        thunar-volman           # Thunar plugin for volume management
-        xfce.tumbler            # thumbnail service 
       ];
 
-      #enable automounting #needs to move to filesystem aspec
-      services.devmon.enable = true;
-      services.gvfs.enable = true;
-      services.udisks2.enable = true;
     };
 
     homeManager = {lib, pkgs, user, ... }: {
@@ -123,35 +110,35 @@
           animations = {
             enable = true;
           };
-      # Misc
+          # Misc
           prefer-no-csd = true;
           screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d_%H-%M-%S.png";	
-	  spawn-at-startup = [
-	    {argv = ["swww-daemon"];}
-	  ];
+          spawn-at-startup = [
+            {argv = ["swww-daemon"];}
+          ];
 	            # Keybindings
           binds = let
             mod = "Mod";
           in {
             "${mod}+Return".action.spawn = [ "ghostty" ];
-            "${mod}+D".action.spawn = [ "fuzzel" ];
-            "${mod}+E".action.spawn = [ "thunar" ];
+            "${mod}+E".action.spawn = [ "fuzzel" ];
+            "${mod}+N".action.spawn = [ "nautilus" ];
             
             "${mod}+Q".action.close-window = {};
             "${mod}+Shift+E".action.quit = {};
             "${mod}+Shift+Slash".action.show-hotkey-overlay = {};
             
             # Focus
-            "${mod}+H".action.focus-column-left = {};
-            "${mod}+J".action.focus-window-down = {};
-            "${mod}+K".action.focus-window-up = {};
-            "${mod}+L".action.focus-column-right = {};
+            "${mod}+W".action.focus-window-up = {};
+            "${mod}+A".action.focus-column-left = {};
+            "${mod}+S".action.focus-window-down = {};
+            "${mod}+D".action.focus-column-right = {};
             
             # Move
-            "${mod}+Shift+H".action.move-column-left = {};
-            "${mod}+Shift+J".action.move-window-down = {};
-            "${mod}+Shift+K".action.move-window-up = {};
-            "${mod}+Shift+L".action.move-column-right = {};
+            "${mod}+Shift+W".action.move-window-up = {};
+            "${mod}+Shift+A".action.move-column-left = {};
+            "${mod}+Shift+S".action.move-window-down = {};
+            "${mod}+Shift+D".action.move-column-right = {};
             
             # Workspace
             "${mod}+1".action.focus-workspace = 1;
@@ -191,12 +178,6 @@
         };
 
       };
-      #move to filesystem aspcct
-      services.udiskie = { 
-          enable = true;
-          automount = true;
-          notify = true;   # sends a dunst notification on plug (you already have dunst)
-        };
       
     };
 

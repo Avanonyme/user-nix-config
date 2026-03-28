@@ -1,6 +1,6 @@
 {
 
-  vix.admin =
+  core.admin =
     { user, ... }:
     {
       darwin.system.primaryUser = user.userName;

@@ -19,9 +19,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    #community
-    #vix.url = "github:vic/vix"; #Is not a flake (how to access community?)
-
     ## these stable inputs are for wsl
     #nixpkgs-stable.url = "github:nixos/nixpkgs/release-25.05";
     #home-manager-stable.url = "github:nix-community/home-manager/release-25.05";

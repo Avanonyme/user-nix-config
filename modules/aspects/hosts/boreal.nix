@@ -12,9 +12,9 @@
           
         ];
     #TODO define device names for disko-boreal
-#   disko.devices.disk.root.device = "/dev/sda";
-#   disko.devices.disk.data1.device = "/dev/sdb";
-#   disko.devices.disk.data2.device = "/dev/sdc";
+    disko.devices.disk.root.device = "/dev/sdb";
+    disko.devices.disk.data1.device = "/dev/sda";
+    disko.devices.disk.data2.device = "/dev/sdc";
     # host NixOS configuration
     nixos =
     { pkgs, lib, ... }:
@@ -23,18 +23,19 @@
       boot.loader.grub.enable = false;
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
-
+      boot.supportedFilesystems = [ "zfs" ];
+      networking.hostId = "002bf327"; # required by ZFS — generate with: head -c4 /dev/urandom | od -A none -t x4 | tr -d ' '
 
       #a priori this is not needed (defined in den.nix with host/user/home)
       #nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
       #TODO: move to a disko filesystem aspect
-      fileSystems."/" =
-        { device = "/dev/disk/by-uuid/1717c128-b9fa-45ce-9e75-f1e163387351";
-          fsType = "ext4";
-        };
+      #fileSystems."/" =
+      #  { device = "/dev/disk/by-uuid/1717c128-b9fa-45ce-9e75-f1e163387351";
+      #    fsType = "ext4";
+      #  };
 
-      swapDevices = [ ]; #can we remove this for disko config?
+      #swapDevices = [ ]; #can we remove this for disko config?
 
       # Set static ipv4 address
       #networking.interfaces.eth0.ipv4.addresses = [

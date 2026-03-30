@@ -1,7 +1,7 @@
 {
 
 # meta-config for all users
-den.schema.user = {...}: {
+den.schema.user = { lib,...}: {
     classes = lib.mkDefault [ "homeManager" ];
 };
 

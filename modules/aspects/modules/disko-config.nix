@@ -17,6 +17,13 @@
                   mountOptions = [ "umask=0077" ];
                 };
               };
+              swap = {
+                size = "4G";
+                content = {
+                  type = "swap";
+                  priority = 100;
+                };
+              };
               root = {
                 size = "100%";
                 content = {
@@ -85,10 +92,16 @@
                 encryption = "aes-256-gcm";
                 keyformat = "passphrase";
                 keylocation = "file:///tmp/secret.key";
+                #echo "your-zfs-passphrase" > /tmp/zfs-key.txt to generate a passphrase
+                #nixos-anywhere \
+                #--disk-encryption-keys /tmp/secret.key /tmp/zfs-key.txt \
+                #--flake .#boreal \
+                #root@<target-ip>
               };
               # use this to read the key during boot
               postCreateHook = ''
                 zfs set keylocation="prompt" "data/encrypted";
+
               '';
             };
           };

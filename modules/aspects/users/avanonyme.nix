@@ -4,7 +4,7 @@
     includes = [
 			den.provides.primary-user
       (den.provides.user-shell "fish")
-			den.provides.unfree
+			#den.provides.unfree
 
 			<core/admin>
 
@@ -15,10 +15,11 @@
     ];
     nixos ={lib, ...}: 
     {
-		#normally now this logic is handled by den.provides.unfree
-    #nixpkgs.config.allowUnfree = true;
-		#home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
-		#home-manager.useUserPackages = true; #pkgs are installed through nixos user
+		#normally now this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
+		#to disable as well in boreal.nix and gaming.nix
+    	nixpkgs.config.allowUnfree = true;
+		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
+		home-manager.useUserPackages = true; #pkgs are installed through nixos user
 											
     };
 

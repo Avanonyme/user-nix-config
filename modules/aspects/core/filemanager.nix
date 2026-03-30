@@ -1,5 +1,5 @@
 {
-  core.filesystem = {
+  core.filemanager = {
     nixos = 
     {pkgs, ...}:
     {

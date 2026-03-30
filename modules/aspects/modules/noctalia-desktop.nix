@@ -34,6 +34,8 @@
       programs.noctalia-shell = {
         enable = true;
         settings = {
+          # alternatively
+          # (builtins.fromJSON (builtins.readFile ./noctalia.json)).settings;
           settingsVersion = 54;
           bar = {
             barType = "floating";

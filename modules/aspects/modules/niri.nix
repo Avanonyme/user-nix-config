@@ -114,18 +114,30 @@
           prefer-no-csd = true;
           screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d_%H-%M-%S.png";	
           spawn-at-startup = [
-            {argv = ["swww-daemon"];}
+            {argv = ["swww-daemon"];} #why not noctalia-shell?
           ];
 	            # Keybindings
           binds = let
             mod = "Mod";
           in {
+            ## Noctalia setup
             "${mod}+Return".action.spawn = [ "ghostty" ];
-            "${mod}+E".action.spawn = [ "fuzzel" ];
+            "${mod}+L".action.spawn-sh = "noctalia-shell ipc call launcher toggle";
+            "${mod}+C".action.spawn-sh = "noctalia-shell ipc call controlCenter toggle";
+            "${mod}+E".action.spawn-sh = "noctalia-shell ipc call settings toggle";
             "${mod}+N".action.spawn = [ "nautilus" ];
-            
+
+/*          # Audio & Brightness #KDL format
+            XF86AudioRaiseVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
+            XF86AudioLowerVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "decrease"; }
+            XF86AudioMute { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
+            XF86MonBrightnessUp { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
+            XF86MonBrightnessDown { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
+             */       
+
+            ## Window management 
             "${mod}+Q".action.close-window = {};
-            "${mod}+Shift+E".action.quit = {};
+            "${mod}+Shift+Q".action.quit = {};
             "${mod}+Shift+Slash".action.show-hotkey-overlay = {};
             
             # Focus
@@ -168,6 +180,8 @@
             "${mod}+V".action.toggle-window-floating = {};
             "${mod}+Minus".action.set-column-width = "-10%";
             "${mod}+Equal".action.set-column-width = "+10%";
+            "${mod}+Shift+Minus".action.set-window-width = "-10%";
+            "${mod}+Shift+Equal".action.set-window-width = "+10%";
             
             # Screenshot
             "Print".action.screenshot = {};

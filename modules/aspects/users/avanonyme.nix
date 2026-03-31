@@ -37,7 +37,7 @@
 				feh #image viewer
 				gh #github in the terminal
 				gimp #image editing
-				davinci-resolve #video editing 
+				#davinci-resolve #video editing 
 				neovim
 				fastfetch #sys info
 				obsidian

@@ -59,7 +59,7 @@
         sc-controller
         
         # Performance monitoring
-        nvtopPackages.full
+        nvtopPackages.amd
       ];
     };
     # User gaming packages via home-manager

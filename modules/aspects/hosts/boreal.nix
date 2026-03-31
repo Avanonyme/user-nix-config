@@ -23,8 +23,7 @@
       # grub boot
       boot.loader.grub = {
         enable = true;
-        # no need to set devices, disko will add all devices that have a EF02 partition to the list already
-        # devices = [ ];
+        devices = [ "nodev" ]; # EFI-only install; disko only auto-adds devices for EF02 (BIOS boot) partitions
         efiSupport = true;
         efiInstallAsRemovable = true;
       };

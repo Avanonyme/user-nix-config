@@ -22,8 +22,8 @@
 		home-manager.useUserPackages = true; #pkgs are installed through nixos user
 
 		users.users.avanonyme.openssh.authorizedKeys.keys = [
-			ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com
-		];				
+			"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com"
+		];			
     };
 
     homeManager =

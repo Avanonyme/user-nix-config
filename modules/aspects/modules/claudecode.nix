@@ -1,6 +1,6 @@
 {den, inputs, ...}:
 {
-  flake-file.inputs.claude-code= {
+/*   flake-file.inputs.claude-code= {
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -10,5 +10,5 @@
       nixpkgs.overlays = [ claude-code.overlays.default];
       home.packages = [ pkgs.claude-code ];
     };
-  };
+  }; */
 }

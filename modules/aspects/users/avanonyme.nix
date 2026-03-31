@@ -2,7 +2,7 @@
 {
  den.aspects.avanonyme = {
     includes = [
-			den.provides.primary-user
+	  den.provides.primary-user
       (den.provides.user-shell "fish")
 			#den.provides.unfree
 
@@ -20,7 +20,10 @@
     	nixpkgs.config.allowUnfree = true;
 		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
 		home-manager.useUserPackages = true; #pkgs are installed through nixos user
-											
+
+		users.users.avanonyme.openssh.authorizedKeys.keys = [
+			ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com
+		];				
     };
 
     homeManager =

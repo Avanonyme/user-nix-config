@@ -4,6 +4,7 @@
     services.openssh = {
       enable = true;
       settings.PermitRootLogin = "no";
+      #settings.PasswordAuthentication = false; #not needed for avanonyme user
       allowSFTP = true;
     };
   };

@@ -11,18 +11,28 @@
           den.aspects.disko-boreal
           
         ];
-    #TODO define device names for disko-boreal
-    disko.devices.disk.root.device = "/dev/sdb";
-    disko.devices.disk.data1.device = "/dev/sda";
-    disko.devices.disk.data2.device = "/dev/sdc";
     # host NixOS configuration
     nixos =
     { pkgs, lib, ... }:
     {
+      #TODO define device names for disko-boreal
+      disko.devices.disk.root.device = "/dev/sdb";
+      disko.devices.disk.data1.device = "/dev/sda";
+      disko.devices.disk.data2.device = "/dev/sdc";
       # Bootloader. #TODO move to boot module
-      boot.loader.grub.enable = false;
-      boot.loader.systemd-boot.enable = true;
-      boot.loader.efi.canTouchEfiVariables = true;
+      # grub boot
+      boot.loader.grub = {
+        enable = true;
+        # no need to set devices, disko will add all devices that have a EF02 partition to the list already
+        # devices = [ ];
+        efiSupport = true;
+        efiInstallAsRemovable = true;
+      };
+      
+      #systemd boot
+      #boot.loader.grub.enable = false;
+      #boot.loader.systemd-boot.enable = true;
+      #boot.loader.efi.canTouchEfiVariables = true;
       boot.supportedFilesystems = [ "zfs" ];
       networking.hostId = "002bf327"; # required by ZFS — generate with: head -c4 /dev/urandom | od -A none -t x4 | tr -d ' '
 

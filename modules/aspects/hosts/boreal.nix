@@ -15,7 +15,7 @@
     nixos =
     { pkgs, lib, ... }:
     {
-      #TODO define device names for disko-boreal
+      #WARNING: define actual devices
       disko.devices.disk.root.device = "/dev/sdb";
       disko.devices.disk.data1.device = "/dev/sda";
       disko.devices.disk.data2.device = "/dev/sdc";
@@ -32,6 +32,7 @@
       #boot.loader.grub.enable = false;
       #boot.loader.systemd-boot.enable = true;
       #boot.loader.efi.canTouchEfiVariables = true;
+      
       boot.supportedFilesystems = [ "zfs" ];
       networking.hostId = "002bf327"; # required by ZFS — generate with: head -c4 /dev/urandom | od -A none -t x4 | tr -d ' '
 

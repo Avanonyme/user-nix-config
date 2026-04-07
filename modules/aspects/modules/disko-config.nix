@@ -36,17 +36,10 @@
                 root = {
                   size = "100%";
                   content = {
-                    # LUKS passphrase will be prompted interactively only
-                    type = "luks";
-                    name = "crypted";
-                    settings = {
-                      allowDiscards = true;
-                    };
-                    content = {
-                      type = "filesystem";
-                      format = "ext4";
-                      mountpoint = "/";
-                    };
+                    type = "filesystem";
+                    format = "ext4";
+                    mountpoint = "/";
+
                   };
                 };
               };
@@ -94,24 +87,25 @@
             postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^data@blank$' || zfs snapshot data@blank";
 
             datasets = {
-              "encrypted" = {
+              "main" = {
                 type = "zfs_fs";
                 mountpoint = "/data";
-                options = {
-                  encryption = "aes-256-gcm";
-                  keyformat = "passphrase";
-                  keylocation = "file:///tmp/secret.key";
-                  #echo "your-zfs-passphrase" > /tmp/zfs-key.txt to generate a passphrase
-                  #nixos-anywhere \
-                  #--disk-encryption-keys /tmp/secret.key /tmp/zfs-key.txt \
-                  #--flake .#boreal \
-                  #root@<target-ip>
-                };
+                # no data encryption needed for boreal, it is a public machine, 
+                # but this is how you would set it up with disko
+                #options = {
+                #  encryption = "aes-256-gcm";
+                #  keyformat = "passphrase";
+                #  keylocation = "file:///tmp/secret.key";
+                #  #echo "your-zfs-passphrase" > /tmp/secret.key 
+                #  #nixos-anywhere \
+                #  #--disk-encryption-keys /tmp/secret.key /tmp/secret.key \ # <remote-host> <local-host>, local applied on remote
+                #  #--flake .#boreal \
+                #  #root@<target-ip> # run ip addr
+                #};
                 # use this to read the key during boot
-                postCreateHook = ''
-                  zfs set keylocation="prompt" "data/encrypted";
-
-                '';
+                # postCreateHook = ''
+                #   zfs set keylocation="prompt" "data/encrypted";
+                # '';
               };
             };
           };

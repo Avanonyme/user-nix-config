@@ -44,6 +44,7 @@
       environment.systemPackages = with pkgs; [
         # Launchers
         faugus-launcher
+        heroic
         #lutris #open gaming
 
         

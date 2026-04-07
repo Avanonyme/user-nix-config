@@ -4,6 +4,7 @@
   # user aspect
   den.aspects.tux = {
     includes = [
+      <core/guest-user>
       (den.provides.user-shell "fish")
       den.aspects.gaming
 

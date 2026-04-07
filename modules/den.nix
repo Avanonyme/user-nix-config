@@ -17,6 +17,7 @@ den.hosts.aarch64-darwin.arctic.users.avanonyme = { };
 
 #vm host
 den.hosts.x86_64-linux.igloo.users.avanonyme = { };
+den.hosts.aarch64-darwin.igloo.users.avanonyme = { };
 }
 
 /*   hm-aspect-deprecated = ''

@@ -34,6 +34,8 @@
       #boot.loader.efi.canTouchEfiVariables = true;
       
       boot.supportedFilesystems = [ "zfs" ];
+      boot.initrd.supportedFilesystems = [ "zfs" ];
+      boot.zfs.extraPools = [ "data" ]; # import non-root ZFS pool at boot
       networking.hostId = "002bf327"; # required by ZFS — generate with: head -c4 /dev/urandom | od -A none -t x4 | tr -d ' '
 
       #a priori this is not needed (defined in den.nix with host/user/home)
@@ -80,7 +82,6 @@
       ];
 
     };
-
 
     # host provides default home environment for its users
     homeManager =

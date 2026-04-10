@@ -20,27 +20,28 @@
     ];
 
     sops = {
+      defaultSopsFile = ../../../secrets/secrets.yaml;
       age.sshKeyPaths = map getKeyPath keys;
       secrets = {
-      	    "sonarr/api_key" = {};
-	    "sonarr/password" = {};
-	    "radarr/ap_key" = {};
-	    "radarr/password" = {};
-"lidarr/api_key" = {};
-    "lidarr/password" = {};
-"prowlarr/api_key" = {};
-    "prowlarr/password" = {};
-"indexer-api-keys/NZBFinder" = {};
-    "indexer-api-keys/NzbPlanet" = {};
-    "jellyfin/alice_password" = {};
-    "jellyseerr/api_key" = {};
-    "mullvad-account-number" = {};
-"sabnzbd/api_key" = {};
-"sabnzbd/nzb_key" = {};
-"usenet/eweka/username" = {};
-"usenet/eweka/password" = {};
+        "sonarr/api_key" = {};
+        "sonarr/password" = {};
+        "radarr/ap_key" = {};
+        "radarr/password" = {};
+        "lidarr/api_key" = {};
+        "lidarr/password" = {};
+        "prowlarr/api_key" = {};
+        "prowlarr/password" = {};
+        "indexer-api-keys/NZBFinder" = {};
+        "indexer-api-keys/NzbPlanet" = {};
+        "jellyfin/alice_password" = {};
+        "jellyseerr/api_key" = {};
+        "mullvad-account-number" = {};
+        "sabnzbd/api_key" = {};
+        "sabnzbd/nzb_key" = {};
+        "usenet/eweka/username" = {};
+        "usenet/eweka/password" = {};
+        "openclaw/api_key" = {};
       };
     };
-  };  
-  #TODO: still need to configure keys
+  };
 }

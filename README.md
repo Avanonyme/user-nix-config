@@ -17,3 +17,13 @@ nix flake check
 ```
 
 - Edit [modules/hosts.nix](modules/hosts.nix)
+
+Install with nixos-anywhere
+nix run github:nix-community/nixos-anywhere \
+  --extra-experimental-features nix-command \
+  --extra-experimental-features flakes \
+  -- \
+  -i ~/.ssh/id_ed25519 \ #if needed
+  --build-on-remote \
+  --flake github:Avanonyme/user-nix-config#host \
+  root@<host-ip>

@@ -44,7 +44,7 @@
 				fastfetch #sys info
 				obsidian
 				transmission_4-qt #torrent client
-				#qemu #virtualization
+				qemu #virtualization
 				synergy #same keyboard for local network
 				tldr
 				unzip

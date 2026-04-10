@@ -83,6 +83,7 @@
             rootFsOptions = {
               compression = "zstd";
               "com.sun:auto-snapshot" = "true";
+              mountpoint = "none";
             };
             postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^data@blank$' || zfs snapshot data@blank";
 
@@ -90,6 +91,7 @@
               "main" = {
                 type = "zfs_fs";
                 mountpoint = "/data";
+                options.mountpoint = "legacy";
                 # no data encryption needed for boreal, it is a public machine, 
                 # but this is how you would set it up with disko
                 #options = {

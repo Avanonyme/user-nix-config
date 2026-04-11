@@ -38,6 +38,11 @@
       boot.zfs.extraPools = [ "data" ]; # import non-root ZFS pool at boot
       networking.hostId = "002bf327"; # required by ZFS — generate with: head -c4 /dev/urandom | od -A none -t x4 | tr -d ' '
 
+      fileSystems."/data" = {
+        device = "data";
+        fsType = "zfs";
+      };
+
       #a priori this is not needed (defined in den.nix with host/user/home)
       #nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 

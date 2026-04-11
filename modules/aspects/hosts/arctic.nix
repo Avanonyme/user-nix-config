@@ -8,7 +8,7 @@
     ];
 
 
-    nixos =
+    darwin =
     { pkgs, ... }:
     {
  

@@ -1,0 +1,7 @@
+{
+  "defaultProvider": "ollama",
+  "defaultModel": "gemma4:e4b",
+  "defaultThinkingLevel": "medium",
+  "theme": "dark",
+  "quietStartup": true
+}

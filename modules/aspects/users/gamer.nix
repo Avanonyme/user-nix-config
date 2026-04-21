@@ -2,20 +2,28 @@
 # gaming user
 {
   # user aspect
-  den.aspects.tux = {
+  den.aspects.gamer = {
     includes = [
-      den._.guest-user
+      den.provides.define-user
       (den.provides.user-shell "fish")
       den.aspects.gaming
 
     ];
-
+    nixos = { ... }: {
+      users.users.gamer = {
+        initialPassword = ""; # or use hashedPassword
+      };
+    };
     homeManager =
       { pkgs, ... }:
       {
-        home.packages = [ 
-          pkgs.htop 
+        home.packages = with pkgs; [ 
+          htop
+          ghostty
+          vscodium
         ];
+
+
       };
 
     # user can provide NixOS configurations

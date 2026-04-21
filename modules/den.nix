@@ -9,8 +9,8 @@ den.schema.user = { lib,...}: {
 den.hosts.x86_64-linux.boreal= {
     users.avanonyme = {};
 
-    users.tux = {};
- }; #gaming user
+    users.gamer = {}; #gaming user
+ }; 
 
 # arctic Macos
 den.hosts.aarch64-darwin.arctic.users.avanonyme = { };

@@ -47,7 +47,6 @@
         heroic
         #lutris #open gaming
 
-        
         # Proton/Wine
         protonup-qt
         winetricks
@@ -63,23 +62,42 @@
         nvtopPackages.amd
       ];
     };
+    darwin = { pkgs, lib, ... }: {
+
+      # Steam has no nix-darwin module — install via homebrew cask
+      homebrew.casks = [
+        "steam"
+      ];
+
+      environment.systemPackages = with pkgs; [
+        # Launchers
+        heroic
+
+        # Wine stack
+        wine64          # core Wine binary
+        winetricks      # helper scripts for Wine prefixes
+      ];
+    };
+
     # User gaming packages via home-manager
-    homeManager = { pkgs, user, ... }: {
-      # MangoHud configuration
-      xdg.configFile."MangoHud/MangoHud.conf".text = ''
-        fps
-        frametime
-        cpu_stats
-        gpu_stats
-        cpu_temp
-        gpu_temp
-        ram
-        vram
-        position=top-left
-        font_size=18
-        background_alpha=0.4
-        round_corners=8
-      '';
+    homeManager = { pkgs, lib, user, ... }: {
+      # MangoHud config — Linux only, guard so it's not dropped on darwin
+      xdg.configFile."MangoHud/MangoHud.conf" = lib.mkIf pkgs.stdenv.isLinux {
+        text = ''
+          fps
+          frametime
+          cpu_stats
+          gpu_stats
+          cpu_temp
+          gpu_temp
+          ram
+          vram
+          position=top-left
+          font_size=18
+          background_alpha=0.4
+          round_corners=8
+        '';
+      };
     };
   };
  }

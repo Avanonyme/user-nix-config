@@ -18,8 +18,8 @@
         piPkg
       ];
       # Declarative ~/.pi config on macOS and Linux
-  xdg.configFile."pi/agent/models.json".text = "../.configs/ollama-models.json";
-  xdg.configFile."pi/agent/settings.json".text = "../.configs/ollama-settings.json";
+      xdg.configFile."pi/agent/models.json".text = ../.configs/ollama-models.json;
+      xdg.configFile."pi/agent/settings.json".text = ../.configs/ollama-settings.json;
     };
 
     nixos = {pkgs, config,...}: {

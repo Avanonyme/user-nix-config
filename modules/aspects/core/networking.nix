@@ -1,6 +1,8 @@
 {
   core.networking.nixos =
     { lib, pkgs, config,... }:
+    # add node to network
+    # tailscale up --login-server <headscale_url>
     {
       networking.networkmanager.enable = true;
       networking.useDHCP = lib.mkDefault true;
@@ -14,14 +16,11 @@
         # enable the firewall
         enable = true;
 
-        # always allow traffic from your Tailscale network
-        trustedInterfaces = [ "tailscale0" ];
+        checkReversePath = "loose"; # See https://carlosvaz.com/posts/setting-up-headscale-on-nixos/
+        trustedInterfaces = [ "tailscale0" ]; # allow all traffic from the Tailscale interface
+        allowedUDPPorts = [ config.services.tailscale.port ];        # allow the Tailscale UDP port through the firewall
+        allowedTCPPorts = [ 22 ];  # let you SSH in over the public internet
 
-        # allow the Tailscale UDP port through the firewall
-        allowedUDPPorts = [ config.services.tailscale.port ];
-
-        # let you SSH in over the public internet
-        allowedTCPPorts = [ 22 ];
       };
 
     };

@@ -20,7 +20,7 @@
         };
       };
     };
-    provides.sync_gpu = {
+    provides.sync_nvidia = {
       nixos = {pkgs,config, host, ...}: {
         includes = [den.aspects.gpu._.amd];
 

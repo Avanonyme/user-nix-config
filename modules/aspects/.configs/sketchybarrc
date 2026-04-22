@@ -1,0 +1,95 @@
+#!/usr/bin/env sh
+
+# ── Solarpunk palette ─────────────────────────────────────────────────────────
+# BASE    0xff1b2e1f  deep forest floor
+# SURFACE 0xff2a4a30  canopy shadow
+# TEXT    0xffe4f0c8  pale sun-through-leaves
+# GREEN   0xff74b87a  fresh growth
+# GOLD    0xfff0c93a  solar gold
+# TEAL    0xff52b788  river teal
+# AMBER   0xffe07b39  warm circuit amber
+
+# ── Bar ────────────────────────────────────────────────────────────────────────
+sketchybar --bar \
+  height=32          \
+  position=top       \
+  sticky=on          \
+  padding_left=12    \
+  padding_right=12   \
+  color=0xff1b2e1f   \
+  notch_width=188
+
+# ── Defaults ───────────────────────────────────────────────────────────────────
+sketchybar --default \
+  icon.font="SF Pro:Semibold:14.0"  \
+  label.font="SF Pro:Semibold:13.0" \
+  icon.color=0xff74b87a             \
+  label.color=0xffe4f0c8            \
+  icon.padding_left=6               \
+  icon.padding_right=4              \
+  label.padding_left=4              \
+  label.padding_right=6             \
+  background.height=24              \
+  background.corner_radius=6        \
+  background.color=0x00000000
+
+# ── Left: AeroSpace workspaces ────────────────────────────────────────────────
+for i in 1 2 3 4 5; do
+  sketchybar --add item "space.$i" left \
+             --set "space.$i"           \
+               icon="$i"               \
+               icon.font="SF Pro:Bold:14.0" \
+               icon.color=0xffe4f0c8   \
+               label.drawing=off       \
+               click_script="aerospace workspace $i" \
+               script="sketchybar --set space.$i background.color=\$(aerospace list-workspaces --focused | grep -q $i && echo 0xff2a4a30 || echo 0x00000000)"
+done
+
+# ── Center: clock ─────────────────────────────────────────────────────────────
+sketchybar --add item clock center \
+           --set clock             \
+             update_freq=10        \
+             icon="󱑎"             \
+             icon.color=0xfff0c93a   \
+             label.color=0xffe4f0c8  \
+             script="sketchybar --set clock label=\"\$(date '+%H:%M')\""
+
+# ── Right: battery ────────────────────────────────────────────────────────────
+sketchybar --add item battery right \
+           --set battery            \
+             update_freq=60         \
+             icon.color=0xff52b788  \
+             label.color=0xffe4f0c8 \
+             script='
+               PCT=$(pmset -g batt | grep -Eo "[0-9]+%" | head -1 | tr -d %)
+               CHARGING=$(pmset -g batt | grep "AC Power" && echo 1 || echo 0)
+               if   [ "$CHARGING" = "1"  ]; then ICON="󰂄"; COLOR=0xfff0c93a
+               elif [ "$PCT" -ge 80      ]; then ICON="󰁹"; COLOR=0xff52b788
+               elif [ "$PCT" -ge 60      ]; then ICON="󰂀"; COLOR=0xff52b788
+               elif [ "$PCT" -ge 40      ]; then ICON="󰁾"; COLOR=0xffe07b39
+               elif [ "$PCT" -ge 20      ]; then ICON="󰁼"; COLOR=0xffe07b39
+               else                               ICON="󰁺"; COLOR=0xffcc3333
+               fi
+               sketchybar --set battery icon="$ICON" icon.color="$COLOR" label="${PCT}%"
+             ' \
+           --subscribe battery system_woke power_source_change
+
+# ── Right: volume ─────────────────────────────────────────────────────────────
+sketchybar --add item volume right \
+           --set volume            \
+             icon.color=0xff74b87a \
+             label.color=0xffe4f0c8 \
+             script='
+               VOL=$(osascript -e "output volume of (get volume settings)")
+               MUTED=$(osascript -e "output muted of (get volume settings)")
+               if   [ "$MUTED" = "true" ]; then ICON="󰝟"; COLOR=0xffe07b39
+               elif [ "$VOL" -ge 66     ]; then ICON="󰕾"; COLOR=0xff74b87a
+               elif [ "$VOL" -ge 33     ]; then ICON="󰖀"; COLOR=0xff74b87a
+               else                             ICON="󰕿"; COLOR=0xff74b87a
+               fi
+               sketchybar --set volume icon="$ICON" icon.color="$COLOR" label="${VOL}%"
+             ' \
+           --subscribe volume volume_change
+
+# ── Finalize ──────────────────────────────────────────────────────────────────
+sketchybar --update

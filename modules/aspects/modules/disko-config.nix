@@ -5,9 +5,27 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.disko-boreal = {
+  den.aspects.boreal_filesystems = {
     nixos = { ... }: {
       imports = [ inputs.disko.nixosModules.disko ];
+
+      boot.supportedFilesystems = [ "zfs" ];
+      boot.initrd.supportedFilesystems = [ "zfs" ];
+      boot.zfs.extraPools = [ "data" ]; # import non-root ZFS pool at boot
+
+      disko.devices.disk.root.device = "/dev/sdb";
+      disko.devices.disk.data1.device = "/dev/sda";
+      disko.devices.disk.data2.device = "/dev/sdc";
+      # declare file systems for boreal
+      fileSystems."/data" = {
+        device = "data";
+        fsType = "zfs";
+      };
+      fileSystems."/data/game" = {
+        device = "data/game";
+        fsType = "zfs";
+        options = [ "zfsutil" ];
+      };
 
       disko.devices = {
         disk = {
@@ -109,12 +127,6 @@
       # zfs unmount data/encrypted
       # zfs unload-key data/encrypted
 
-      # declare 
-      fileSystems."/data/game" = {
-        device = "data/game";
-        fsType = "zfs";
-        options = [ "zfsutil" ];
-      };
     };
   };
 }

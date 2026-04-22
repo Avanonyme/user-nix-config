@@ -8,9 +8,9 @@
 
 			<core/admin>
 
-      den.aspects.noctalia-desktop
       den.aspects.zen-browser
       den.aspects.gaming
+			den.aspects.pi-agent
     
     ];
     nixos ={lib, ...}: 

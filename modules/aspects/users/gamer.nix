@@ -7,6 +7,8 @@
       den.provides.define-user
       (den.provides.user-shell "fish")
       den.aspects.gaming
+      den.aspects.noctalia-desktop
+      den.aspects.zen-browser
 
     ];
     nixos = { ... }: {

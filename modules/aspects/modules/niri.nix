@@ -2,6 +2,8 @@
 # NIRI WINDOW MANAGER MODULE
 # ═══════════════════════════════════════════════════════════════════════════
 # Niri scrolling compositor with NVIDIA support and modern Wayland features
+# 
+# Source: https://github.com/sodiboo/niri-flake
 
 {inputs, den, ...}:
 {
@@ -15,7 +17,7 @@
   den.aspects.niri = {
     nixos = { host, pkgs, lib, config, ...}: {
       imports = [inputs.niri.nixosModules.niri];
-        
+
       programs.niri = {
         enable = true;
         #Disable test to avoid "too many open files" error during Nix build
@@ -110,7 +112,10 @@
           prefer-no-csd = true;
           screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d_%H-%M-%S.png";	
           spawn-at-startup = [
-            {argv = ["swww-daemon"];} #why not noctalia-shell?
+            {
+            #argv = ["swww-daemon"]; #why not noctalia-shell?
+            command = [ "noctalia-shell"];
+            }
           ];
 	            # Keybindings
           binds = let

@@ -31,11 +31,16 @@
     homeManager = { user, ... }: {
       imports = [ inputs.noctalia.homeModules.default ];
       
+      
       programs.noctalia-shell = {
         enable = true;
-        settings = {
+        settings = builtins.fromJSON (builtins.readFile ./../.configs/noctalia.json);
+          /*
+          {
           # alternatively
-          # (builtins.fromJSON (builtins.readFile ../.configs/noctalia.json)).settings;
+          
+          #(builtins.fromJSON (builtins.readFile ../.configs/noctalia.json)).settings;
+          
           settingsVersion = 54;
           bar = {
             barType = "floating";
@@ -594,10 +599,8 @@
             gridSnap = false;
             monitorWidgets = [ ];
           };
-        };
-        plugins = {
-          autoUpdate = true;
-        };
+          
+        };*/
       };
     };
   };

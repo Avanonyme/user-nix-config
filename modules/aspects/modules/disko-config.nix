@@ -17,15 +17,21 @@
       disko.devices.disk.data1.device = "/dev/sda";
       disko.devices.disk.data2.device = "/dev/sdc";
       # declare file systems for boreal
-      fileSystems."/data" = {
-        device = "data";
-        fsType = "zfs";
-      };
-      fileSystems."/data/game" = {
-        device = "data/game";
-        fsType = "zfs";
-        options = [ "zfsutil" ];
-      };
+
+       # prompt for encryption credentials at boot for the encrypted dataset
+      #boot.zfs.requestEncryptionCredentials = [ "data/encrypted" ];
+      # you can decrypt it after boot using
+      # zfs load-key data/encrypted
+      # zfs mount data/encrypted
+      # and encrypt again using
+      # zfs unmount data/encrypted
+      # zfs unload-key data/encrypted
+      
+      #fileSystems."/data/encrypted" = {
+      # device = "data/encrypted";
+      #  fsType = "zfs";
+      #  options = [ "zfsutil" ];
+      #};
 
       disko.devices = {
         disk = {
@@ -119,14 +125,6 @@
           };
         };
       };
-      boot.zfs.requestEncryptionCredentials = [ "data/encrypted" ]; # prompt for encryption credentials at boot for the encrypted dataset
-      # you can decrypt it after boot using
-      # zfs load-key data/encrypted
-      # zfs mount data/encrypted
-      # and encrypt again using
-      # zfs unmount data/encrypted
-      # zfs unload-key data/encrypted
-
     };
   };
 }

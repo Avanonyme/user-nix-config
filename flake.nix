@@ -28,11 +28,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     import-tree.url = "github:vic/import-tree";
+    mac-app-util.url = "github:hraban/mac-app-util";
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-pi-agent = {
+      url = "github:rbright/nix-pi-agent";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixflix = {
       url = "github:kiriwalawren/nixflix";
       inputs.nixpkgs.follows = "nixpkgs";

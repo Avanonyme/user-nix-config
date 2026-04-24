@@ -4,7 +4,6 @@ let
   flake-file.inputs = {
     nix-darwin.url = "github:LnL7/nix-darwin";
     mac-app-util.url = "github:hraban/mac-app-util";
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
   core.darwin.darwin.imports = [
@@ -29,9 +28,15 @@ let
     {
       imports = [
         inputs.mac-app-util.darwinModules.default
-        inputs.nix-homebrew.darwinModules.nix-homebrew
       ];
-      homebrew.enable = true;
+      homebrew = {
+        enable = true;
+        onActivation = {
+          autoUpdate = true;
+          cleanup = "uninstall";
+          upgrade = true;
+        };
+      };
       
       environment.systemPackages = with inputs.nix-darwin.packages.${pkgs.system}; [
         darwin-option

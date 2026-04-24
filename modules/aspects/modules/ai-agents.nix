@@ -18,15 +18,15 @@
         piPkg
       ];
       # Declarative ~/.pi config on macOS and Linux
-      xdg.configFile."pi/agent/models.json".text = ../.configs/ollama-models.json;
-      xdg.configFile."pi/agent/settings.json".text = ../.configs/ollama-settings.json;
+      xdg.configFile."pi/agent/models.json".source = ../.configs/ollama-models.json;
+      xdg.configFile."pi/agent/settings.json".source = ../.configs/ollama-settings.json;
     };
 
-    nixos = {pkgs, config,...}: {
+    nixos = {pkgs, config,...}: {
 
       services.ollama = {
         enable = true;
-        acceleration = "cuda";
+        package = pkgs.ollama-cuda;
         
         #default
         host = "127.0.0.1"; #could change for tailscale host

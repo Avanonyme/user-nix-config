@@ -645,7 +645,7 @@
     "predefinedScheme": "Noctalia (default)",
     "darkMode": true,
     "schedulingMode": "on",
-    "manualSunrise": "06:30",
+    "manualSunrise": "08:30",
     "manualSunset": "18:30",
     "generationMethod": "tonal-spot",
     "monitorForColors": "",

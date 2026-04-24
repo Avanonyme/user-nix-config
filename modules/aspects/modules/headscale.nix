@@ -4,7 +4,7 @@
     # Source: https://carlosvaz.com/posts/setting-up-headscale-on-nixos/
 
 let
-  headscaleDomain = "headscale.example.com"; # TODO: set your domain # admin console
+  headscaleDomain = "rustedbonghomeserver.mooo.com"; # TODO: set your domain # admin console
   headscalePort = 8080;
 in
 {
@@ -24,10 +24,14 @@ in
           enable = true;
           address = "127.0.0.1";
           port = headscalePort;
-          dns = { baseDomain = "headnet";}; # or {baseDomain = "example.com";}
-          server_url = "https://${headscaleDomain}";
           settings = {
             logtail.enabled = false;
+            dns = { 
+              base_domain = "rustedbonghomeserver.mooo.com"; # or {baseDomain = "example.com";}
+              nameservers.global = ["mooo.com"];
+            };
+            server_url = "https://${headscaleDomain}";
+
           };
         };
 

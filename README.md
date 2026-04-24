@@ -27,3 +27,5 @@ nix run github:nix-community/nixos-anywhere \
   --build-on-remote \
   --flake github:Avanonyme/user-nix-config#host \
   root@<host-ip>
+
+App for flake.nix generator: nix run .#write-flake

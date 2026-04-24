@@ -13,20 +13,24 @@
     darwin =
     { pkgs, config, ... }:
     {
+      system = {
+        defaults = {
+          controlcenter.BatteryShowPercentage = true;
+          dock.autohide = true;
+          hitoolbox.AppleFnUsageType = "Do Nothing";
+
+          finder = {
+            AppleShowAllExtensions = true;
+            AppleShowAllFiles = true;
+            ShowStatusBar = true;
+            _FXShowPosixPathInTitle = true;
+            _FXSortFoldersFirst = true;
+          };
+        };
+      };
       environment.systemPackages = with pkgs; [
         ghostty
       ];
-       nix-homebrew = {
-          enable = true;
-          enableRosetta = true;
-          user = "avanonyme";
-
-          taps = {
-              "homebrew/homebrew-core" = homebrew-core;
-              "homebrew/homebrew-cask" = homebrew-cask;
-            };
-      };
-      homebrew.taps = builtins.attrNames config.nix-homebrew.taps; # align homebrew taps with nix-homebrew configuration
     };
     homeManager =
     { pkgs, ... }:

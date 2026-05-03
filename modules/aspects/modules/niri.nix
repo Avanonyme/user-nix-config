@@ -22,13 +22,13 @@
         enable = true;
         #Disable test to avoid "too many open files" error during Nix build
         package =
-          inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-stable.overrideAttrs (_: {
+          inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable.overrideAttrs (_: {
               doCheck = false;
           });
       };
       #to prevent black screen
       services.displayManager.sessionPackages = [
-        inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-stable
+        inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable
       ];
       services.displayManager.gdm = {
         enable = true;
@@ -192,7 +192,7 @@
 
           # Animations
           animations = {
-            enable = true;
+            enable = false;
             "window-open" = {
               "duration-ms" = 1000;
               "custom-shader" = ''

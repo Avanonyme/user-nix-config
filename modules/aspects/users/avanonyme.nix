@@ -25,7 +25,11 @@
 			"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com"
 		];	
 		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
-		
+		#fileSystems."/home/avanonyme/data" = {
+		#	device = "/data";
+		#	fsType = "none";
+		#	options = [ "bind" "x-systemd.after=zfs-mount.service" ];
+		};
     };
 
     homeManager =

@@ -17,20 +17,33 @@
       home.packages = [
         piPkg
       ];
-      # Declarative ~/.pi config on macOS and Linux
-      xdg.configFile."pi/agent/models.json".source = ../.configs/ollama-models.json;
-      xdg.configFile."pi/agent/settings.json".source = ../.configs/ollama-settings.json;
     };
 
     nixos = {pkgs, config,...}: {
 
       services.ollama = {
         enable = true;
-        package = pkgs.ollama-cuda;
-        
-        #default
-        host = "127.0.0.1"; #could change for tailscale host
+        package = pkgs.ollama-vulkan;
+        user = "ollama";
+        group = "users";
+
+        loadModels = [
+          #"qwen3.6:35b"
+          "qwen3.6:27b-coding-mxfp8"
+          #"deepseek-v3:671b" #i'm afraid
+        ];
+
+        environmentVariables = {
+          OLLAMA_VULKAN = "1";
+          OLLAMA_KEEP_ALIVE = "0";
+          OLLAMA_MODELS = "/data/ai_models/ollama";
+          GGML_VK_VISIBLE_DEVICES = "0";
+        };
+
+        #default #eventually expose as tailscale/headscale app
+        host = "127.0.0.1"; 
         port = 11434;
+        #use both AMD and NVIDIA by choosing one backend per server
 
       };
     };

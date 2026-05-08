@@ -2,7 +2,8 @@
 {
  den.aspects.avanonyme = {
     includes = [
-	  den.provides.primary-user # handled by core admin ?
+			den.provides.define-user
+	  	den.provides.primary-user # handled by core admin ?
       (den.provides.user-shell "fish")
 			#den.provides.unfree
 
@@ -10,7 +11,7 @@
 
       den.aspects.zen-browser
       den.aspects.gaming
-			den.aspects.pi-agent
+			den.aspects.hermes-agent
     
     ];
     nixos ={lib, ...}: 
@@ -25,36 +26,53 @@
 			"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com"
 		];	
 		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
-		#fileSystems."/home/avanonyme/data" = {
-		#	device = "/data";
-		#	fsType = "none";
-		#	options = [ "bind" "x-systemd.after=zfs-mount.service" ];
 		};
-    };
+		darwin = {lib,...}:{
+	  #normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
+		#to disable as well in boreal.nix and gaming.nix
+    	nixpkgs.config.allowUnfree = true;
+		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
+		home-manager.useUserPackages = true; #pkgs are installed through nixos user
+
+    homebrew.casks = [
+        "vlc"
+				"gimp"
+				"vscodium"
+				"obsidian"
+				"bitwarden"
+      ];
+
+		};
+
 
     homeManager =
     { pkgs, user, ... }:
 		{
 			home.packages = with pkgs; [
-				bat #moder replacemement for cat
-				htop #resources monitoring
-				bitwarden-desktop
-				dunst #notif daemon
-				feh #image viewer
-				gh #github in the terminal
-				gimp #image editing
-				#davinci-resolve #video editing 
-				neovim
-				fastfetch #sys info
-				obsidian
-				transmission_4-qt #torrent client
-				qemu #virtualization
-				synergy #same keyboard for local network
-				tldr
-				unzip
-				tree #directory visualisation
-				vlc #media player
-				vscodium #code editor
+			]
+			++ lib.optionals stdenv.isLinux [
+					bat #moder replacemement for cat
+					htop #resources monitoring
+					bitwarden-desktop
+
+					gh #github in the terminal
+					#davinci-resolve #video editing 
+					neovim
+					fastfetch #sys info
+					obsidian
+
+					synergy #same keyboard for local network
+					tldr
+					unzip
+					tree #directory visualisation
+					vscodium #code editor
+
+					dunst #notif daemon
+					feh #image viewer
+					transmission_4-qt #torrent client
+					qemu #virtualization
+					gimp #image editing
+									vlc #media player
 
 			];
 

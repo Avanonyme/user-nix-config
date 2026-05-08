@@ -13,10 +13,5 @@
       security.rtkit.enable = true;
       powerManagement.enable = true;
     };
-    darwin =
-    { pkgs, ... }:
-    {
-      powerManagement.enable = true;
-    };
   };
 }

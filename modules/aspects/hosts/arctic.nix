@@ -3,6 +3,8 @@
 {
   den.aspects.arctic = {
      includes = [
+      <core/hostname>
+      <core/networking>
       <core/darwin>
       <core/dev-laptop>
       den.aspects.darwin-desktop
@@ -29,7 +31,7 @@
         };
       };
       environment.systemPackages = with pkgs; [
-        ghostty
+        iterm2
       ];
     };
     homeManager =

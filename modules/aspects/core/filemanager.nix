@@ -18,11 +18,10 @@
     };
 
     homeManager = {
-            #move to filesystem aspcct
-      services.udiskie = { 
+     services.udiskie = { 
         enable = true;
         automount = true;
-        notify = true;   # sends a dunst notification on plug (you already have dunst)
+        notify = true; 
       };
     };
   };

@@ -70,12 +70,7 @@
       ];
 
       environment.systemPackages = with pkgs; [
-        # Launchers
-        heroic
 
-        # Wine stack
-        wine64          # core Wine binary
-        winetricks      # helper scripts for Wine prefixes
       ];
     };
 

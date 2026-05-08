@@ -2,18 +2,20 @@
 let
 
   flake-file.inputs = {
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
     nix-darwin.url = "github:LnL7/nix-darwin";
     mac-app-util.url = "github:hraban/mac-app-util";
   };
 
-  core.darwin.darwin.imports = [
+  core.darwin.darwin.imports = [ #core is namespace; 1st darwin is aspect name; 2nd darwin is host system
+    inputs.determinate.darwinModules.default
     nix-darwin-pkgs
     darwin-cfg
   ];
 
   darwin-cfg = {
     # Determinate uses its own daemon to manage the Nix installation
-    nix.enable = false;
+    determinateNix.enable = true;
 
     system.defaults.trackpad.Clicking = true;
     system.defaults.trackpad.TrackpadThreeFingerDrag = true;

@@ -1,8 +1,11 @@
 { den, ... }:
 # gaming user
+  let 
+    username = "gamer";
+  in
 {
   # user aspect
-  den.aspects.gamer = {
+  den.aspects.${username} = {
     includes = [
       den.provides.define-user
       (den.provides.user-shell "fish")
@@ -11,7 +14,7 @@
 
     ];
     nixos = { ... }: {
-      users.users.gamer = {
+      users.users.${username} = {
         initialPassword = ""; # or use hashedPassword
       };
     };

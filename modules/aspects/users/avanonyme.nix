@@ -14,11 +14,12 @@
 			den.aspects.hermes-agent
     
     ];
-    nixos ={lib, ...}: 
+    nixos ={lib, pkgs, ...}: 
     {
 		#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
 		#to disable as well in boreal.nix and gaming.nix
-    	nixpkgs.config.allowUnfree = true;
+		#--> should we move this to homemanager ?
+    nixpkgs.config.allowUnfree = true;
 		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
 		home-manager.useUserPackages = true; #pkgs are installed through nixos user
 
@@ -26,6 +27,26 @@
 			"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com"
 		];	
 		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
+		
+		#niri+noctalia
+		gtk = {
+			enable = false; #noctalia handle gtk.css
+			iconTheme = {
+				name = "Tela-circle-green";
+				package = pkgs.tela-circle-icon-theme;
+			};
+		};
+		home.pointerCursor = {
+			name = "Bibata-Modern-Classic";
+			package = pkgs.bibata-cursors;
+			size = 24;
+			gtk.enable = true;
+		};
+		fonts.fontconfig.enable = true;
+		home.packages = with pkgs; [
+			geist-font 
+			nerd-fonts.geist-mono
+		];
 		};
 		darwin = {lib,...}:{
 	  #normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check

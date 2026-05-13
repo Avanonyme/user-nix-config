@@ -5,26 +5,25 @@
   flake-file.inputs.hermes = {
     url = "github:yzx9/hermes-agent/feat/home-manager";
   };
-
-  # nix-darwin PR #972 (services.ollama) is unmerged — managing ollama via launchd.agents instead
   den.aspects.hermes-agent = {
     homeManager = {pkgs, ...}: {
       imports = [ inputs.hermes.homeManagerModules.default ];
 
       programs.hermes-agent = {
         enable = true;
-        settings.model = "deepseek/deepseek-chat"; # deepseek-v4-flash public model id
+        settings.model = "deepseek/deepseek-v4-flash";
       };
 
       # Ollama: installed as package, service managed via launchd user agent
-      # Replace services.ollama (nix-darwin PR #972, still unmerged)
       home.packages = [ pkgs.ollama ];
 
       launchd.agents.ollama = {
         enable = true;
         config = {
           ProgramArguments = [
-            "${pkgs.ollama}/bin/ollama"
+            "${pkgs.ollama}/bin/ollama" 
+            # API call failed after 3 retries: HTTP 500: error starting runner: fork/exec /opt/homebrew/bin/ollama: no such file or directory 
+            #--> solved: imperative copy from actual emplacement  /etc/profiles/per-user/avanonyme/bin/ollama
             "serve"
           ];
           EnvironmentVariables = {

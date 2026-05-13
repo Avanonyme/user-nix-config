@@ -266,7 +266,7 @@
     "reverseScroll": false
   },
   "ui": {
-    "fontDefault": "Sans Serif",
+    "fontDefault": "Geist",
     "fontFixed": "monospace",
     "fontDefaultScale": 0.9,
     "fontFixedScale": 1,

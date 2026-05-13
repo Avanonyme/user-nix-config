@@ -4,6 +4,7 @@
   __findFile ? __findFile,
   den,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -17,4 +18,5 @@
   };
   # host<->user provides
   den.ctx.user.includes = [ den.provides.mutual-provider ];
+
 }

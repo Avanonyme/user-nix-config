@@ -33,7 +33,7 @@
 
       # Gamescope compositor
       programs.gamescope = {
-        enable = false;
+        enable = true;
         capSysNice = true;
       };
 

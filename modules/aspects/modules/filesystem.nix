@@ -126,9 +126,16 @@
         };
       };
     # MOUNT /mnt/data with the correct permission
-    fileSystems."/mnt/data".options = [ 
-      "uid=1000" "gid=100" "umask=007" "users" "exec"
+    fileSystems."/mnt/data" = {
+      device = "data";
+      fsType = "zfs";
+      options = ["zfsutil" "X-mount.mkdir"];
+    };
+
+    systemd.tmpfiles.rules= [
+      "d /mnt/data 0775 root users -" #type path mode owner group ,
     ];
+
     nix = {    
       # do garbage collection weekly to keep disk usage low
       gc = {

@@ -10,7 +10,8 @@
       den.aspects.darwin-desktop
       #den.aspects.darwin-filesystems #in disko-config.nix
     ];
-
+   # provides.to-users = [den.aspects.darwin-desktop];
+   #different issue than on boreal because darwin desktop does not provide homeManager module
 
     darwin =
     { pkgs, config, ... }:

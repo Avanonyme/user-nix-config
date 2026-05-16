@@ -4,14 +4,19 @@
 
     darwin = { pkgs, ... }: {
         homebrew.casks = [
-          #"hyprspace"#not a cask yet  https://hyprspace.net
+          #"hyprspace"#  https://hyprspace.net, cli: hyprspace init
+                     #  for custom config:
+                     # $ cp ./.config/hyprspace.toml ~/.config/hyprspace/config.toml
           "ghostty"
+          "raycast"# launcher
         ];
         homebrew.brews = [ 
           "node" 
           "python"
         ];
-        homebrew.taps = []; #github repo
+        homebrew.taps = [
+          "PeachlifeAB/tap"
+        ]; #github repo
 
     };
 

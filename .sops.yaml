@@ -1,0 +1,13 @@
+keys:
+  - &admin-avanonyme age1srkgyhzrp6n6g4383rwaqvnger6dqmzxthcfgpwwx6jmrapznpaqfxxz4n
+# i could add more keys here
+# e.g - $server_cool
+#run on remote host 
+# cat /etc/ssh/ssh_host_ed25519_key.pub | nix run  nixpkgs#ssh-to-age
+
+creation_rules:
+  - path_regex: modules/secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+     - age:
+       - *admin-avanonyme
+      #- *server_cool 

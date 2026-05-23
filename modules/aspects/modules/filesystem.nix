@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib,... }:
 {
   flake-file.inputs.disko = {
     url = "github:nix-community/disko";
@@ -12,7 +12,9 @@
       boot.supportedFilesystems = [ "zfs" ];
       boot.initrd.supportedFilesystems = [ "zfs" ];
       boot.zfs.extraPools = [ "data" ]; # import non-root ZFS pool at boot
+      
 
+      boot.zfs.forceImportRoot = true; #silences the warning: evaluation warning: `boot.zfs.forceImportRoot` is using the default value of `true`. It is highly recommended to set it to `false`, the new default from 26.11 on, to reduce the risk of data loss. Alternatively, you can silence this warning by explicitly setting it to `true`.
       disko.devices.disk.root.device = "/dev/sdb";
       disko.devices.disk.data1.device = "/dev/sda";
       disko.devices.disk.data2.device = "/dev/sdc";
@@ -129,7 +131,7 @@
     fileSystems."/mnt/data" = {
       device = "data";
       fsType = "zfs";
-      options = ["zfsutil" "X-mount.mkdir"];
+      options = ["zfsutil" "X-mount.mkdir" "uid=1000" "gid=100" "umask=007" "users" "exec"];
     };
 
     systemd.tmpfiles.rules= [

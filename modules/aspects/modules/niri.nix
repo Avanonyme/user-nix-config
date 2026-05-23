@@ -63,7 +63,7 @@
         slurp
         xwayland-satellite
         ghostty #terminal
-        swww
+        awww
         fuzzel #app launcher
       ];
 
@@ -71,7 +71,7 @@
 
     homeManager = {lib, pkgs, user, ... }: {
       #imports = [ inputs.niri.homeModules.niri ];
-      #home.file.".config/niri/config.kdl".source = ./config.kdl;
+      #home.file.".config/niri/config.kdl".source = ./../../.config/config.kdl;
       programs.niri = {
         settings = {
           # Input configuration
@@ -192,9 +192,8 @@
 
           # Animations
           animations = {
-            enable = false;
+            enable = true;
             "window-open" = {
-              "duration-ms" = 1000;
               "custom-shader" = ''
                 float hash(vec2 p) {
                     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -266,7 +265,6 @@
             };
 
             "window-close" = {
-              "duration-ms" = 1000;
               "custom-shader" = ''
                 float hash(vec2 p) {
                     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);

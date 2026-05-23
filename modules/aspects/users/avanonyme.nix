@@ -9,9 +9,12 @@
 
 			<core/admin>
 
+			den.aspects.noctalia-desktop
       den.aspects.zen-browser
       den.aspects.gaming
 			den.aspects.hermes-agent
+
+			den.aspects.gaming.provides.vr
     
     ];
     nixos ={lib, pkgs, ...}: 
@@ -28,25 +31,8 @@
 		];	
 		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
 		
-		#niri+noctalia
-		gtk = {
-			enable = false; #noctalia handle gtk.css
-			iconTheme = {
-				name = "Tela-circle-green";
-				package = pkgs.tela-circle-icon-theme;
-			};
-		};
-		home.pointerCursor = {
-			name = "Bibata-Modern-Classic";
-			package = pkgs.bibata-cursors;
-			size = 24;
-			gtk.enable = true;
-		};
 		fonts.fontconfig.enable = true;
-		home.packages = with pkgs; [
-			geist-font 
-			nerd-fonts.geist-mono
-		];
+
 		};
 		darwin = {lib,...}:{
 	  #normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
@@ -74,6 +60,7 @@
     homeManager =
     { pkgs, user, ... }:
 		{
+			
 			home.packages = with pkgs; [
 			]
 			++ lib.optionals stdenv.isLinux [
@@ -99,6 +86,10 @@
 					qemu #virtualization
 					gimp #image editing
 									vlc #media player
+
+					#fonts
+					geist-font 
+					nerd-fonts.geist-mono
 
 			];
 

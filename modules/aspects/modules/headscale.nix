@@ -1,4 +1,4 @@
-{ den, ... }:
+{ den, pkgs, config,... }:
 
     ### Headscale server — include on the NixOS host acting as the coordinator ###
     # Source: https://carlosvaz.com/posts/setting-up-headscale-on-nixos/
@@ -11,16 +11,27 @@ in
 {
   den.aspects.headscale = {
     
-    # Tailscale client is at core.networking
-    # After rebuild, run: tailscale up --login-server https://<headscaleDomain>
+    # current used Tailscale client is at core.networking
+    provides.client ={    
+      services.tailscale.enable =  true;
+          environment.systemPackages = with pkgs; [
+            tailscale
+          ];
+          #firewall config is per OS
+          #nixos
+          networking.firewall = {
+            # enable the firewall
+            enable = true;
 
-    # To create a namespace: headscale namespaces create <namespace_name>
-    # Register a node: headscale --namespace <namespace_name> nodes register --key <machine_key>
+            checkReversePath = "loose"; # See https://carlosvaz.com/posts/setting-up-headscale-on-nixos/
+            trustedInterfaces = [ "tailscale0" ]; # allow all traffic from the Tailscale interface
+            allowedUDPPorts = [ config.services.tailscale.port ];        # allow the Tailscale UDP port through the firewall
+            allowedTCPPorts = [ 22 ];  # let you SSH in over the public internet
 
-    # To create a user: headscale users create <name>
+          };
+    };
 
     provides.server = {
-      nixos = { pkgs, config, ... }: {
         services.headscale = {
           enable = true;
           address = "127.0.0.1";
@@ -57,7 +68,14 @@ in
         networking.firewall.allowedTCPPorts = [ 80 443 ];
 
         environment.systemPackages = [ config.services.headscale.package ];
-      };
     };
+        
+    # After rebuild, run: tailscale up --login-server https://<headscaleDomain>
+
+    # To create a namespace: headscale namespaces create <namespace_name>
+    # Register a node: headscale --namespace <namespace_name> nodes register --key <machine_key>
+
+    # To create a user: headscale users create <name>
+
   };
 }

@@ -10,13 +10,18 @@ den.hosts.x86_64-linux.boreal= {
     users.avanonyme = {};
 
     users.gamer = {}; #gaming user
+
+    #microvm.guest = [den.hosts.x86_64-linux.igloo];
  }; 
 
 # arctic Macos
 den.hosts.aarch64-darwin.arctic.users.avanonyme = { };
 
 #vm host
-den.hosts.x86_64-linux.igloo.users.avanonyme = { };
+den.hosts.x86_64-linux.igloo = {
+   users.avanonyme = { };
+   intoAttr = [];
+ };
 #den.hosts.aarch64-darwin.igloo.users.avanonyme = { };
 }
 

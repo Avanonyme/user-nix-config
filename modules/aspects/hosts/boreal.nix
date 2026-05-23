@@ -72,12 +72,15 @@
   
       ];
 
+      home-manager.backupFileExtension = "backup";
+
     };
 
     # host provides default home environment for its users
     homeManager =
     { pkgs, ... }:
     {
+      
       home.packages = with pkgs;[ 
         ghostty
       ];

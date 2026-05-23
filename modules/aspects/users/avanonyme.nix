@@ -56,12 +56,17 @@
 		home-manager.useUserPackages = true; #pkgs are installed through nixos user
 
     homebrew.casks = [
-        "vlc"
+        "vlc" 
 				"gimp"
 				"vscodium"
 				"obsidian"
 				"bitwarden"
+				"signal"
+				"transmission"
+				"mullvad-vpn"
       ];
+		homebrew.taps = [
+		];
 
 		};
 

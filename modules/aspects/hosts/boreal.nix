@@ -14,11 +14,11 @@
           den.aspects.noctalia-desktop
 
         ];
-    provides.to-users = {users, ...}: {includes = [den.aspects.noctalia-desktop];};
+    #provides.to-users = {users, ...}: {includes = [den.aspects.noctalia-desktop];};
     # fixes niri module keybinding issues for user on boreal; see https://github.com/denful/den/discussions/360
     # likely the same thing is happening on arctic, home module is not provided
 
-    #alternatively, add includes den.batteries.host-aspects, to myuser.nix
+    #alternatively, add includes den.batteries.host-aspects, to user.nix
     #https://den.denful.dev/reference/batteries/#den_forward
 
     # host NixOS configuration

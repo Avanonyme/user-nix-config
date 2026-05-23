@@ -8,7 +8,8 @@
                      #  for custom config:
                      # $ cp ./.config/hyprspace.toml ~/.config/hyprspace/config.toml
           "ghostty"
-          "raycast"# launcher
+          "alfred" #application launcher
+
         ];
         homebrew.brews = [ 
           "node" 

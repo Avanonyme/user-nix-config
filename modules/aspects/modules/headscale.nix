@@ -4,8 +4,7 @@
     # Source: https://carlosvaz.com/posts/setting-up-headscale-on-nixos/
 
 let
-  baseDomain = "rustedbonghomeserver.mooo.com"; 
-  headscaleDomain = "head.${baseDomain}";# TODO: set your domain # admin console
+  domain = "rustedbonghomeserver.mooo.com"; 
   headscalePort = 8080;
 in
 {
@@ -39,17 +38,18 @@ in
           settings = {
             logtail.enabled = false;
             dns = { 
-              base_domain = "tail.${baseDomain}"; # or {baseDomain = "example.com";}
+              base_domain = "tail.${domain}"; # or {baseDomain = "example.com";}
               nameservers.global = [ "1.1.1.1" "9.9.9.9" ];
+              override_local_dns = false;
             };
-            server_url = "https://${headscaleDomain}";
+            server_url = "https://headscale.${domain}";
 
           };
         };
 
         services.nginx = {
           enable = true;
-          virtualHosts.${headscaleDomain} = {
+          virtualHosts."headscale.${domain}" = {
             forceSSL = true;
             enableACME = true;
             locations."/" = {

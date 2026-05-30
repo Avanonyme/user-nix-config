@@ -32,7 +32,6 @@
       ];
       services.displayManager.gdm = {
         enable = true;
-        wayland = true;
       }; 
       #XDG desktop Portal
       xdg.portal = {

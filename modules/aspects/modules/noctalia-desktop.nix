@@ -13,13 +13,14 @@
     nixos = { host, pkgs, ... }: {
       imports = [ inputs.noctalia.nixosModules.default ];
 
-      # Enable Noctalia shell systemd service
-      services.noctalia-shell = {
-        enable = true;
-      };
+      # DEPRECATED Enable Noctalia shell systemd service
+      #services.noctalia-shell = {
+      #  enable = true;
+      #};
 
       # Additional packages that complement Noctalia
       environment.systemPackages = with pkgs; [
+        inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
         brightnessctl
         playerctl
         pamixer

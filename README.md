@@ -16,6 +16,8 @@ nix flake update den
 nix flake check
 ```
 
+- Use `nix run .#write-flake` to regenerate flake.nix
+
 - Edit [modules/hosts.nix](modules/hosts.nix)
 
 Install with nixos-anywhere

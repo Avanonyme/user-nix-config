@@ -30,6 +30,10 @@
     };
     import-tree.url = "github:vic/import-tree";
     mac-app-util.url = "github:hraban/mac-app-util";
+    microvm = {
+      url = "github:astro/microvm.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,10 +46,6 @@
     nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    reticulum-flake = {
-      url = "git+https://codeberg.org/adingbatponder/reticulum_nixos_flake.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {

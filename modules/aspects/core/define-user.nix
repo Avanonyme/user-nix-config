@@ -29,7 +29,7 @@ let
         name = user.userName;
         home = homeDir host user;
         isNormalUser = true;
-        extraGroups = ["users"];
+        extraGroups = ["users"]; #we'll use nest.denful.dev eventually
       };
       darwin.users.users.${user.userName} = {
         name = user.userName;

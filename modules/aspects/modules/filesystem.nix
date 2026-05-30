@@ -11,7 +11,7 @@
 
       boot.supportedFilesystems = [ "zfs" ];
       boot.initrd.supportedFilesystems = [ "zfs" ];
-      boot.zfs.extraPools = [ "data" ]; # import non-root ZFS pool at boot
+      #boot.zfs.extraPools = [ "data" ]; # import non-root ZFS pool at boot
       
 
       boot.zfs.forceImportRoot = true; #silences the warning: evaluation warning: `boot.zfs.forceImportRoot` is using the default value of `true`. It is highly recommended to set it to `false`, the new default from 26.11 on, to reduce the risk of data loss. Alternatively, you can silence this warning by explicitly setting it to `true`.
@@ -131,12 +131,15 @@
     fileSystems."/mnt/data" = {
       device = "data";
       fsType = "zfs";
-      options = ["zfsutil" "X-mount.mkdir" "uid=1000" "gid=100" "umask=007" "users" "exec"];
+      options = ["zfsutil" "nofail"];
+    };
+    systemd.services.fix-data-perms = {
+      wantedBy = [ "multi-user.target" ];
+      after = [ "zfs-mount.service" "data.mount" ];
+      serviceConfig.Type = "oneshot";
+      script = "chown -R 1000:100 /mnt/data && chmod -R 777 /mnt/data";
     };
 
-    systemd.tmpfiles.rules= [
-      "d /mnt/data 0775 root users -" #type path mode owner group ,
-    ];
 
     nix = {    
       # do garbage collection weekly to keep disk usage low

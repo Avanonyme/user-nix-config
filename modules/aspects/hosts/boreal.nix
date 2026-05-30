@@ -72,7 +72,7 @@
   
       ];
 
-      home-manager.backupFileExtension = "backup";
+      home-manager.backupFileExtension = "hm.OLD";
 
     };
 
@@ -84,6 +84,8 @@
       home.packages = with pkgs;[ 
         ghostty
       ];
+
+
     };
   };
 }

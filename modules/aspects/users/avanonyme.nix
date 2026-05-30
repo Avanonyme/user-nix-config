@@ -12,7 +12,6 @@
 			#den.aspects.noctalia-desktop
       den.aspects.zen-browser
       den.aspects.gaming
-			den.aspects.hermes-agent
 
 			den.aspects.gaming.provides.vr
     

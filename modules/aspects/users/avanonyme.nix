@@ -9,7 +9,7 @@
 
 			<core/admin>
 
-			den.aspects.noctalia-desktop
+			#den.aspects.noctalia-desktop
       den.aspects.zen-browser
       den.aspects.gaming
 			den.aspects.hermes-agent
@@ -19,6 +19,7 @@
     ];
     nixos ={lib, pkgs, ...}: 
     {
+		includes = [den.aspects.boreal.provides.to-users];
 		#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
 		#to disable as well in boreal.nix and gaming.nix
 		#--> should we move this to homemanager ?
@@ -37,7 +38,7 @@
 		darwin = {lib,...}:{
 	  #normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
 		#to disable as well in boreal.nix and gaming.nix
-    	nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.allowUnfree = true;
 		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
 		home-manager.useUserPackages = true; #pkgs are installed through nixos user
 

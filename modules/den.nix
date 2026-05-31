@@ -24,11 +24,5 @@ den.hosts.x86_64-linux.igloo = {
  };
 #den.hosts.aarch64-darwin.igloo.users.avanonyme = { };
 
-den.hosts.x86_64-linux.runnable-microvm = {
-    intoAttr = [
-        "microvms"
-        "runnable-microvm"
-    ]; # pkgs; not intended to be used from nixosConfigurations
-};
 }
 

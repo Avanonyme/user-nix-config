@@ -8,15 +8,12 @@
   den.aspects.noctalia-desktop = {
     includes = [
       den.aspects.niri
+      den.aspects.niri._.niri_settings_1
+
       ];
 
     nixos = { host, pkgs, ... }: {
       imports = [ inputs.noctalia.nixosModules.default ];
-
-      # DEPRECATED Enable Noctalia shell systemd service
-      #services.noctalia-shell = {
-      #  enable = true;
-      #};
 
       # Additional packages that complement Noctalia
       environment.systemPackages = with pkgs; [

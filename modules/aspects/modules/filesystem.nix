@@ -133,6 +133,7 @@
       fsType = "zfs";
       options = ["zfsutil" "nofail"];
     };
+    #moved to boreal.nix
     systemd.services.fix-data-perms = {
       wantedBy = [ "multi-user.target" ];
       after = [ "zfs-mount.service" "data.mount" ];

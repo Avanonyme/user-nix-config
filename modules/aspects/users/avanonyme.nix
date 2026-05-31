@@ -1,66 +1,70 @@
-{den, __findFile, ...}:
+{den, __findFile, config, ...}:
 {
- den.aspects.avanonyme = {
-    includes = [
-			den.provides.define-user
-	  	den.provides.primary-user # handled by core admin ?
-      (den.provides.user-shell "fish")
-			#den.provides.unfree
+	den.aspects.avanonyme = {
+		includes = [
+			#core
+			den.provides.primary-user
 
-			<core/admin>
+			#user-env
+			(den.provides.user-shell "fish") #or fish
+			den.aspects.noctalia-desktop
 
-			#den.aspects.noctalia-desktop
-      den.aspects.zen-browser
-      den.aspects.gaming
+			#apps
+			den.aspects.zen-browser
+			den.aspects.gaming
 
+			#testing
 			den.aspects.gaming.provides.vr
-    
-    ];
-    nixos ={lib, pkgs, ...}: 
-    {
-		includes = [den.aspects.boreal.provides.to-users];
-		#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
-		#to disable as well in boreal.nix and gaming.nix
-		#--> should we move this to homemanager ?
-    nixpkgs.config.allowUnfree = true;
-		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
-		home-manager.useUserPackages = true; #pkgs are installed through nixos user
-
-		users.users.avanonyme.openssh.authorizedKeys.keys = [
-			"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com"
-		];	
-		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
 		
-		fonts.fontconfig.enable = true;
+		];
+		config.allowUnfree = true;
+
+		nixos ={lib, pkgs, ...}: 
+		{
+
+			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
+			home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
+			home-manager.useUserPackages = true; #pkgs are installed through nixos user
+
+			users.users.avanonyme.openssh.authorizedKeys.keys = [
+				"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com"
+			];	
+			users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
+			
+			fonts.fontconfig.enable = true;
+
+			services.mullvad-vpn = {
+				enable = true;
+				package = pkgs.mullvad-vpn;
+			};
 
 		};
 		darwin = {lib,...}:{
-	  #normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
-		#to disable as well in boreal.nix and gaming.nix
-    nixpkgs.config.allowUnfree = true;
-		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
-		home-manager.useUserPackages = true; #pkgs are installed through nixos user
+			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
+			#to disable as well in boreal.nix and gaming.nix
+			nixpkgs.config.allowUnfree = true;
+			home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
+			home-manager.useUserPackages = true; #pkgs are installed through nixos user
 
-    homebrew.casks = [
-        "vlc" 
-				"gimp"
-				"vscodium"
-				"obsidian"
-				"bitwarden"
-				"signal"
-				"transmission"
-				"mullvad-vpn"
-      ];
-		homebrew.taps = [
-		];
+			homebrew.casks = [
+					"vlc" 
+					"gimp"
+					"vscodium"
+					"obsidian"
+					"bitwarden"
+					"signal"
+					"transmission"
+					"mullvad-vpn"
+				];
+			homebrew.taps = [
+			];
 
 		};
 
 
-    homeManager =
-    { pkgs, user, ... }:
-		{
-			
+		homeManager =
+		{ pkgs, user, ... }:{
+				
 			home.packages = with pkgs; [
 			]
 			++ lib.optionals stdenv.isLinux [
@@ -93,25 +97,21 @@
 
 			];
 
-	programs.git = {
-	 enable = true;
-	 settings = {
-	  user.Name = "avanonyme";
-	  user.Email = "avanix26@protonmail.com";
-	  extraConfig = {
-	    init.defaultBranch = "main";
-	    safe.directory = [
-				"/home/avanonyme/.dotfiles"
-				"/home/avanonyme/vault"
-			];
-	  };
-	 };
+			programs.git = {
+
+			enable = true;
+			settings = {
+				user.Name = "avanonyme";
+				user.Email = "avanix26@protonmail.com";
+					extraConfig = {
+						init.defaultBranch = "main";
+						safe.directory = [
+								"/home/avanonyme/.dotfiles"
+								"/home/avanonyme/vault"
+						];
+					};
+				};
+			};
+		};
 	};
-
-				# user can provide NixOS configurations
-				# to any host it is included on
-				# nixos = { pkgs, ... }: { };
-
-     };
-   };
 }

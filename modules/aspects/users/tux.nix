@@ -1,7 +1,7 @@
-{ den, ... }:
+{ den, config, ... }:
 # gaming user
   let 
-    username = "gamer";
+    username = "tux";
   in
 {
   # user aspect
@@ -11,7 +11,6 @@
       (den.provides.user-shell "fish")
 
       den.aspects.noctalia-desktop
-      den.aspects.gaming
       den.aspects.zen-browser
 
     ];
@@ -39,5 +38,8 @@
 
       };
 
+    # user can provide NixOS configurations
+    # to any host it is included on
+    # nixos = { pkgs, ... }: { };
   };
 }

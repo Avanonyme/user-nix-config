@@ -7,6 +7,7 @@
 
     config.allowUnfree = true;
 
+
     nixos = {pkgs, host, ... }: {
 
       # Steam with Proton support
@@ -96,7 +97,7 @@
     };
 
     provides.vr = {pkgs, config, ... }:{
-    #https://www.reddit.com/r/NixOS/comments/1re37ky/vr_on_nixos/
+      #https://www.reddit.com/r/NixOS/comments/1re37ky/vr_on_nixos/
       services.monado.enable = true;
       services.monado.defaultRuntime = true;
       services.monado.package =
@@ -107,10 +108,10 @@
               domain = "gitlab.freedesktop.org";
               owner = "thaytan";
               repo = "monado";
-    # here you need go to gitlab for this and find most suitable branch for your headset and replace string below
-    # or remove whole package override
-    #          rev = "dev-wmr-HP-G2-tunnelled-controller";
-    #          hash = "sha256-bZBNYKJEegJgm/sDPYsxNCilu8s2ObCGcXAmfrgrmsQ=";
+        # here you need go to gitlab for this and find most suitable branch for your headset and replace string below
+        # or remove whole package override
+        #          rev = "dev-wmr-HP-G2-tunnelled-controller";
+        #          hash = "sha256-bZBNYKJEegJgm/sDPYsxNCilu8s2ObCGcXAmfrgrmsQ=";
             };
 
             patches = [ ];
@@ -131,10 +132,10 @@
           export PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES=1
         '';
       };
-    # kernel patch for async re projection
-    # only works on AMD videocards
-    # can be removed if you don't want to recompile your kernel
-      boot.kernelPatches = [
+      # kernel patch for async re projection
+      # only works on AMD videocards
+      # can be removed if you don't want to recompile your kernel
+        boot.kernelPatches = [
         {
           name = "amdgpu-ignore-ctx-privileges";
           patch = pkgs.fetchpatch {
@@ -165,7 +166,7 @@
       };
 
       environment.systemPackages = [
-    # provides hello_xr for testing VR
+      # provides hello_xr for testing VR
         pkgs.openxr-loader
       ];
     };

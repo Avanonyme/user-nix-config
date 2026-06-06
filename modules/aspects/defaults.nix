@@ -15,8 +15,25 @@
     nixos.system.stateVersion = "25.05";
     homeManager.home.stateVersion = "25.05";
 
+    includes = [
+      den.batteries.define-user
+      den.batteries.hostname
+    ];
+
   };
-  # host<->user provides
-  den.ctx.user.includes = [ den.provides.mutual-provider ];
+
+    # Default user includes — per-user data emission + entity-named aspect auto-include
+  den.schema.user.includes = [
+    #emits resolved-users entry 
+    #den.aspects.resolved-user-emitter #error: attribute 'resolved-user-emitter' missing
+
+    # Include den.aspects.<hostname>.<username> if it exists
+    (den.lib.policy.mkPolicy "user-aspect-auto-include" (
+      { host, user, ... }:
+      lib.optional (den.aspects ? ${host.name} && den.aspects.${host.name} ? ${user.name}) (
+        den.lib.policy.include den.aspects.${host.name}.${user.name}
+      )
+    ))
+  ];
 
 }

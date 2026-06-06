@@ -4,8 +4,7 @@
     # Source: https://carlosvaz.com/posts/setting-up-headscale-on-nixos/
 
 let
-  baseDomain = "rustedbonghomeserver.mooo.com"; 
-  headscaleDomain = "head.${baseDomain}";# TODO: set your domain # admin console
+  domain = "rustedbonghomeserver.mooo.com"; 
   headscalePort = 8080;
 in
 {

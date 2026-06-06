@@ -15,6 +15,7 @@
 			den.aspects.AI
 			den.aspects.stylix
 
+			#testing
 			den.aspects.gaming.provides.vr
 
 			den.aspects.boreal.provides.to-users
@@ -33,15 +34,35 @@
 		];	
 		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
 		
-		fonts.fontconfig.enable = true;
+		];
+		config.allowUnfree = true;
+
+		nixos ={lib, pkgs, ...}: 
+		{
+
+			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
+			home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
+			home-manager.useUserPackages = true; #pkgs are installed through nixos user
+
+			users.users.avanonyme.openssh.authorizedKeys.keys = [
+				"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com"
+			];	
+			users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
+			
+			fonts.fontconfig.enable = true;
+
+			services.mullvad-vpn = {
+				enable = true;
+				package = pkgs.mullvad-vpn;
+			};
 
 		};
 		darwin = {lib,...}:{
-	  #normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
-		#to disable as well in boreal.nix and gaming.nix
-    nixpkgs.config.allowUnfree = true;
-		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
-		home-manager.useUserPackages = true; #pkgs are installed through nixos user
+			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
+			#to disable as well in boreal.nix and gaming.nix
+			nixpkgs.config.allowUnfree = true;
+			home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
+			home-manager.useUserPackages = true; #pkgs are installed through nixos user
 
     homebrew.casks = [
         "vlc" 
@@ -96,25 +117,21 @@
 
 			];
 
-	programs.git = {
-	 enable = true;
-	 settings = {
-	  user.Name = "avanonyme";
-	  user.Email = "avanix26@protonmail.com";
-	  extraConfig = {
-	    init.defaultBranch = "main";
-	    safe.directory = [
-				"/home/avanonyme/.dotfiles"
-				"/home/avanonyme/vault"
-			];
-	  };
-	 };
+			programs.git = {
+
+			enable = true;
+			settings = {
+				user.Name = "avanonyme";
+				user.Email = "avanix26@protonmail.com";
+					extraConfig = {
+						init.defaultBranch = "main";
+						safe.directory = [
+								"/home/avanonyme/.dotfiles"
+								"/home/avanonyme/vault"
+						];
+					};
+				};
+			};
+		};
 	};
-
-				# user can provide NixOS configurations
-				# to any host it is included on
-				# nixos = { pkgs, ... }: { };
-
-     };
-   };
 }

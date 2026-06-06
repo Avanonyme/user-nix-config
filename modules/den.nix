@@ -1,5 +1,4 @@
-{ den, ... }:
-{
+{den,...}:{
 
 # meta-config for all users
 den.schema.user = { lib,...}: {
@@ -29,7 +28,7 @@ den.hosts.aarch64-darwin.arctic = {
 #vm host
 den.hosts.x86_64-linux.igloo = {
    users.avanonyme = { };
-   intoAttr = [];
+   intoAttr = [];  # dont produce Guest nixosConfiguration at flake output
  };
  #vm package
 den.hosts.x86_64-linux.igloo-runner = {
@@ -42,21 +41,3 @@ den.hosts.x86_64-linux.igloo-runner.users.avanonyme = {}; #admin
 
 }
 
-/*   hm-aspect-deprecated = ''
-    NOTICE: den.provides.home-manager aspect is not used anymore.
-    See https://den.oeiuwq.com/guides/home-manager/
-
-    Since den.ctx.hm-host requires least one user with homeManager class,
-    Home Manager is now enabled via options.
-
-    For all users unless they set a value:
-
-       den.schema.user.classes = lib.mkDefault [ "homeManager" ];
-
-    On specific users:
-
-       den.hosts.x86_64-linux.igloo.users.tux.classes = [ "homeManager" ];
-
-    For attaching aspects to home-manager enabled hosts.
-  '';
- */

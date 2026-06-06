@@ -11,7 +11,6 @@
           den.aspects.boreal_filesystems
           den.aspects.headscale._.server
 
-          den.aspects.noctalia-desktop
 
         ];
     provides.to-users = {includes = [den.aspects.noctalia-desktop];};
@@ -72,7 +71,7 @@
   
       ];
 
-      home-manager.backupFileExtension = "backup";
+      home-manager.backupFileExtension = "hm.OLD";
 
     };
 
@@ -84,6 +83,8 @@
       home.packages = with pkgs;[ 
         ghostty
       ];
+
+
     };
   };
 }

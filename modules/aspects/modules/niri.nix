@@ -70,7 +70,7 @@
     };
 
     homeManager = {lib, pkgs, user, ... }: {
-      #imports = [ inputs.niri.homeModules.niri ];
+      imports = [ inputs.niri.homeModules.niri ];
       #home.file.".config/niri/config.kdl".source = ./../../.config/config.kdl;
       programs.niri = {
         settings = {

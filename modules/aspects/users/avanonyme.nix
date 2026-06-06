@@ -1,25 +1,26 @@
-{den, __findFile, ...}:
+{den, inputs, __findFile, ...}:
 {
  den.aspects.avanonyme = {
     includes = [
 			den.provides.define-user
-	  	den.provides.primary-user # handled by core admin ?
+	  	den.provides.primary-user 
       (den.provides.user-shell "fish")
 			#den.provides.unfree
 
-			<core/admin>
+			#<core/admin> #handled by primary-user
 
 			#den.aspects.noctalia-desktop
       den.aspects.zen-browser
       den.aspects.gaming
-			den.aspects.hermes-agent
+			den.aspects.AI
+			den.aspects.stylix
 
 			den.aspects.gaming.provides.vr
-    
+
+			den.aspects.boreal.provides.to-users
     ];
     nixos ={lib, pkgs, ...}: 
     {
-		includes = [den.aspects.boreal.provides.to-users];
 		#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
 		#to disable as well in boreal.nix and gaming.nix
 		#--> should we move this to homemanager ?
@@ -46,11 +47,11 @@
         "vlc" 
 				"gimp"
 				"vscodium"
-				"obsidian"
 				"bitwarden"
 				"signal"
 				"transmission"
 				"mullvad-vpn"
+
       ];
 		homebrew.taps = [
 		];
@@ -61,7 +62,8 @@
     homeManager =
     { pkgs, user, ... }:
 		{
-			
+			#nix.settings.builders = "ssh://avanonyme@100.x.y.z x86_64-linux - - - - -";
+
 			home.packages = with pkgs; [
 			]
 			++ lib.optionals stdenv.isLinux [

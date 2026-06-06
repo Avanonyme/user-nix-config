@@ -1,35 +1,63 @@
-{den, inputs, pkgs, ...}:
-{
-  # hermes-agent: pulling the per-user HM module since upstream only has a NixOS module
-  # PR: https://github.com/NousResearch/hermes-agent/pull/9087 (unmerged — pinned to feature branch)
-  flake-file.inputs.hermes = {
-    url = "github:yzx9/hermes-agent/feat/home-manager";
+{ den, pkgs, lib, config, inputs, ... }:
+
+let
+  aiConfig = {
+    dataDir = "/data/ai_models";
+    ollamaHost = "127.0.0.1";
+    ollamaPort = 11434;
   };
-  den.aspects.hermes-agent = {
-    homeManager = {pkgs, ...}: {
+
+  ollamaModels = [ "gemma4:e4b" "qwen3.6:27b" "nomic-embed-text" ];
+
+in
+{
+  flake-file.inputs = {
+    hermes = {
+      url = "github:yzx9/hermes-agent/feat/home-manager";
+    };
+  };
+
+  den.aspects.AI = {
+    includes = [
+      den.provides.hermes
+      den.provides.obsidian
+    ];
+  };
+
+  den.provides.hermes = {
+
+    homeManager = { pkgs, config, lib, ... }: {
       imports = [ inputs.hermes.homeManagerModules.default ];
 
       programs.hermes-agent = {
         enable = true;
-        settings.model = "deepseek/deepseek-v4-flash";
+        settings.model = lib.mkDefault "deepseek/deepseek-v4-flash";
+        settings.models = {
+          "deepseek/deepseek-v4-flash" = {
+            provider = "deepseek";
+            apiKeyEnv = "DEEPSEEK_API_KEY";
+          };
+          "deepseek/deepseek-v4-pro" = {
+            provider = "deepseek";
+            apiKeyEnv = "DEEPSEEK_API_KEY";
+          };
+          "ollama/qwen3.6" = {
+            provider = "ollama";
+            baseUrl = "http://${aiConfig.ollamaHost}:${toString aiConfig.ollamaPort}/v1";
+          };
+        };
       };
 
-      # Ollama: installed as package, service managed via launchd user agent
-      home.packages = [ pkgs.ollama ];
+      home.packages = with pkgs; [ ollama ];
 
       launchd.agents.ollama = {
         enable = true;
         config = {
-          ProgramArguments = [
-            "${pkgs.ollama}/bin/ollama" 
-            # API call failed after 3 retries: HTTP 500: error starting runner: fork/exec /opt/homebrew/bin/ollama: no such file or directory 
-            #--> solved: imperative copy from actual emplacement  /etc/profiles/per-user/avanonyme/bin/ollama
-            "serve"
-          ];
+          ProgramArguments = [ "${pkgs.ollama}/bin/ollama" "serve" ];
           EnvironmentVariables = {
             OLLAMA_KEEP_ALIVE = "0";
-            OLLAMA_MODELS = "/data/ai_models/ollama";
-            OLLAMA_HOST = "127.0.0.1:11434";
+            OLLAMA_MODELS = aiConfig.dataDir + "/ollama";
+            OLLAMA_HOST = "${aiConfig.ollamaHost}:${toString aiConfig.ollamaPort}";
           };
           RunAtLoad = true;
           KeepAlive = false;
@@ -37,6 +65,20 @@
           StandardErrorPath = "/tmp/ollama.err";
         };
       };
+
+      home.activation.ollamaPull = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        for model in ${lib.concatStringsSep " " ollamaModels}; do
+          $DRY_RUN_CMD ${pkgs.ollama}/bin/ollama pull "$model" 2>/dev/null || true
+        done
+      '';
+    };
+  };
+
+  den.provides.obsidian = {
+    darwin = { ... }: { homebrew.casks = [ "obsidian" ]; };
+    homeManager = { pkgs, ... }: { 
+      home.packages = with pkgs; []
+       ++ lib.optionals stdenv.isLinux [ obsidian ]; 
     };
   };
 }

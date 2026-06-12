@@ -5,6 +5,7 @@
 
 let
   domain = "rustedbonghomeserver.mooo.com"; 
+  headscaleDomain = "head.${domain}"
   headscalePort = 8080;
 in
 {
@@ -39,7 +40,7 @@ in
               settings = {
                 logtail.enabled = false;
                 dns = { 
-                  base_domain = "tail.${baseDomain}"; # or {baseDomain = "example.com";}
+                  base_domain = "${domain}"; # or {baseDomain = "example.com";}
                   nameservers.global = [ "1.1.1.1" "9.9.9.9" ];
                 };
                 server_url = "https://${headscaleDomain}";

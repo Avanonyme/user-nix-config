@@ -64,6 +64,10 @@
 			home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
 			home-manager.useUserPackages = true; #pkgs are installed through nixos user
 
+	homebrew.brews = [
+		"calibre"
+
+	];
     homebrew.casks = [
         "vlc" 
 				"gimp"
@@ -72,7 +76,7 @@
 				"signal"
 				"transmission"
 				"mullvad-vpn"
-
+				"brave-browser"
       ];
 		homebrew.taps = [
 		];

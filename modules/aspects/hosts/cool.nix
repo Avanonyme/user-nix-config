@@ -44,7 +44,7 @@
         fsType = "ext4";
       };
 
-            boot.loader.grub = {
+      boot.loader.grub = {
         enable = true;
         devices = [ "nodev" ]; # EFI-only install; disko only auto-adds devices for EF02 (BIOS boot) partitions
         efiSupport = true;

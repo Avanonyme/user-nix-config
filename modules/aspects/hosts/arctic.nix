@@ -7,6 +7,7 @@
       <core/darwin>
       <core/dev-laptop>
       den.aspects.darwin-desktop
+      den.aspects.microvm
       den.aspects.headscale._.client
     ];
 

@@ -11,16 +11,11 @@
           den.aspects.boreal_filesystems
           den.aspects.headscale._.client # server lives on cool — boreal can't do inbound/ACME (Videotron router)
           den.aspects.sops
-          den.aspects.microvm-net # bridge+NAT for microvm guests
+          den.aspects.microvm
 
 
         ];
     provides.to-users = {includes = [den.aspects.noctalia-desktop];};
-    # fixes niri module keybinding issues for user on boreal; see https://github.com/denful/den/discussions/360
-    # likely the same thing is happening on arctic, home module is not provided
-
-    #alternatively, add includes den.batteries.host-aspects, to user.nix
-    #https://den.denful.dev/reference/batteries/#den_forward
 
     # host NixOS configuration
     nixos =
@@ -35,20 +30,6 @@
         efiInstallAsRemovable = true;
       };
       
-      #systemd boot
-      #boot.loader.grub.enable = false;
-      #boot.loader.systemd-boot.enable = true;
-      #boot.loader.efi.canTouchEfiVariables = true;
-      
-      # Set static ipv4 address
-      #networking.interfaces.eth0.ipv4.addresses = [
-      #{
-      #  address = "175.142.7.2";
-      #  prefixLength = 24;
-      #}
-      #];
-      #networking.defaultGateway = "175.142.7.1";
-      #networking.nameservers = ["175.142.7.1"];
       networking.hostId = "002bf327"; # required by ZFS — generate with: head -c4 /dev/urandom | od -A none -t x4 | tr -d ' '
 
       # Set your time zone.

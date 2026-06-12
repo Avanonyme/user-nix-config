@@ -10,7 +10,7 @@
 
 			#<core/admin> #handled by primary-user
 
-			#den.aspects.noctalia-desktop
+			den.aspects.noctalia-desktop
       den.aspects.zen-browser
       den.aspects.gaming
 			den.aspects.AI
@@ -46,8 +46,8 @@
 			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
 			#to disable as well in boreal.nix and gaming.nix
 			nixpkgs.config.allowUnfree = true;
-			home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
-			home-manager.useUserPackages = true; #pkgs are installed through nixos user
+			#home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
+			#home-manager.useUserPackages = true; #pkgs are installed through nixos user
 
 	homebrew.brews = [
 		"calibre"

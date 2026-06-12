@@ -33,7 +33,7 @@ in
     includes = [den.aspects.sops];
 
     nixos = {host, user, config, ...}:{
-      imports = [inputs.hermes-agent.nixosModules.default]; #or imports?
+      imports = [inputs.hermes-agent.nixosModules.default]; 
       
       # for full options see https://hermes-agent.nousresearch.com/docs/getting-started/nix-setup
 
@@ -49,6 +49,10 @@ in
           "deepseek/deepseek-v4-pro" = {
             provider = "deepseek";
             apiKeyEnv = "DEEPSEEK_API_KEY";
+          };
+          "deepseek/fable-5" = {
+            provider = "anthropic";
+            apiKeyEnv = "ANTHROPIC_API_KEY";
           };
           "ollama/qwen3.6:27b" = {
             provider = "ollama";

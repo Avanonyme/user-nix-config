@@ -9,15 +9,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-#Activation — import microvm integration as a top-level module
-  imports = [
-    # allows the creation of microvm.guests in host 
-    (import "${inputs.den}/templates/microvm/modules/microvm-integration.nix")
+  #Activation — import microvm integration
+  den.aspects.microvm = {...}: {
+    imports = [
+      # allows the creation of microvm.guests in host 
+      (import "${inputs.den}/templates/microvm/modules/microvm-integration.nix")
 
-    # expose declaredrunner for each hosts as flake output
-    (import "${inputs.den}/templates/microvm/modules/microvm-runners.nix") 
-  ];
-
+      # expose declaredrunner for each hosts as flake output
+      (import "${inputs.den}/templates/microvm/modules/microvm-runners.nix") 
+    ];
+    includes = [den.aspects.microvm-net];
+  };
 # Host-side networking for VM connectivity, as a den aspect (NixOS options can't
 # live at the flake-module top level). Include den.aspects.microvm-net in the vm host.
 # See https://microvm-nix.github.io/microvm.nix/advanced-network.html

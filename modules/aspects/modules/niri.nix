@@ -1,4 +1,4 @@
-# Niri scrolling compositor with NVIDIA support and modern Wayland features
+# Niri scrolling compositor modern Wayland features
 # 
 # Source: https://github.com/sodiboo/niri-flake
 
@@ -76,6 +76,8 @@
       #home.file.".config/niri/config.kdl".source = ./../../.config/config.kdl;
       #programs.niri.cnnfig = ./../../.config/config.kdl;
       #https://github.com/sodiboo/niri-flake/blob/main/docs.md#programsnirisettings
+
+      #only nixos 
       programs.niri.settings = {
         #includes = lib.mkAfter [
         #  (../../.config/blur.kdl)
@@ -196,6 +198,7 @@
           {
           #argv = ["mako"]; #mako should spawn by itself
           command = [ "noctalia" ];
+          #TODO: greetd seems blocked
           }
         ];
 

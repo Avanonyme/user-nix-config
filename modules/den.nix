@@ -10,7 +10,7 @@ den.hosts.x86_64-linux.boreal= {
    users.avanonyme = {};
    users.gamer = {}; #gaming user
 
-    microvm.guests = [den.hosts.x86_64-linux.igloo]; #vm host; systemctl start microvm@igloo
+   microvm.guests = [den.hosts.x86_64-linux.igloo]; #vm host; systemctl start microvm@igloo
 
  };
 
@@ -21,7 +21,10 @@ den.hosts.x86_64-linux.cool = {
 
 # arctic- laptop
 den.hosts.aarch64-darwin.arctic = { 
-   users.avanonyme = {};
+   users.avanonyme = {
+      classes = [ ]; #no homemanager on darwin
+
+   };
 
 };
 

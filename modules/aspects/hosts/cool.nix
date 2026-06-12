@@ -3,7 +3,7 @@
   den.aspects.cool = {
     includes = [
       <core/hostname>
-      <core/networking>
+      #<core/networking>
       <core/openssh>
       den.aspects.headscale._.server
       den.aspects.sops
@@ -35,6 +35,14 @@
       time.timeZone = "America/Toronto";
 
       nixpkgs.config.allowUnfree = true;
+
+      # PLACEHOLDER filesystems — no hardware yet. Replace with disko config
+      # (like boreal_filesystems) once the physical machine exists.
+      # Keeps `nix eval .#nixosConfigurations.cool` green so refactors are tested.
+      fileSystems."/" = {
+        device = "/dev/disk/by-label/nixos"; # TODO: real disk
+        fsType = "ext4";
+      };
 
             boot.loader.grub = {
         enable = true;

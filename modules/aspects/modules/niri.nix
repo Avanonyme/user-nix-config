@@ -88,9 +88,9 @@
           "${mod}+L".action.spawn = "blurred-locker";
           "${mod}+Shift+P".action.power-off-monitors= {};
           "${mod}+Return".action.spawn = [ "ghostty" ];
-          "${mod}+Space".action.spawn-sh = "noctalia-shell ipc call launcher toggle";
-          "${mod}+C".action.spawn-sh = "noctalia-shell ipc call controlCenter toggle";
-          "${mod}+E".action.spawn-sh = "noctalia-shell ipc call settings toggle";
+          "${mod}+Space".action.spawn-sh = "noctalia msg panel-toggle launcher";
+          "${mod}+C".action.spawn-sh = "noctalia msg panel-toggle control-center";
+          "${mod}+E".action.spawn-sh = "noctalia msg settings-toggle";
           "${mod}+N".action.spawn = [ "nautilus" ];
           "${mod}+O".action.toggle-overview = {}; 
 
@@ -195,7 +195,7 @@
         spawn-at-startup = [
           {
           #argv = ["mako"]; #mako should spawn by itself
-          command = [ "noctalia-shell"];
+          command = [ "noctalia" ];
           }
         ];
 

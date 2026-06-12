@@ -89,13 +89,18 @@
       };
     };
 
-    darwin = {user, ...}: {
-      # import the home module since darwin doesnt have its own
+    # On darwin there's no sops-nix darwin module wired here; use the
+    # home-manager module in the homeManager class instead (the darwin
+    # class is nix-darwin system config and has no `home` options).
+    homeManager = {user, pkgs, ...}: {
       imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
       sops = {
         defaultSopsFile = secretFile;
-        age.keyFile = "/Users/${user.userName}/.config/sops/age/keys.txt";
+        age.keyFile =
+          if pkgs.stdenv.hostPlatform.isDarwin
+          then "/Users/${user.userName}/.config/sops/age/keys.txt"
+          else "/home/${user.userName}/.config/sops/age/keys.txt";
 
         secrets = allSecrets;
       };

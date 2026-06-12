@@ -4,20 +4,18 @@
   den.aspects.arctic = {
      includes = [
       <core/hostname>
-      <core/networking>
       <core/darwin>
       <core/dev-laptop>
       den.aspects.darwin-desktop
-      #den.aspects.darwin-filesystems #in disko-config.nix
+      den.aspects.headscale._.client
     ];
-   # provides.to-users = [den.aspects.darwin-desktop];
-   #different issue than on boreal because darwin desktop does not provide homeManager module
 
     darwin =
     { pkgs, config, ... }:
     {
-  #  All the configuration options are documented here:
-  #    https://daiderd.com/nix-darwin/manual/index.html#sec-options
+    #  All the configuration options are documented here:
+    #    https://daiderd.com/nix-darwin/manual/index.html#sec-options
+    
       system = {
 
         defaults = {

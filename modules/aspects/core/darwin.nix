@@ -7,7 +7,8 @@ let
     mac-app-util.url = "github:hraban/mac-app-util";
   };
 
-  core.darwin.darwin.imports = [ #core is namespace; 1st darwin is aspect name; 2nd darwin is host system
+  #core is namespace; 1st darwin is aspect name; 2nd darwin is host system
+  core.darwin.darwin.imports = [ 
     inputs.determinate.darwinModules.default
     nix-darwin-pkgs
     darwin-cfg
@@ -47,7 +48,6 @@ let
         darwin-uninstaller
       ];
     };
-  # TODO: link home-manager apps.
 in
 {
   inherit core flake-file;

@@ -30,7 +30,7 @@ let
   mac_rightcmd = {
   };
 
-  # MacOS Option (⌥
+  # MacOS Option (⌥)
 
   mac_opt = { };
 

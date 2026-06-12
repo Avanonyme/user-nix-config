@@ -29,8 +29,8 @@
       # 1. Enable the Tailscale daemon
       services.tailscale.enable = true;
 
-      # 2. Add the CLI to your path
-      environment.systemPackages = [ pkgs.tailscale ];
+      # 2. Add the CLI and GUI to your path
+      environment.systemPackages = [ pkgs.tailscale pkgs.tailscale-gui];
 
       # 3. macOS Firewall (ALF) - Basic enablement
       # Note: macOS doesn't use 'trustedInterfaces' or 'allowedUDPPorts'

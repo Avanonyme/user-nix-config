@@ -18,29 +18,33 @@
     (import "${inputs.den}/templates/microvm/modules/microvm-runners.nix") 
   ];
 
-# Network bridge to allow vm connectivity; see https://microvm-nix.github.io/microvm.nix/advanced-network.html
-  systemd.network.netdevs."10-microvm".netdevConfig = {
-    Kind = "bridge";
-    Name = "microvm";
-  };
-
-  systemd.network.networks."10-microvm" = {
-    matchConfig.Name = "microvm";
-    addresses = [ { Address = "192.168.83.1/24"; } ];
-    networkConfig = {
-      ConfigureWithoutCarrier = true;
+# Host-side networking for VM connectivity, as a den aspect (NixOS options can't
+# live at the flake-module top level). Include den.aspects.microvm-net in the vm host.
+# See https://microvm-nix.github.io/microvm.nix/advanced-network.html
+  den.aspects.microvm-net.nixos = { ... }: {
+    systemd.network.netdevs."10-microvm".netdevConfig = {
+      Kind = "bridge";
+      Name = "microvm";
     };
-  };
 
-  systemd.network.networks."21-microvm-tap" = {
-    matchConfig.Name = "microvm*";
-    networkConfig.Bridge = "microvm";
-  };
+    systemd.network.networks."10-microvm" = {
+      matchConfig.Name = "microvm";
+      addresses = [ { Address = "192.168.83.1/24"; } ];
+      networkConfig = {
+        ConfigureWithoutCarrier = true;
+      };
+    };
 
-  networking.nat = {
-    enable = true;
-    internalInterfaces = [ "microvm" ]; # The bridge where you want to provide Internet access
-    externalInterface = "eno1"; # Change this to the interface with upstream Internet access
+    systemd.network.networks."21-microvm-tap" = {
+      matchConfig.Name = "microvm*";
+      networkConfig.Bridge = "microvm";
+    };
+
+    networking.nat = {
+      enable = true;
+      internalInterfaces = [ "microvm" ]; # The bridge where you want to provide Internet access
+      externalInterface = "eno1"; # Change this to the interface with upstream Internet access
+    };
   };
 
 /* Port forwarding

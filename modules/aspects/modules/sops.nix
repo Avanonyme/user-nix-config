@@ -11,7 +11,7 @@
 
 
 
-{den, config, inputs, user, ...}:
+{den, config, inputs, ...}:
 {
 
   flake-file.inputs.sops-nix = {
@@ -25,7 +25,7 @@
     #   ./ = modules/aspects/modules/
     #   ../../.. = repo root (~/.config/nix)
     secretsDir = ../../../secrets;
-    secretFile = secretsDir + "secrets.yaml";
+    secretFile = secretsDir + "/secrets.yaml";
 
 # Couple options available in brackets:
 #      mode:
@@ -38,25 +38,26 @@
 #      Secret "deepseek/api_key" → looks up deepseek_api_key in ai.yaml
 
     allSecrets = {
-      "sonarr/api_key" = {};
-      "sonarr/password" = {};
-      "radarr/api_key" = {};
-      "radarr/password" = {};
-      "lidarr/api_key" = {};
-      "lidarr/password" = {};
-      "prowlarr/api_key" = {};
-      "prowlarr/password" = {};
-      "indexer-api-keys/NZBFinder" = {};
-      "indexer-api-keys/NzbPlanet" = {};
-      "jellyfin/avanonyme_password" = {};
-      "jellyseerr/api_key" = {};
-      "mullvad-account-number" = {};
-      "sabnzbd/api_key" = {};
-      "sabnzbd/nzb_key" = {};
-      "usenet/eweka/username" = {};
-      "usenet/eweka/password" = {};
+      #"sonarr/api_key" = {};
+      #"sonarr/password" = {};
+      #"radarr/api_key" = {};
+      #"radarr/password" = {};
+      #"lidarr/api_key" = {};
+      #"lidarr/password" = {};
+      #"prowlarr/api_key" = {};
+      #"prowlarr/password" = {};
+      #"indexer-api-keys/NZBFinder" = {};
+      #"indexer-api-keys/NzbPlanet" = {};
+      #"jellyfin/avanonyme_password" = {};
+      #"jellyseerr/api_key" = {};
+      "mullvad_account_number" = {};
+      #"sabnzbd/api_key" = {};
+      #"sabnzbd/nzb_key" = {};
+      #"usenet/eweka/username" = {};
+      #"usenet/eweka/password" = {};
 
-      "deepseek/api_key" = {};
+      "hermes_env/deepseek/api_key" = {};
+      "hermes_env/anthropic/api_key" = {};
     };
 
     # following https://guekka.github.io/nixos-server-2/
@@ -66,7 +67,7 @@
     
   in
   {
-    nixos = {
+    nixos = {user, config, ... }:{
       imports = [
         inputs.sops-nix.nixosModules.sops
       ];
@@ -76,11 +77,19 @@
         age.sshKeyPaths = [];
         age.keyFile = "/home/${user.userName}/.config/sops/age/keys.txt";
 
-        inherit (allSecrets) secrets;
+        secrets = allSecrets;
+
+        templates."hermes.env" = {
+          content = ''
+            DEEPSEEK_API_KEY=${config.sops.placeholder."hermes_env/deepseek/api_key"}
+            ANTHROPIC_API_KEY=${config.sops.placeholder."hermes_env/anthropic/api_key"}
+          '';
+        };
+
       };
     };
 
-    darwin = {
+    darwin = {user, ...}: {
       # import the home module since darwin doesnt have its own
       imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
@@ -88,7 +97,7 @@
         defaultSopsFile = secretFile;
         age.keyFile = "/Users/${user.userName}/.config/sops/age/keys.txt";
 
-        inherit (allSecrets) secrets;
+        secrets = allSecrets;
       };
 
     };

@@ -61,13 +61,13 @@ in
 
             security.acme = {
               acceptTerms = true;
-              defaults.email = "admin@example.com"; # TODO: set your email for Let's Encrypt
+              defaults.email = "avanix26@protonmail.com"; # TODO: set your email for Let's Encrypt
             };
 
             # Allow HTTP (ACME challenge) and HTTPS through the firewall
             networking.firewall.allowedTCPPorts = [ 80 443 ];
 
-            environment.systemPackages = [ config.services.headscale.package ];
+            #environment.systemPackages = [ config.services.headscale.package ];
           };
         };
         

@@ -108,7 +108,7 @@
 
 				mullvad = { # vpn
 					enable = true;
-					accountNumber = {_secret = den.sops.secrets.mullvad-account-number.path;};
+					accountNumber = {_secret = den.sops.secrets.mullvad_account_number.path;};
 					location = ["us" "nyc"];
 					dns = [
 						"94.140.14.14"

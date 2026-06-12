@@ -10,6 +10,7 @@
           den.aspects.gpu._.amd #subaspect amd of gpu.nix
           den.aspects.boreal_filesystems
           den.aspects.headscale._.server
+          den.aspects.sops
 
 
         ];

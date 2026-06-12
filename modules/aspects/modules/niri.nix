@@ -6,15 +6,13 @@
 {
   flake-file.inputs = {
     niri = {
-    url = "github:sodiboo/niri-flake";
-    inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:sodiboo/niri-flake/very-refactor";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   den.aspects.niri = {
-    includes = [
-      den.aspects.niri._.niri_settings_1
-    ];
+
     nixos = { host, pkgs, lib, config, ...}: {
       imports = [inputs.niri.nixosModules.niri];
 
@@ -66,277 +64,207 @@
         slurp
         xwayland-satellite
         ghostty #terminal
-        awww
         fuzzel #app launcher
+
+        mako # notification daemon
       ];
 
     };
 
     homeManager = {lib, pkgs, user, ... }: {
-      imports = [ inputs.niri.homeModules.niri ];
+      #imports = [ inputs.niri.homeModules.niri ];
       #home.file.".config/niri/config.kdl".source = ./../../.config/config.kdl;
-      programs.niri = {
-        settings = {
-          # Input configuration
-          input = {
-            keyboard = {
-              xkb = {
-                layout = "us";
-              };
+      #programs.niri.cnnfig = ./../../.config/config.kdl;
+      #https://github.com/sodiboo/niri-flake/blob/main/docs.md#programsnirisettings
+      programs.niri.settings = {
+        #includes = lib.mkAfter [
+        #  (../../.config/blur.kdl)
+        #];
+        binds = 
+          let
+            mod = "Mod";
+          in {
+          ## Noctalia setup
+          "${mod}+L".action.spawn = "blurred-locker";
+          "${mod}+Shift+P".action.power-off-monitors= {};
+          "${mod}+Return".action.spawn = [ "ghostty" ];
+          "${mod}+Space".action.spawn-sh = "noctalia-shell ipc call launcher toggle";
+          "${mod}+C".action.spawn-sh = "noctalia-shell ipc call controlCenter toggle";
+          "${mod}+E".action.spawn-sh = "noctalia-shell ipc call settings toggle";
+          "${mod}+N".action.spawn = [ "nautilus" ];
+          "${mod}+O".action.toggle-overview = {}; 
+
+
+          "XF86AudioRaiseVolume".action.spawn-sh = "noctalia msg volume-up";
+          "XF86AudioLowerVolume".action.spawn-sh = "noctalia msg volume-down";
+          "XF86AudioMute".action.spawn-sh = "noctalia msg volume-mute";
+
+          "XF86AudioPlay".action.spawn-sh = "playerctl play-pause";
+          "XF86AudioPause".action.spawn-sh = "playerctl play-pause";
+          "XF86AudioStop".action.spawn-sh = "playerctl stop";
+          "XF86AudioPrev".action.spawn-sh = "playerctl previous";
+          "XF86AudioNext".action.spawn-sh = "playerctl next";
+
+          "XF86MonBrightnessUp".action.spawn-sh = "noctalia msg brightness-up";
+          "XF86MonBrightnessDown".action.spawn-sh = "noctalia msg brightness-down";
+
+
+
+          
+
+          ## Window management 
+          "${mod}+Q".action.close-window = {};
+          "${mod}+Shift+Q".action.quit = {};
+          "${mod}+Shift+Slash".action.show-hotkey-overlay = {};
+          
+          # Focus
+          "${mod}+W".action.focus-window-or-workspace-up = {};
+          "${mod}+A".action.focus-column-left = {};
+          "${mod}+S".action.focus-window-or-workspace-down = {};
+          "${mod}+D".action.focus-column-right = {};
+          
+          # Move
+          "${mod}+Shift+W".action.move-window-up-or-to-workspace-up = {};
+          "${mod}+Shift+A".action.move-column-left = {};
+          "${mod}+Shift+S".action.move-window-down-or-to-workspace-down = {};
+          "${mod}+Shift+D".action.move-column-right = {};
+
+          #Move to column
+          "${mod}+BracketLeft".action.consume-or-expel-window-left = {};
+          "${mod}+BracketRight".action.consume-or-expel-window-right = {};
+          "${mod}+Comma".action.consume-window-into-column = {};
+          "${mod}+Period".action.expel-window-from-column = {};
+
+          
+          # Workspace
+          "${mod}+1".action.focus-workspace = 1;
+          "${mod}+2".action.focus-workspace = 2;
+          "${mod}+3".action.focus-workspace = 3;
+          "${mod}+4".action.focus-workspace = 4;
+          "${mod}+5".action.focus-workspace = 5;
+          "${mod}+6".action.focus-workspace = 6;
+          "${mod}+7".action.focus-workspace = 7;
+          "${mod}+8".action.focus-workspace = 8;
+          "${mod}+9".action.focus-workspace = 9;
+          
+          # Move to workspace
+          "${mod}+Shift+1".action.move-column-to-workspace = 1;
+          "${mod}+Shift+2".action.move-column-to-workspace = 2;
+          "${mod}+Shift+3".action.move-column-to-workspace = 3;
+          "${mod}+Shift+4".action.move-column-to-workspace = 4;
+          "${mod}+Shift+5".action.move-column-to-workspace = 5;
+          "${mod}+Shift+6".action.move-column-to-workspace = 6;
+          "${mod}+Shift+7".action.move-column-to-workspace = 7;
+          "${mod}+Shift+8".action.move-column-to-workspace = 8;
+          "${mod}+Shift+9".action.move-column-to-workspace = 9;
+          
+          # Layout
+          "${mod}+F".action.maximize-column = {};
+          "${mod}+Shift+F".action.fullscreen-window = {};
+          "${mod}+V".action.toggle-window-floating = {};
+          "${mod}+Minus".action.set-column-width = "-10%";
+          "${mod}+Equal".action.set-column-width = "+10%";
+          "${mod}+Shift+Minus".action.set-window-height = "-10%";
+          "${mod}+Shift+Equal".action.set-window-height = "+10%";
+          "${mod}+M".action.maximize-window-to-edges = {};
+          
+          # Screenshot
+          "Print".action.screenshot = {};
+          "Shift+Print".action.screenshot-screen = {};
+          "${mod}+Print".action.screenshot-window = {};
+
+          #MouseWheel
+          "${mod}+WheelScrollDown".action.focus-workspace-down = { };#add cooldown-ms = 150
+          "${mod}+WheelScrollUp".action.focus-workspace-up = {};
+          "${mod}+Ctrl+WheelScrollDown".action.move-column-to-workspace-down= {};
+          "${mod}+Ctrl+WheelScrollUp".action.move-column-to-workspace-up = {};
+
+          "${mod}+WheelScrollRight".action.focus-column-right = {};#add cooldown-ms = 150
+          "${mod}+WheelScrollLeft".action.focus-column-left = {};
+          "${mod}+Ctrl+WheelScrollRight".action.move-column-right= {};
+          "${mod}+Ctrl+WheelScrollLeft".action.move-column-left = {};
+        };
+
+        #Overview
+        overview = {
+          zoom = 0.4;
+        };
+        # Misc
+        prefer-no-csd = true;
+        screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d_%H-%M-%S.png";	
+        spawn-at-startup = [
+          {
+          #argv = ["mako"]; #mako should spawn by itself
+          command = [ "noctalia-shell"];
+          }
+        ];
+
+        input = {
+          keyboard = {
+            xkb = {
+              layout = "us";
             };
+            repeat-delay = 400;
+            repeat-rate = 40;
+          };
+          focus-follows-mouse.enable = true;
+        };
+        cursor = {
+          hide-after-inactive-ms = 5000;
+          theme = "Ukiyo";
+          size = 24;
+        };
+        
+        # Layout
+        layout = {
+          background-color = "transparent";
+          gaps = 10;
+          center-focused-column = "never";
+          preset-column-widths = [
+            { proportion = 1.0 / 3.0; }
+            { proportion = 1.0 / 2.0; }
+            { proportion = 2.0 / 3.0; }
+          ];
+          default-column-width = { proportion = 1.0 / 2.0; };
+          border = {
+            enable = false;
+            width = 2;
+          };
 
-            # Layout
-            layout = {
-              gaps = 10;
-              center-focused-column = "never";
-              preset-column-widths = [
-                { proportion = 1.0 / 3.0; }
-                { proportion = 1.0 / 2.0; }
-                { proportion = 2.0 / 3.0; }
-              ];
-              default-column-width = { proportion = 1.0 / 2.0; };
-              focus-ring = {
-                enable = true;
-                width = 2;
-              };
-              border = {
-                enable = false;
-              };
-            };
-            # Misc
-            prefer-no-csd = true;
-            screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d_%H-%M-%S.png";	
-            spawn-at-startup = [
-              {
-              #argv = ["swww-daemon"]; #why not noctalia-shell?
-              command = [ "noctalia-shell"];
-              }
-            ];
-                # Keybindings
-            binds = let
-              mod = "Mod";
-            in {
-              ## Noctalia setup
-              "${mod}+Return".action.spawn = [ "ghostty" ];
-              "${mod}+Space".action.spawn-sh = "noctalia-shell ipc call launcher toggle";
-              "${mod}+C".action.spawn-sh = "noctalia-shell ipc call controlCenter toggle";
-              "${mod}+E".action.spawn-sh = "noctalia-shell ipc call settings toggle";
-              "${mod}+N".action.spawn = [ "nautilus" ];
+          focus-ring = {
+            enable = true;
+            width = 10000;
+            active.color = "#00000055";
+          };
 
-              /*# Audio & Brightness #KDL format
-              XF86AudioRaiseVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
-              XF86AudioLowerVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "decrease"; }
-              XF86AudioMute { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
-              XF86MonBrightnessUp { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
-              XF86MonBrightnessDown { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
-              */       
+          shadow = {
+            enable = true;
+            draw-behind-window = true;
+          };
 
-              ## Window management 
-              "${mod}+Q".action.close-window = {};
-              "${mod}+Shift+Q".action.quit = {};
-              "${mod}+Shift+Slash".action.show-hotkey-overlay = {};
-              
-              # Focus
-              "${mod}+W".action.focus-window-up = {};
-              "${mod}+A".action.focus-column-left = {};
-              "${mod}+S".action.focus-window-down = {};
-              "${mod}+D".action.focus-column-right = {};
-              
-              # Move
-              "${mod}+Shift+W".action.move-window-up = {};
-              "${mod}+Shift+A".action.move-column-left = {};
-              "${mod}+Shift+S".action.move-window-down = {};
-              "${mod}+Shift+D".action.move-column-right = {};
-              
-              # Workspace
-              "${mod}+1".action.focus-workspace = 1;
-              "${mod}+2".action.focus-workspace = 2;
-              "${mod}+3".action.focus-workspace = 3;
-              "${mod}+4".action.focus-workspace = 4;
-              "${mod}+5".action.focus-workspace = 5;
-              "${mod}+6".action.focus-workspace = 6;
-              "${mod}+7".action.focus-workspace = 7;
-              "${mod}+8".action.focus-workspace = 8;
-              "${mod}+9".action.focus-workspace = 9;
-              
-              # Move to workspace
-              "${mod}+Shift+1".action.move-column-to-workspace = 1;
-              "${mod}+Shift+2".action.move-column-to-workspace = 2;
-              "${mod}+Shift+3".action.move-column-to-workspace = 3;
-              "${mod}+Shift+4".action.move-column-to-workspace = 4;
-              "${mod}+Shift+5".action.move-column-to-workspace = 5;
-              "${mod}+Shift+6".action.move-column-to-workspace = 6;
-              "${mod}+Shift+7".action.move-column-to-workspace = 7;
-              "${mod}+Shift+8".action.move-column-to-workspace = 8;
-              "${mod}+Shift+9".action.move-column-to-workspace = 9;
-              
-              # Layout
-              "${mod}+F".action.maximize-column = {};
-              "${mod}+Shift+F".action.fullscreen-window = {};
-              "${mod}+V".action.toggle-window-floating = {};
-              "${mod}+Minus".action.set-column-width = "-10%";
-              "${mod}+Equal".action.set-column-width = "+10%";
-              "${mod}+Shift+Minus".action.set-window-width = "-10%";
-              "${mod}+Shift+Equal".action.set-window-width = "+10%";
-              
-              # Screenshot
-              "Print".action.screenshot = {};
-              "Shift+Print".action.screenshot-screen = {};
-              "${mod}+Print".action.screenshot-window = {};
-            };
+          empty-workspace-above-first = true;
+        };
 
-            # Animations
-            animations = {
-              enable = true;
-              "window-open" = {
-                "custom-shader" = ''
-                  float hash(vec2 p) {
-                      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-                  }
+        # Animations
+        animations = {
+          enable = true;
+          slowdown = 3;
+          window-open = {
+            "custom-shader" = builtins.readFile ../../.config/shaders/smoke-window-open.glsl;
+          };
 
-                  float noise(vec2 p) {
-                      vec2 i = floor(p);
-                      vec2 f = fract(p);
-                      f = f * f * (3.0 - 2.0 * f);
-                      float a = hash(i);
-                      float b = hash(i + vec2(1.0, 0.0));
-                      float c = hash(i + vec2(0.0, 1.0));
-                      float d = hash(i + vec2(1.0, 1.0));
-                      return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
-                  }
+          window-close = {
+            "custom-shader" = builtins.readFile ../../.config/shaders/smoke-window-close.glsl;
+          };
 
-                  float fbm(vec2 p) {
-                      float v = 0.0;
-                      float amp = 0.5;
-                      for (int i = 0; i < 6; i++) {
-                          v += amp * noise(p);
-                          p *= 2.0;
-                          amp *= 0.5;
-                      }
-                      return v;
-                  }
-
-                  float warpedFbm(vec2 p, float t) {
-                      vec2 q = vec2(fbm(p + vec2(0.0, 0.0)),
-                                    fbm(p + vec2(5.2, 1.3)));
-
-                      vec2 r = vec2(fbm(p + 6.0 * q + vec2(1.7, 9.2) + 0.25 * t),
-                                    fbm(p + 6.0 * q + vec2(8.3, 2.8) + 0.22 * t));
-
-                      vec2 s = vec2(fbm(p + 5.0 * r + vec2(3.1, 7.4) + 0.18 * t),
-                                    fbm(p + 5.0 * r + vec2(6.7, 0.9) + 0.2 * t));
-
-                      return fbm(p + 6.0 * s);
-                  }
-
-                  vec4 open_color(vec3 coords_geo, vec3 size_geo) {
-                      float p = niri_clamped_progress;
-                      vec2 uv = coords_geo.xy;
-                      float seed = niri_random_seed * 100.0;
-
-                      float t = p * 12.0 + seed;
-
-                      float fluid = warpedFbm(uv * 2.0 + seed, t);
-
-                      vec2 center = uv - 0.5;
-                      float dist = length(center * vec2(1.0, 0.7));
-
-                      float appear = (1.0 - dist * 1.2) + (1.0 - fluid) * 0.7;
-                      float reveal = smoothstep(appear + 0.5, appear - 0.5, (1.0 - p) * 1.8);
-
-                      float distort_strength = (1.0 - p) * (1.0 - p) * 0.35;
-                      vec2 wq = vec2(fbm(uv * 2.0 + vec2(0.0, t * 0.2)),
-                                    fbm(uv * 2.0 + vec2(5.2, t * 0.2)));
-                      vec2 wr = vec2(fbm(uv * 2.0 + 4.0 * wq + vec2(1.7, 9.2)),
-                                    fbm(uv * 2.0 + 4.0 * wq + vec2(8.3, 2.8)));
-                      vec2 warped_uv = uv + (wr - 0.5) * distort_strength;
-
-                      vec3 tex_coords = niri_geo_to_tex * vec3(warped_uv, 1.0);
-                      vec4 color = texture2D(niri_tex, tex_coords.st);
-
-                      return color * reveal;
-                  }
-                '';
-              };
-
-              "window-close" = {
-                "custom-shader" = ''
-                  float hash(vec2 p) {
-                      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-                  }
-
-                  float noise(vec2 p) {
-                      vec2 i = floor(p);
-                      vec2 f = fract(p);
-                      f = f * f * (3.0 - 2.0 * f);
-                      float a = hash(i);
-                      float b = hash(i + vec2(1.0, 0.0));
-                      float c = hash(i + vec2(0.0, 1.0));
-                      float d = hash(i + vec2(1.0, 1.0));
-                      return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
-                  }
-
-                  float fbm(vec2 p) {
-                      float v = 0.0;
-                      float amp = 0.5;
-                      for (int i = 0; i < 6; i++) {
-                          v += amp * noise(p);
-                          p *= 2.0;
-                          amp *= 0.5;
-                      }
-                      return v;
-                  }
-
-                  float warpedFbm(vec2 p, float t) {
-                      vec2 q = vec2(fbm(p + vec2(0.0, 0.0)),
-                                    fbm(p + vec2(5.2, 1.3)));
-
-                      vec2 r = vec2(fbm(p + 6.0 * q + vec2(1.7, 9.2) + 0.25 * t),
-                                    fbm(p + 6.0 * q + vec2(8.3, 2.8) + 0.22 * t));
-
-                      vec2 s = vec2(fbm(p + 5.0 * r + vec2(3.1, 7.4) + 0.18 * t),
-                                    fbm(p + 5.0 * r + vec2(6.7, 0.9) + 0.2 * t));
-
-                      return fbm(p + 6.0 * s);
-                  }
-
-                  vec4 close_color(vec3 coords_geo, vec3 size_geo) {
-                      float p = niri_clamped_progress;
-                      vec2 uv = coords_geo.xy;
-                      float seed = niri_random_seed * 100.0;
-
-                      float t = p * 12.0 + seed;
-
-                      float fluid = warpedFbm(uv * 2.0 + seed, t);
-
-                      vec2 center = uv - 0.5;
-                      float dist = length(center * vec2(1.0, 0.7));
-
-                      float dissolve = (1.0 - dist) * 1.2 + fluid * 0.7;
-                      float remain = smoothstep(dissolve + 0.5, dissolve - 0.5, p * 1.8);
-
-                      float distort_strength = p * p * 0.4;
-                      vec2 wq = vec2(fbm(uv * 2.0 + vec2(0.0, t * 0.2)),
-                                    fbm(uv * 2.0 + vec2(5.2, t * 0.2)));
-                      vec2 wr = vec2(fbm(uv * 2.0 + 4.0 * wq + vec2(1.7, 9.2)),
-                                    fbm(uv * 2.0 + 4.0 * wq + vec2(8.3, 2.8)));
-                      vec2 warped_uv = uv + (wr - 0.5) * distort_strength;
-
-                      vec3 tex_coords = niri_geo_to_tex * vec3(warped_uv, 1.0);
-                      vec4 color = texture2D(niri_tex, tex_coords.st);
-
-                      float tail = smoothstep(1.0, 0.8, p);
-                      return color * remain * tail;
-                  }
-                '';
-              };
-            };
-
+          window-resize = {
+            "custom-shader" = builtins.readFile ../../.config/shaders/prism-window-resize.glsl;
           };
 
         };
-        
+
       };
+         
     };
 
   };

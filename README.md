@@ -30,4 +30,17 @@ nix run github:nix-community/nixos-anywhere \
   --flake github:Avanonyme/user-nix-config#host \
   root@<host-ip>
 
-App for flake.nix generator: nix run .#write-flake
+
+to run the vm:
+nix build .#nixosConfigurations.boreal.config.system.build.vm
+then execute the locally generated QEMU output link:
+./result/bin/run-boreal-vm
+
+
+for guest microvm (igloo on boreal):
+sudo systemctl start microvm@igloo.service
+
+to run the runner:
+nix run .#igloo-runner
+
+the hypervisor for macos is vfkit

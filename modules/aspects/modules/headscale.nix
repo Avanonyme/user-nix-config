@@ -5,6 +5,7 @@
 
 let
   domain = "rustedbonghomeserver.mooo.com"; 
+  headscaleDomain = "head.${domain}";
   headscalePort = 8080;
 in
 {
@@ -39,7 +40,7 @@ in
               settings = {
                 logtail.enabled = false;
                 dns = { 
-                  base_domain = "tail.${baseDomain}"; # or {baseDomain = "example.com";}
+                  base_domain = "tail.${domain}"; # or {baseDomain = "example.com";}
                   nameservers.global = [ "1.1.1.1" "9.9.9.9" ];
                 };
                 server_url = "https://${headscaleDomain}";
@@ -60,13 +61,13 @@ in
 
             security.acme = {
               acceptTerms = true;
-              defaults.email = "admin@example.com"; # TODO: set your email for Let's Encrypt
+              defaults.email = "avanix26@protonmail.com"; # TODO: set your email for Let's Encrypt
             };
 
             # Allow HTTP (ACME challenge) and HTTPS through the firewall
             networking.firewall.allowedTCPPorts = [ 80 443 ];
 
-            environment.systemPackages = [ config.services.headscale.package ];
+            #environment.systemPackages = [ config.services.headscale.package ];
           };
         };
         

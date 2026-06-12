@@ -8,12 +8,10 @@
   den.aspects.noctalia-desktop = {
     includes = [
       den.aspects.niri
-      den.aspects.niri._.niri_settings_1
-
       ];
 
     nixos = { host, pkgs, ... }: {
-      imports = [ inputs.noctalia.nixosModules.default ];
+     # imports = [ inputs.noctalia.nixosModules.default ];
 
       # Additional packages that complement Noctalia
       environment.systemPackages = with pkgs; [
@@ -30,7 +28,7 @@
       imports = [ inputs.noctalia.homeModules.default ];
       
       
-      programs.noctalia-shell = {
+      programs.noctalia = {
         enable = true;
         settings = builtins.fromJSON (builtins.readFile ./../../.config/noctalia.json);
 

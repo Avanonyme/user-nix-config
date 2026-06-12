@@ -1,14 +1,69 @@
-    { den, inputs, ... }:{
-      flake-file.inputs = {
-        microvm = {
-          url = "github:astro/microvm.nix";
-          inputs.nixpkgs.follows = "nixpkgs";
-        };
-      };
-    #Activation — import microvm integration as a top-level module
-      imports = [
-        (import "${inputs.den}/templates/microvm/modules/microvm-integration.nix")
-        (import "${inputs.den}/templates/microvm/modules/microvm-runners.nix")
-      ];
-    }
-    
+# MicroVM Den integration
+# See https://den.denful.dev/tutorials/microvm/
+#     https://github.com/denful/den/tree/main/templates/microvm  
+# move to vms folder eventually
+{ den, inputs, pkgs, ... }:{
+  flake-file.inputs = {
+    microvm = {
+      url = "github:astro/microvm.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+#Activation — import microvm integration as a top-level module
+  imports = [
+    # allows the creation of microvm.guests in host 
+    (import "${inputs.den}/templates/microvm/modules/microvm-integration.nix")
+
+    # expose declaredrunner for each hosts as flake output
+    (import "${inputs.den}/templates/microvm/modules/microvm-runners.nix") 
+  ];
+
+# Network bridge to allow vm connectivity; see https://microvm-nix.github.io/microvm.nix/advanced-network.html
+  systemd.network.netdevs."10-microvm".netdevConfig = {
+    Kind = "bridge";
+    Name = "microvm";
+  };
+
+  systemd.network.networks."10-microvm" = {
+    matchConfig.Name = "microvm";
+    addresses = [ { Address = "192.168.83.1/24"; } ];
+    networkConfig = {
+      ConfigureWithoutCarrier = true;
+    };
+  };
+
+  systemd.network.networks."21-microvm-tap" = {
+    matchConfig.Name = "microvm*";
+    networkConfig.Bridge = "microvm";
+  };
+
+  networking.nat = {
+    enable = true;
+    internalInterfaces = [ "microvm" ]; # The bridge where you want to provide Internet access
+    externalInterface = "eno1"; # Change this to the interface with upstream Internet access
+  };
+
+/* Port forwarding
+Isolating your public Internet services is a great use-case for virtualization. 
+But how does traffic get to you when your MicroVMs have private IP addresses 
+behind NAT?
+
+NixOS has got you covered with the networking.nat.forwardPorts option! 
+This example forwards TCP ports 80 (HTTP) and 443 (HTTPS) to other hosts:
+networking.nat = {
+  enable = true;
+  forwardPorts = [ {
+    proto = "tcp";
+    sourcePort = 80;
+    destination = my-addresses.http-reverse-proxy.ip4;
+  } {
+    proto = "tcp";
+    sourcePort = 443;
+    destination = my-addresses.https-reverse-proxy.ip4;
+  } ];
+};
+
+*/
+
+
+}

@@ -1,0 +1,34 @@
+// Noctalia layers - blur with exclusions
+layer-rule {
+    match namespace="^noctalia.*$"
+    exclude namespace="^(bar|noctalia-background|noctalia-popup|toast|osd).*$"
+    background-effect {
+        blur true
+        xray false
+    }
+}
+
+// Disable blur on notifications and OSD (they glitch with xray false)
+layer-rule {
+    match namespace="^(toast|osd|noctalia-popup).*$"
+    background-effect {
+        blur false
+    }
+}
+
+// Windows (e.g. ghostty)
+window-rule {
+    // match app-id="^ghostty$"
+    background-effect {
+        blur true
+        xray false
+    }
+}
+
+blur {
+    // radius 10
+    // noise 0.0
+    // brightness 1.0
+    // contrast 1.0
+    // saturation 1.0
+}

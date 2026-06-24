@@ -36,12 +36,6 @@ den.aspects.igloo = {
           image = "var.img";
           size = 256;
         }];
-        shares = [{
-          proto = "virtiofs";
-          tag = "ro-store";
-          source = "/nix/store";
-          mountPoint = "/nix/.ro-store";
-        }];
       };
     };
   };

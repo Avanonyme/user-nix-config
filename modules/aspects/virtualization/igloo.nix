@@ -1,8 +1,6 @@
 { den, inputs, pkgs, ... }:
 {
 
-# move to vm folder eventually
-
 # Igloo guest VM — runs as a guest of boreal via microvm.guests
 # run via systemctl start microvm@igloo.service
 
@@ -27,7 +25,7 @@ den.aspects.igloo = {
       environment.systemPackages = [ inputs.nixpkgs.legacyPackages.x86_64-linux.htop ];
 
       microvm = {
-        hypervisor = "qemu";
+        hypervisor = "stratovirt"; # default qemu
         socket = "control.socket";
 
         # Enable writable nix store overlay so nix-daemon works.
@@ -39,7 +37,7 @@ den.aspects.igloo = {
           size = 256;
         }];
         shares = [{
-          proto = "virtiosf";
+          proto = "virtiofs";
           tag = "ro-store";
           source = "/nix/store";
           mountPoint = "/nix/.ro-store";
@@ -71,7 +69,7 @@ den.aspects.igloo = {
         environment.systemPackages = [ inputs.nixpkgs.legacyPackages.x86_64-linux.htop ];
 
         microvm = {
-          hypervisor = "qemu";
+          hypervisor = "stratovirt";
           socket = "control.socket";
           volumes = [{
             mountPoint = "/var";
@@ -79,7 +77,7 @@ den.aspects.igloo = {
             size = 256;
           }];
           shares = [{
-            proto = "virtiosf";
+            proto = "virtiofs";
             tag = "ro-store";
             source = "/nix/store";
             mountPoint = "/nix/.ro-store";

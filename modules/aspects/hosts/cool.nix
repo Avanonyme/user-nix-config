@@ -1,12 +1,21 @@
 { den, inputs, __findFile, ... }:
 {
+  #16gb ram
   den.aspects.cool = {
-    includes = [
-      <core/hostname>
-      #<core/networking>
-      <core/openssh>
-      den.aspects.headscale._.server
-      den.aspects.sops
+    
+    domain = "rustedbonghomeserver.mooo.com"; 
+
+
+    includes = with den.aspects; [
+      core.hostname
+      network.base
+      core.openssh
+      disk.cool
+      #den.aspects.headscale.server
+      #den.aspects.headscale._.client
+      sops
+      microvm
+     # den.aspects.ipfs-media._.gateway
     ];
 
     # Host NixOS configuration
@@ -14,7 +23,6 @@
       networking.hostName = "cool";
       networking.hostId = "727b3488";
 
-      # TODO: set a static IP or use DHCP
       networking.useDHCP = lib.mkDefault true;
 
       nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -28,7 +36,6 @@
         vim
         git
         htop
-        tailscale
       ];
 
       # TODO: set timezone
@@ -36,13 +43,6 @@
 
       nixpkgs.config.allowUnfree = true;
 
-      # PLACEHOLDER filesystems — no hardware yet. Replace with disko config
-      # (like boreal_filesystems) once the physical machine exists.
-      # Keeps `nix eval .#nixosConfigurations.cool` green so refactors are tested.
-      fileSystems."/" = {
-        device = "/dev/disk/by-label/nixos"; # TODO: real disk
-        fsType = "ext4";
-      };
 
       boot.loader.grub = {
         enable = true;
@@ -50,12 +50,53 @@
         efiSupport = true;
         efiInstallAsRemovable = true;
       };
+      boot.kernelParams = [ "nomodeset" ];
     };
+
+    # Test microvm guest (uncomment to create a VM on cool):
+    # microvm.guests.test-vm = {
+    #   config = { ... }: {
+    #     imports = [ inputs.microvm.nixosModules.microvm ];
+    #     microvm.hypervisor = "qemu";
+    #     microvm.socket = "control.socket";
+    #     microvm.writableStoreOverlay = "/nix/.rw-store";
+    #     microvm.volumes = [{
+    #       mountPoint = "/var";
+    #       image = "var.img";
+    #       size = 256;
+    #     }];
+    #     microvm.shares = [{
+    #       proto = "virtiofs";
+    #       tag = "ro-store";
+    #       source = "/nix/store";
+    #       mountPoint = "/nix/.ro-store";
+    #     }];
+    #     networking.firewall.enable = false;
+    #     services.openssh.enable = true;
+    #     users.users.root.password = "";
+    #   };
+    # };
+
+    # Auto-update from git repo (uncomment to enable):
+    # systemd.services.nixos-auto-update = {
+    #   path = [ pkgs.git pkgs.nix ];
+    #   script = ''
+    #     cd /var/lib/nixos-config
+    #     git pull --ff-only
+    #     nixos-rebuild switch --flake .#cool
+    #   '';
+    #   serviceConfig.Type = "oneshot";
+    # };
+    # systemd.timers.nixos-auto-update = {
+    #   wantedBy = [ "timers.target" ];
+    #   timerConfig.OnCalendar = "weekly";
+    # };
 
     homeManager = { pkgs, ... }: {
       home.packages = with pkgs; [
         ghostty
       ];
     };
+    avanonyme.includes = with den.aspects; [avanonyme.headless];
   };
 }

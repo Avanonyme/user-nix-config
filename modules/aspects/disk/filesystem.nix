@@ -5,7 +5,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.boreal_filesystems = {
+  den.aspects.disk.boreal = {
     nixos = { ... }: {
       imports = [ inputs.disko.nixosModules.disko ];
 
@@ -158,5 +158,46 @@
     
     };
 
+  };
+
+  den.aspects.disk.cool.nixos = {
+    imports = [ inputs.disko.nixosModules.disko ];
+
+    disko.devices = {
+      disk.main = {
+        device = "/dev/sda";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            swap = {
+              size = "4G";
+              content = {
+                type = "swap";
+                priority = 100;
+              };
+            };
+            ESP = {
+              type = "EF00";
+              size = "1G";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+                mountOptions = ["umask=0077"];
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
+              };
+            };
+          };
+        };
+      };
+    };
   };
 }

@@ -1,5 +1,5 @@
-{
-  core.xserver.nixos = {
+{den,...}:{
+  den.aspects.core.xserver.nixos = {
     services.xserver.enable = true;
     services.xserver.xkb = {
       layout = "us";

@@ -14,9 +14,6 @@ let
 in
 {
   flake-file.inputs = {
-    hermes_home = {
-      url = "github:yzx9/hermes-agent/feat/home-manager";
-    };
     hermes-agent = {
       url = "github:NousResearch/hermes-agent";
     };
@@ -73,7 +70,7 @@ in
 
         # container options; ways to use microvm?  https://michael.stapelberg.ch/posts/2026-02-01-coding-agent-microvm-nix/
         container.enable = false;
-        # also by default writes in /data which we dont want
+        # also by default writes in /data which we dont want (need /data/models)
 
         settings = {
           terminal = { backend = "local"; timeout = 180; };
@@ -110,7 +107,7 @@ in
     };
   };
 
-  #Not a done config
+  #Not done config
   den.provides.avanonyme_agent = {
     #obsidian should come here when this is ready
     #includes = [den.provides.obsidian];

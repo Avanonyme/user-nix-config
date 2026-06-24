@@ -1,5 +1,5 @@
 {
-  core.filemanager = {
+  den.aspects.core.filemanager = {
     nixos = 
     {pkgs, ...}:
     {

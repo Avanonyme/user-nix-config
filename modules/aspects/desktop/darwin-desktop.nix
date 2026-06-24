@@ -1,6 +1,9 @@
 { den, ... }:
 {
   den.aspects.darwin-desktop = {
+    includes = [
+      den.aspects.hardware.darwin #hardware/
+    ];
 
     darwin = { pkgs, ... }: {
         homebrew.casks = [

@@ -4,7 +4,7 @@
 
 {
   den.aspects.gpu = {
-    provides.amd = {
+    amd = {
       nixos = {pkgs,config, host, ...}: {
 
         #Kernel; more options in nvidia aspect # move nvidia and amdpgu to GPU aspect
@@ -20,10 +20,9 @@
         };
       };
     };
-    provides.sync_nvidia = {
+    nvidia = {
+      #to be ran in a microvm for computing tasks; this gpu is on boreal, and so old most games and ai models dont run on it 
       nixos = {pkgs,config, host, ...}: {
-        includes = [den.aspects.gpu._.amd];
-
         # Initrd modules for NVIDIA support
         boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" "nvidia" "i915" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
 
@@ -38,9 +37,9 @@
         nixpkgs.config.nvidia.acceptLicense = true;
         hardware.nvidia = {
           prime = {
-            sync.enable = true;
+            #sync.enable = true;
             #main
-            amdgpuBusId = "PCI:4:0:0";
+            #amdgpuBusId = "PCI:4:0:0";
             #legacy
             nvidiaBusId = "PCI:1:0:0";
           };

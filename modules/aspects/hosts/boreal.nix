@@ -2,20 +2,20 @@
 {
   # host aspect
   den.aspects.boreal = { #following den (flake-aspects) convention, den.aspects.≤aspect≥.≤class≥
-     includes = [
-          <core/hostname> #define Hostname
-          #<core/networking> # networking configuration
-          <core/filemanager> #nautilus filemanager and automount
-          <core/openssh> #enable services.openssh
-          den.aspects.gpu._.amd #subaspect amd of gpu.nix
-          den.aspects.boreal_filesystems
-          den.aspects.headscale._.client # server lives on cool — boreal can't do inbound/ACME (Videotron router)
-          den.aspects.sops
-          den.aspects.microvm
+     includes = with den.aspects; [
+          core.hostname #define Hostname
+          core.filemanager #nautilus filemanager and automount
+          core.openssh #enable services.openssh
+          network.base
+          gpu.amd #subaspect amd of gpu.nix
+          disk.boreal
+          headscale.client
+          sops
+          microvm
+         # ipfs-media.peer
 
 
         ];
-    provides.to-users = {includes = [den.aspects.noctalia-desktop];};
 
     # host NixOS configuration
     nixos =

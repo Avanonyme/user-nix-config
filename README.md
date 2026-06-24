@@ -1,46 +1,84 @@
-# Getting Started Guide
+# Avanonyme — Nix Configuration
 
-Steps you can follow after cloning this template:
+Personal NixOS/darwin flake using the [Den framework](https://den.denful.dev/).
 
-- Be sure to read the [den documentation](https://vic.github.io/den)
+## Hosts
 
-- Update den input.
+| Host   | Role         | Arch               |
+|--------|-------------|---------------------|
+| arctic | Darwin laptop | aarch64-darwin     |
+| boreal | Workstation   | x86_64-linux       |
+| cool   | Server        | x86_64-linux       |
+
+## Structure
+
+```
+modules/
+├── aspects/
+│   ├── core/           # base (hostname, openssh)
+│   ├── network/        # nginx, headscale, base
+│   ├── disk/           # disko partition layouts
+│   ├── desktop/        # niri, noctalia, stylix
+│   ├── hardware/       # GPU, darwin
+│   ├── services/       # vaultwarden, media-server
+│   ├── virtualization/ # microvm, podman
+│   ├── secrets/        # sops-nix
+│   ├── users/          # per-user configs
+│   ├── hosts/          # per-host configs
+│   ├── apps/           # gaming, AI, zen-browser
+│   └── devshell/     
+├── den.nix              # host/user declarations
+├── namespace.nix        # angle-bracket paths
+└── dendritic.nix
+```
+
+## Workflows
+
+### Deploy to a host
+
+```console
+# Build on the remote host itself, deploy from here 
+nixos-rebuild switch --flake .#cool \
+  --build-host root@<host-ip> \
+  --target-host root@<host-ip>
+```
+or from macos with wheel
+
+```console
+nix run nixpkgs#nixos-rebuild -- switch --flake .#cool \
+  --build-host avanonyme@<host-ip> \
+  --target-host avanonyme@<host-ip> \
+  --use-remote-sudo
+  --ask-elevate-password
+```
+### Fresh install with nixos-anywhere
+
+```console
+nix run github:nix-community/nixos-anywhere -- \
+  --flake .#cool \
+  root@<host-ip>
+```
+
+### Update Den
 
 ```console
 nix flake update den
-```
-
-- Run checks to test everything works.
-
-```console
+nix run .#write-flake
 nix flake check
 ```
 
-- Use `nix run .#write-flake` to regenerate flake.nix
+### Run microvm host
 
-- Edit [modules/hosts.nix](modules/hosts.nix)
-
-Install with nixos-anywhere
-nix run github:nix-community/nixos-anywhere \
-  --extra-experimental-features nix-command \
-  --extra-experimental-features flakes \
-  -- \
-  -i ~/.ssh/id_ed25519 \ #if needed
-  --build-on-remote \
-  --flake github:Avanonyme/user-nix-config#host \
-  root@<host-ip>
-
-
-to run the vm:
-nix build .#nixosConfigurations.boreal.config.system.build.vm
-then execute the locally generated QEMU output link:
-./result/bin/run-boreal-vm
-
-
-for guest microvm (igloo on boreal):
+```console
 sudo systemctl start microvm@igloo.service
+```
+or just run the pkg:
 
-to run the runner:
+```console
 nix run .#igloo-runner
+```
 
-the hypervisor for macos is vfkit
+## Inspiration
+
+- https://github.com/sini/nix-config
+- https://github.com/denful/den

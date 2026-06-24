@@ -1,7 +1,6 @@
 # MicroVM Den integration
 # See https://den.denful.dev/tutorials/microvm/
 #     https://github.com/denful/den/tree/main/templates/microvm  
-# move to vms folder eventually
 { den, inputs, pkgs, ... }:{
   flake-file.inputs = {
     microvm = {
@@ -19,11 +18,34 @@
       (import "${inputs.den}/templates/microvm/modules/microvm-runners.nix") 
     ];
     includes = [den.aspects.microvm-net];
+
+    # https://github.com/aspauldingcode/.dotfiles/blob/master/modules/microvm.nix
+    darwin ={ pkgs, inputs, ... }:
+      let
+        microvmRunWrapper = pkgs.writeShellApplication {
+          name = "microvm-run";
+          runtimeInputs = [ pkgs.nix ];
+          text = ''
+            set -eu
+            runner="$(${pkgs.nix}/bin/nix build --no-link --print-out-paths \
+              "/etc/nix-darwin/.dotfiles#nixosConfigurations.microvm.config.microvm.runner.vfkit")"
+            exec "$runner/bin/microvm-run" "$@"
+          '';
+        };
+      in
+      {
+        environment.systemPackages = [
+          inputs.determinate-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+          microvmRunWrapper
+        ];
+      };
   };
 # Host-side networking for VM connectivity, as a den aspect (NixOS options can't
 # live at the flake-module top level). Include den.aspects.microvm-net in the vm host.
 # See https://microvm-nix.github.io/microvm.nix/advanced-network.html
   den.aspects.microvm-net.nixos = { ... }: {
+    systemd.network.enable = true;
+
     systemd.network.netdevs."10-microvm".netdevConfig = {
       Kind = "bridge";
       Name = "microvm";
@@ -45,7 +67,7 @@
     networking.nat = {
       enable = true;
       internalInterfaces = [ "microvm" ]; # The bridge where you want to provide Internet access
-      externalInterface = "eno1"; # Change this to the interface with upstream Internet access
+      externalInterface = "enp1s0"; # Change this to the interface with upstream Internet access
     };
   };
 
@@ -70,6 +92,15 @@ networking.nat = {
 };
 
 */
-
+  den.aspects.port_forward = {port,address,...}:{
+    networking.nat = {
+      enable = true;
+      forwardPorts = [ {
+        proto = "tcp";
+        sourcePort = port;
+        destination = address;
+      } ];
+    };
+  };
 
 }

@@ -16,7 +16,7 @@ den.hosts.x86_64-linux.boreal= {
 
 # cool - server
 den.hosts.x86_64-linux.cool = {
-   users.avanonyme = { };
+   users.avanonyme = {   };
  };
 
 # arctic- laptop

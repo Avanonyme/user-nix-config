@@ -2,13 +2,12 @@
 {den, inputs, __findFile, ...}:
 {
   den.aspects.arctic = {
-     includes = [
-      <core/hostname>
-      <core/darwin>
-      <core/dev-laptop>
-      den.aspects.darwin-desktop
-      den.aspects.microvm
-      den.aspects.headscale._.client
+     includes = with den.aspects; [
+      core.hostname
+     # <core/dev-laptop>
+      darwin-desktop
+      microvm
+      headscale.client
     ];
 
     darwin =
@@ -18,6 +17,7 @@
     #    https://daiderd.com/nix-darwin/manual/index.html#sec-options
     
       system = {
+			  primaryUser = "avanonyme";
 
         defaults = {
           controlcenter.BatteryShowPercentage = true;

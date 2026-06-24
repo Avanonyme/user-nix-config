@@ -1,27 +1,13 @@
 {den, inputs, __findFile, ...}:
 {
 
- den.aspects.avanonyme = {
-    includes = [
+ den.aspects.avanonyme.headless = {
+		includes = [
 			den.provides.define-user
 	  	den.provides.primary-user 
       (den.provides.user-shell "fish")
-			#den.provides.unfree
-
-			#<core/admin> #handled by primary-user
-
-			den.aspects.noctalia-desktop
-      den.aspects.zen-browser
-      den.aspects.gaming
-			den.aspects.AI
-			den.aspects.stylix
-
-			#testing
-			den.aspects.gaming.provides.vr
-
-			den.aspects.boreal.provides.to-users
-    ];
-    nixos ={lib, pkgs, ...}: 
+		];
+		nixos ={lib, pkgs, ...}: 
     {
 		#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
 		#to disable as well in boreal.nix and gaming.nix
@@ -34,37 +20,65 @@
 		users.users.avanonyme.openssh.authorizedKeys.keys = [
 			"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com"
 		];	
+		#or 
+		# users.users."user".openssh.authorizedKeys.keyFiles = [
+  	#		/etc/nixos/ssh/authorized_keys
+		#	];
+
+		# TODO: change to an encrypted secrets (already in secrets.yaml) 
 		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
-		
-			services.mullvad-vpn = {
-				enable = true;
-				package = pkgs.mullvad-vpn;
-			};
+
 
 		};
+		homeManager = {
+			programs.git = {
+				enable = true;
+				settings = {
+					user.Name = "avanonyme";
+					user.Email = "avanix26@protonmail.com";
+						extraConfig = {
+							init.defaultBranch = "main";
+							safe.directory = [
+									"/home/avanonyme/.dotfiles"
+									"/home/avanonyme/vault"
+							];
+						};
+					};
+			};
+		};
+ };
+ den.aspects.avanonyme.desktop = {
+    includes = [
+			den.aspects.avanonyme.headless
+			
+			den.aspects.noctalia-desktop
+      den.aspects.zen-browser
+      den.aspects.gaming
+			den.aspects.AI
+			den.aspects.stylix
+
+			#testing
+			den.aspects.gaming.vr
+    ];
 		darwin = {lib,...}:{
-			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
-			#to disable as well in boreal.nix and gaming.nix
 			nixpkgs.config.allowUnfree = true;
-			#home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
-			#home-manager.useUserPackages = true; #pkgs are installed through nixos user
+			
+			homebrew.brews = [
+				"calibre"
 
-	homebrew.brews = [
-		"calibre"
-
-	];
-    homebrew.casks = [
-        "vlc" 
-				"gimp"
-				"vscodium"
-				"bitwarden"
-				"signal"
-				"transmission"
-				"mullvad-vpn"
-				"brave-browser"
-      ];
-		homebrew.taps = [
-		];
+			];
+				homebrew.casks = [
+						"vlc" 
+						"gimp"
+						"vscodium"
+						"bitwarden"
+						"signal"
+						"transmission"
+						"mullvad-vpn"
+						"brave-browser"
+					];
+				homebrew.taps = [
+				];
 
 		};
     homeManager =
@@ -101,22 +115,6 @@
 					nerd-fonts.geist-mono
 
 			];
-
-			programs.git = {
-
-			enable = true;
-			settings = {
-				user.Name = "avanonyme";
-				user.Email = "avanix26@protonmail.com";
-					extraConfig = {
-						init.defaultBranch = "main";
-						safe.directory = [
-								"/home/avanonyme/.dotfiles"
-								"/home/avanonyme/vault"
-						];
-					};
-				};
-			};
 		};
 	};
 }

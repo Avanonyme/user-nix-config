@@ -1,5 +1,5 @@
-{
-  core.sound.nixos = {
+{den,...}:{
+  den.aspects.core.sound.nixos = {
     services.pulseaudio.enable = false;
     services.pipewire = {
       enable = true;

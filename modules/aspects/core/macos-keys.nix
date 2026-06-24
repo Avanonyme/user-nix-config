@@ -1,5 +1,5 @@
 {
-  core.macos-keys.nixos =
+  den.aspects.core.macos-keys.nixos =
     {
       lib,
       pkgs,

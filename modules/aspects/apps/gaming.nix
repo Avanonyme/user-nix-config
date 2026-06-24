@@ -96,7 +96,7 @@
       };
     };
 
-    provides.vr = {pkgs, config, ... }:{
+    vr.nixos = {pkgs, config, host, user, ... }:{
       #https://www.reddit.com/r/NixOS/comments/1re37ky/vr_on_nixos/
       services.monado.enable = true;
       services.monado.defaultRuntime = true;
@@ -147,7 +147,7 @@
       ];
 
       # OpenXR discovery
-      home-manager.users."${config.unixname}" = {
+      home-manager.users."${user.userName}" = {
         xdg.configFile."openxr/1/active_runtime.json".source =
           "${config.services.monado.package}/share/openxr/1/openxr_monado.json";
         home.file.".local/share/monado/hand-tracking-models".source = pkgs.fetchgit {
@@ -156,10 +156,10 @@
           fetchLFS = true;
         };
         xdg.configFile."openvr/openvrpaths.vrpath".text = builtins.toJSON {
-          config = [ "${config.home-manager.users."${config.unixname}".xdg.dataHome}/Steam/config" ];
+          config = [ "${config.home-manager.users."${user.userName}".xdg.dataHome}/Steam/config" ];
           external_drivers = null;
           jsonid = "vrpathreg";
-          log = [ "${config.home-manager.users."${config.unixname}".xdg.dataHome}/Steam/logs" ];
+          log = [ "${config.home-manager.users."${user.userName}".xdg.dataHome}/Steam/logs" ];
           runtime = [ "${pkgs.opencomposite}/lib/opencomposite" ];
           version = 1;
         };

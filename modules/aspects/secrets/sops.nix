@@ -58,6 +58,11 @@
 
       "hermes_env/deepseek/api_key" = {};
       "hermes_env/anthropic/api_key" = {};
+
+      # ipfs-media peer: SSH private key used to push the .strm catalog to the
+      # gateway. Owner is set in ipfs-media.nix (provides.peer). secrets.yaml key:
+      #   ipfs_media_peer_ssh_key
+      "ipfs-media/peer_ssh_key" = {};
     };
 
     # following https://guekka.github.io/nixos-server-2/

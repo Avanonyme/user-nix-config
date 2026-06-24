@@ -1,7 +1,7 @@
-{ core, ... }:
+{ den, ... }:
 {
-  core.dev-laptop = {
-    includes = [
+  den.aspects.core.dev-laptop = {
+    includes = with den.aspects; [
       core.bluetooth
       core.sound
       core.xserver

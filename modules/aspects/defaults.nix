@@ -25,7 +25,7 @@
     # Default user includes — per-user data emission + entity-named aspect auto-include
   den.schema.user.includes = [
     #emits resolved-users entry 
-    #den.aspects.resolved-user-emitter #error: attribute 'resolved-user-emitter' missing
+    den.aspects.resolved-user-emitter
 
     # Include den.aspects.<hostname>.<username> if it exists
     (den.lib.policy.mkPolicy "user-aspect-auto-include" (

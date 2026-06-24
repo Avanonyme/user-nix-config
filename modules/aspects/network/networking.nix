@@ -6,7 +6,7 @@
 
     {
       networking.networkmanager.enable = true;
-      networking.useDHCP = lib.mkDefault true;
+      networking.useDHCP = lib.mkDefault false;
 
       networking.firewall = {
         # enable the firewall

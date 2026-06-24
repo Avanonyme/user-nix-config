@@ -19,11 +19,11 @@
     ];
 
     # Host NixOS configuration
-    nixos = { pkgs, lib, config, ... }: {
+    nixos = { pkgs, lib, config, inputs, ... }: {
       networking.hostName = "cool";
       networking.hostId = "727b3488";
 
-      networking.useDHCP = lib.mkDefault true;
+      networking.useDHCP = lib.mkDefault false;
 
       nix.settings.experimental-features = ["nix-command" "flakes"];
       nix.settings.trusted-users = [ "avanonyme" ];
@@ -50,32 +50,10 @@
         efiSupport = true;
         efiInstallAsRemovable = true;
       };
-      boot.kernelParams = [ "nomodeset" ];
+      boot.kernelParams = [ "nomodeset" ];   #its an old computer 
+
     };
 
-    # Test microvm guest (uncomment to create a VM on cool):
-    # microvm.guests.test-vm = {
-    #   config = { ... }: {
-    #     imports = [ inputs.microvm.nixosModules.microvm ];
-    #     microvm.hypervisor = "qemu";
-    #     microvm.socket = "control.socket";
-    #     microvm.writableStoreOverlay = "/nix/.rw-store";
-    #     microvm.volumes = [{
-    #       mountPoint = "/var";
-    #       image = "var.img";
-    #       size = 256;
-    #     }];
-    #     microvm.shares = [{
-    #       proto = "virtiofs";
-    #       tag = "ro-store";
-    #       source = "/nix/store";
-    #       mountPoint = "/nix/.ro-store";
-    #     }];
-    #     networking.firewall.enable = false;
-    #     services.openssh.enable = true;
-    #     users.users.root.password = "";
-    #   };
-    # };
 
     # Auto-update from git repo (uncomment to enable):
     # systemd.services.nixos-auto-update = {

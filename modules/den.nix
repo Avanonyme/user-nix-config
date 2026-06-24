@@ -17,6 +17,7 @@ den.hosts.x86_64-linux.boreal= {
 # cool - server
 den.hosts.x86_64-linux.cool = {
    users.avanonyme = {   };
+   microvm.guests = [den.hosts.x86_64-linux.igloo];
  };
 
 # arctic- laptop

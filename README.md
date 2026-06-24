@@ -51,6 +51,11 @@ nix run nixpkgs#nixos-rebuild -- switch --flake .#cool \
   --use-remote-sudo
   --ask-elevate-password
 ```
+
+or directly from the host
+```console
+sudo nixos-rebuild switch --flake github.com:Avanonyme/user-nix-config#host
+```
 ### Fresh install with nixos-anywhere
 
 ```console

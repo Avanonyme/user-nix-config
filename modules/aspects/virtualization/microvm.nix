@@ -53,7 +53,7 @@
 
     systemd.network.networks."10-microvm" = {
       matchConfig.Name = "microvm";
-      addresses = [ { Address = "192.168.83.1/24"; } ];
+      addresses = [ { Address = "10.0.83.1/24"; } ];
       networkConfig = {
         ConfigureWithoutCarrier = true;
       };

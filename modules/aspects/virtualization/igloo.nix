@@ -22,16 +22,27 @@ den.aspects.igloo = {
       fileSystems."/".fsType = "tmpfs";      # microvm needs fsType defined
       users.users.root.password = "";
 
+      networking.interfaces.enp0s1.ipv4.addresses = [{
+        address = "10.0.83.2";
+        prefixLength = 24;
+      }];
+      networking.defaultGateway = "10.0.83.1";
+      networking.nameservers = [ "1.1.1.1" ];
+
       environment.systemPackages = [ inputs.nixpkgs.legacyPackages.x86_64-linux.htop ];
 
       microvm = {
-        hypervisor = "stratovirt"; # default qemu
+        hypervisor = "qemu"; # default
         socket = "control.socket";
-        mem_share = true;
 
         # Enable writable nix store overlay so nix-daemon works.
         # This is required for home-manager activation.
         writableStoreOverlay = "/nix/.rw-store";
+        interfaces = [{
+          type = "tap";
+          id = "igloo";
+          mac = "02:00:00:00:00:01";
+        }];
         volumes = [{
           mountPoint = "/var";
           image = "var.img";

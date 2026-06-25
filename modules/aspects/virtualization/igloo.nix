@@ -27,6 +27,7 @@ den.aspects.igloo = {
       microvm = {
         hypervisor = "stratovirt"; # default qemu
         socket = "control.socket";
+        mem_share = true;
 
         # Enable writable nix store overlay so nix-daemon works.
         # This is required for home-manager activation.

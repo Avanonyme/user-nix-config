@@ -9,7 +9,6 @@
     };
   };
   #Activation — import microvm integration
-  den.aspects.microvm = {...}: {
     imports = [
       # allows the creation of microvm.guests in host 
       (import "${inputs.den}/templates/microvm/modules/microvm-integration.nix")
@@ -17,6 +16,7 @@
       # expose declaredrunner for each hosts as flake output
       (import "${inputs.den}/templates/microvm/modules/microvm-runners.nix") 
     ];
+  den.aspects.microvm = {...}: {
     includes = [den.aspects.microvm-net];
 
     # https://github.com/aspauldingcode/.dotfiles/blob/master/modules/microvm.nix

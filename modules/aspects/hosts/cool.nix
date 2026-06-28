@@ -1,20 +1,27 @@
-{ den, inputs, __findFile, ... }:
+{ den, inputs, lib, __findFile, ... }:
 {
   #16gb ram
   den.aspects.cool = {
-    
-    domain = "rustedbonghomeserver.mooo.com"; 
-
+    settings.domain = {
+        basedomain = lib.mkOption {
+          type = lib.types.str;
+          description = "Your domain name";
+        };     
+        admin_email = lib.mkOption {
+          type = lib.types.str;
+          description = "Your email admin";
+        };    
+    };
 
     includes = with den.aspects; [
       core.hostname
-      network.base
+      networking.base
       core.openssh
       disk.cool
       #den.aspects.headscale.server
       #den.aspects.headscale._.client
-      sops
-      microvm
+      security.sops
+      virtualization.microvm-bridge
      # den.aspects.ipfs-media._.gateway
     ];
 
@@ -51,6 +58,26 @@
         efiInstallAsRemovable = true;
       };
       boot.kernelParams = [ "nomodeset" ];   #its an old computer 
+
+      microvm.vms."igloo" = {
+        # Mount the secret into the VM so it can decrypt its own secrets on boot
+        shares = [{
+          source = config.sops.secrets."microvm/igloo_age_key".path;
+          mountPoint = "/var/lib/sops-age.key";
+          tag = "igloo-age-key";
+          proto = "virtiofs";
+        }];
+
+        config = {
+          # The VM configuration
+          sops.age.keyFile = "/var/lib/sops-age.key";
+          sops.defaultSopsFile = ../../../secrets/secrets.yaml;
+          
+          # Now the VM can decrypt the OIDC secret and admin password!
+          sops.secrets."kanidm/admin_password" = { owner = "kanidm"; };
+          sops.secrets."kanidm/headscale_oidc_secret" = { owner = "headscale"; };
+        };
+      };
 
     };
 

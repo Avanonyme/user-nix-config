@@ -1,6 +1,6 @@
 {
   # networking.domain = rustedbonghomeserver.mooo.com ?
-  den.aspects.network.base= {
+  den.aspects.networking.base= {
     nixos =
     { lib, pkgs, config,... }:
 
@@ -21,6 +21,18 @@
         allowSigned = true;
         allowSignedApp = true;
       };
+    };
+  };
+
+# host-to-internet port forwarding
+  den.aspects.port_forward = {port,address,...}:{
+    networking.nat = {
+      enable = true;
+      forwardPorts = [ {
+        proto = "tcp";
+        sourcePort = port;
+        destination = address; #my-addresses.https-reverse-proxy.ip4;
+      } ];
     };
   };
 

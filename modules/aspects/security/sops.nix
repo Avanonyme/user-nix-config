@@ -19,7 +19,7 @@
     inputs.nixpkgs.follows ="nixpkgs";
   };
 
-  den.aspects.sops = 
+  den.aspects.security.sops = 
   let
     # Paths relative to this nix file:
     #   ./ = modules/aspects/modules/
@@ -62,7 +62,7 @@
       # ipfs-media peer: SSH private key used to push the .strm catalog to the
       # gateway. Owner is set in ipfs-media.nix (provides.peer). secrets.yaml key:
       #   ipfs_media_peer_ssh_key
-      "ipfs-media/peer_ssh_key" = {};
+      #"ipfs-media/peer_ssh_key" = {};
     };
 
     # following https://guekka.github.io/nixos-server-2/
@@ -97,7 +97,7 @@
     # On darwin there's no sops-nix darwin module wired here; use the
     # home-manager module in the homeManager class instead (the darwin
     # class is nix-darwin system config and has no `home` options).
-    homeManager = {user, pkgs, ...}: {
+    darwin = {user, pkgs, ...}: {
       imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
       sops = {
@@ -105,7 +105,6 @@
         age.keyFile =
           if pkgs.stdenv.hostPlatform.isDarwin
           then "/Users/${user.userName}/.config/sops/age/keys.txt"
-          else "/home/${user.userName}/.config/sops/age/keys.txt";
 
         secrets = allSecrets;
       };

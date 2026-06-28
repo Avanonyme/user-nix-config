@@ -1,16 +1,13 @@
 keys:
   - &admin-avanonyme age1srkgyhzrp6n6g4383rwaqvnger6dqmzxthcfgpwwx6jmrapznpaqfxxz4n
+  - &microvm-sealskin age1p7g2jsj6w5qe62tedel8g9h8g957uvt4l87jflzaq5mqm8tgu57q3pd7wp
   # &cool-host age...
   # Generate on cool host: cat /etc/ssh/ssh_host_ed25519_key.pub | nix run nixpkgs#ssh-to-age
   # Then: sops updatekeys secrets/secrets.yaml
-# i could add more keys here
-# e.g - $server_cool
-#run on remote host 
-# cat /etc/ssh/ssh_host_ed25519_key.pub | nix run  nixpkgs#ssh-to-age
 
 creation_rules:
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
      - age:
        - *admin-avanonyme
-      #- *server_cool 
+       - *microvm-sealskin

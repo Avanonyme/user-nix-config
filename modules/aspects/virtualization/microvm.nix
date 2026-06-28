@@ -16,8 +16,8 @@
       # expose declaredrunner for each hosts as flake output
       (import "${inputs.den}/templates/microvm/modules/microvm-runners.nix") 
     ];
-  den.aspects.microvm = {...}: {
-    includes = [den.aspects.microvm-net];
+  den.aspects.microvm-darwin= {...}: {
+    #includes = [den.aspects.microvm-bridge]; #metal side aspect
 
     # https://github.com/aspauldingcode/.dotfiles/blob/master/modules/microvm.nix
     darwin ={ pkgs, inputs, ... }:
@@ -40,18 +40,18 @@
         ];
       };
   };
-# Host-side networking for VM connectivity, as a den aspect (NixOS options can't
-# live at the flake-module top level). Include den.aspects.microvm-net in the vm host.
+# metal host-side networking for VM connectivity, as a den aspect (NixOS options can't
+# live at the flake-module top level). Include den.aspects.microvm-net in the metal host.
 # See https://microvm-nix.github.io/microvm.nix/advanced-network.html
-  den.aspects.microvm-net.nixos = { ... }: {
+  den.aspects.virtualization.microvm-bridge.nixos = { ... }: {
     systemd.network.enable = true;
 
-    systemd.network.netdevs."10-microvm".netdevConfig = {
+    systemd.network.netdevs."10-microbr".netdevConfig = {
       Kind = "bridge";
       Name = "microvm";
     };
 
-    systemd.network.networks."10-microvm" = {
+    systemd.network.networks."10-microbr" = {
       matchConfig.Name = "microvm";
       addresses = [ { Address = "10.0.83.1/24"; } ];
       networkConfig = {
@@ -59,18 +59,20 @@
       };
     };
 
-    systemd.network.networks."21-microvm-tap" = {
+### Metal host - Make sure your matchConfig matches just the interfaces you want
+    systemd.network.networks."11-microvm-tap" = {
       matchConfig.Name = "microvm*";
       networkConfig.Bridge = "microvm";
     };
 
     networking.nat = {
       enable = true;
-      internalInterfaces = [ "microvm" ]; # The bridge where you want to provide Internet access
+      internalInterfaces = [ "microbr" ]; # The bridge where you want to provide Internet access
       externalInterface = "enp1s0"; # Change this to the interface with upstream Internet access
     };
   };
 
+# Defined in networking.nix
 /* Port forwarding
 Isolating your public Internet services is a great use-case for virtualization. 
 But how does traffic get to you when your MicroVMs have private IP addresses 
@@ -92,15 +94,5 @@ networking.nat = {
 };
 
 */
-  den.aspects.port_forward = {port,address,...}:{
-    networking.nat = {
-      enable = true;
-      forwardPorts = [ {
-        proto = "tcp";
-        sourcePort = port;
-        destination = address;
-      } ];
-    };
-  };
 
 }

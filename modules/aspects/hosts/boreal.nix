@@ -6,12 +6,11 @@
           core.hostname #define Hostname
           core.filemanager #nautilus filemanager and automount
           core.openssh #enable services.openssh
-          network.base
+          networking.base
           gpu.amd #subaspect amd of gpu.nix
           disk.boreal
-          headscale.client
-          sops
-          microvm
+          networking.headscale.client
+          security.sops
          # ipfs-media.peer
 
 

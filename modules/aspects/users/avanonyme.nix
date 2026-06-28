@@ -28,7 +28,17 @@
 		# TODO: change to an encrypted secrets (already in secrets.yaml) 
 		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
 
+		services.kanidm.provision = {
+			groups."vpn.users" = {
+				members = [ "avanonyme" ];
+			};
 
+			persons."avanonyme" = {
+				displayName = "avanonyme";
+				mailAddresses = [ "avanix26@protonmail.com" ];
+				groups = [ "vpn.users" ];
+			};
+		};
 		};
 		homeManager = {
 			programs.git = {

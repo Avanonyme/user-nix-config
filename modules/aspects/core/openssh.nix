@@ -7,5 +7,6 @@
       settings.PasswordAuthentication = false;
       settings.KbdInteractiveAuthentication = false;
     };
+    networking.firewall.allowedTCPPorts = [ 22 ];  # let you SSH in over the public internet
   };
 }

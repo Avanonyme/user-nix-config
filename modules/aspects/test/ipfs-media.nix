@@ -1,5 +1,6 @@
 # ipfs-media.nix
 # deentralized NAS storage in shared /data for tailnet with headscale
+# Design doc: Projects/Knowledge-Tech/ipfs-media-quirk-design.md
 # ──────────────────────────────────────────────
 # den.aspect: P2P media sharing across a trusted tailnet, surfaced through
 # the existing nixflix/Jellyfin UI.

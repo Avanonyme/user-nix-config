@@ -6,8 +6,9 @@
       core.hostname
      # <core/dev-laptop>
       darwin-desktop
-      microvm
-      headscale.client
+      microvm-darwin
+      networking.headscale.client
+      security.sops
     ];
 
     darwin =

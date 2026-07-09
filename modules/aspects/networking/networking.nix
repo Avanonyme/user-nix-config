@@ -1,8 +1,23 @@
-{
+{lib, ...}:{
   # networking.domain = rustedbonghomeserver.mooo.com ?
+  den.aspects.networking = {
+    settings = {
+      domain = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "your domain name";
+      };
+      admin_email = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "your admin email";
+      };
+    };
+
+  };
   den.aspects.networking.base= {
     nixos =
-    { lib, pkgs, config,... }:
+    { pkgs, config,... }:
 
     {
       networking.networkmanager.enable = true;
@@ -23,17 +38,4 @@
       };
     };
   };
-
-# host-to-internet port forwarding
-  den.aspects.port_forward = {port,address,...}:{
-    networking.nat = {
-      enable = true;
-      forwardPorts = [ {
-        proto = "tcp";
-        sourcePort = port;
-        destination = address; #my-addresses.https-reverse-proxy.ip4;
-      } ];
-    };
-  };
-
 }

@@ -9,7 +9,7 @@
           networking.base
           gpu.amd #subaspect amd of gpu.nix
           disk.boreal
-          networking.headscale.client
+          networking.tailscale.client
           security.sops
          # ipfs-media.peer
 

@@ -7,7 +7,7 @@
      # <core/dev-laptop>
       darwin-desktop
       microvm-darwin
-      networking.headscale.client
+      networking.tailscale.client
       security.sops
     ];
 

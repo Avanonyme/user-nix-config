@@ -38,6 +38,7 @@
 #      Secret "deepseek/api_key" → looks up deepseek_api_key in ai.yaml
 
     allSecrets = {
+      # media 
       #"sonarr/api_key" = {};
       #"sonarr/password" = {};
       #"radarr/api_key" = {};
@@ -50,14 +51,22 @@
       #"indexer-api-keys/NzbPlanet" = {};
       #"jellyfin/avanonyme_password" = {};
       #"jellyseerr/api_key" = {};
-      "mullvad_account_number" = {};
       #"sabnzbd/api_key" = {};
       #"sabnzbd/nzb_key" = {};
       #"usenet/eweka/username" = {};
       #"usenet/eweka/password" = {};
 
+      # AI
       "hermes_env/deepseek/api_key" = {};
       "hermes_env/anthropic/api_key" = {};
+
+      #vpn
+      "headscale/auth_key" = {};
+      "tailscale/auth_key" = {};
+      "mullvad_account_number" = {};
+
+      # network
+      #ddclient/password = {};
 
       # ipfs-media peer: SSH private key used to push the .strm catalog to the
       # gateway. Owner is set in ipfs-media.nix (provides.peer). secrets.yaml key:
@@ -94,10 +103,18 @@
       };
     };
 
-    # On darwin there's no sops-nix darwin module wired here; use the
-    # home-manager module in the homeManager class instead (the darwin
-    # class is nix-darwin system config and has no `home` options).
-    darwin = {user, pkgs, ...}: {
+    darwin = {user, config, ...}: {
+      imports = [ inputs.sops-nix.darwinModules.sops ];
+
+      sops = {
+        defaultSopsFile = secretFile;
+        age.sshKeyPaths = [];
+        age.keyFile = "/Users/${user.userName}/.config/sops/age/keys.txt";
+        secrets = allSecrets;
+      };
+    };
+
+    homeManager = {user, pkgs, ...}: {
       imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
       sops = {
@@ -105,6 +122,7 @@
         age.keyFile =
           if pkgs.stdenv.hostPlatform.isDarwin
           then "/Users/${user.userName}/.config/sops/age/keys.txt"
+          else "/home/${user.userName}/.config/sops/age/keys.txt";
 
         secrets = allSecrets;
       };

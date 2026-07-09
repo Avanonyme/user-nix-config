@@ -2,7 +2,7 @@
 {
   #16gb ram
   den.aspects.cool = {
-    settings.domain = {
+    settings = {
         basedomain = lib.mkOption {
           type = lib.types.str;
           description = "Your domain name";
@@ -15,18 +15,22 @@
 
     includes = with den.aspects; [
       core.hostname
-      networking.base
       core.openssh
+
       disk.cool
-      #den.aspects.headscale.server
-      #den.aspects.headscale._.client
+
+      networking.base
+
+      networking.tailscale.client
+
       security.sops
-      virtualization.microvm-bridge
-     # den.aspects.ipfs-media._.gateway
+
+     # virtualization.microvm-bridge
+     # virtualization.microvms.sealskin #not running headscale anymore
     ];
 
     # Host NixOS configuration
-    nixos = { pkgs, lib, config, inputs, ... }: {
+    nixos = { host, pkgs, lib, config, inputs, ... }: {
       networking.hostName = "cool";
       networking.hostId = "727b3488";
 
@@ -58,27 +62,6 @@
         efiInstallAsRemovable = true;
       };
       boot.kernelParams = [ "nomodeset" ];   #its an old computer 
-
-      microvm.vms."igloo" = {
-        # Mount the secret into the VM so it can decrypt its own secrets on boot
-        shares = [{
-          source = config.sops.secrets."microvm/igloo_age_key".path;
-          mountPoint = "/var/lib/sops-age.key";
-          tag = "igloo-age-key";
-          proto = "virtiofs";
-        }];
-
-        config = {
-          # The VM configuration
-          sops.age.keyFile = "/var/lib/sops-age.key";
-          sops.defaultSopsFile = ../../../secrets/secrets.yaml;
-          
-          # Now the VM can decrypt the OIDC secret and admin password!
-          sops.secrets."kanidm/admin_password" = { owner = "kanidm"; };
-          sops.secrets."kanidm/headscale_oidc_secret" = { owner = "headscale"; };
-        };
-      };
-
     };
 
 
@@ -102,6 +85,5 @@
         ghostty
       ];
     };
-    avanonyme.includes = with den.aspects; [avanonyme.headless];
   };
 }

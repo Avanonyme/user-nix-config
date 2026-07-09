@@ -46,32 +46,52 @@ den.reservedKeys = ["settings"]; #options in aspects; see http://gist.github.com
 
 # boreal - desktop
 den.hosts.x86_64-linux.boreal= {
-   users.avanonyme = {};
+   users.avanonyme = {
+      aspect = den.aspects.avanonyme.linux-desktop;
+   };
    users.gamer = {}; #gaming user
-
-   microvm.guests = [den.hosts.x86_64-linux.igloo]; #vm host; systemctl start microvm@igloo
-
-   #settings.networking.headscale.login_server ="head.${domain_name}";
  };
 
 # cool - server
 den.hosts.x86_64-linux.cool = {
-   users.avanonyme = {   };
-   microvm.guests = [den.hosts.x86_64-linux.igloo];
+   users.avanonyme = { 
+      aspect = den.aspects.avanonyme.headless;   
+   };
+   microvm.guests = [
+      #den.hosts.x86_64-linux.sealskin # not running headscale because of CGNAT issues
+   ];
 
    settings = {
-      cool.domain = domain;
+      cool.basedomain = domain;
       cool.admin_email = admin_email;
+
+      #networking.ddclient.domain = domain;
+      #networking.headscale.headscaleDomain = "head.${domain}";
    };
  };
 
-# arctic- laptop
+# arctic - laptop
 den.hosts.aarch64-darwin.arctic = { 
    users.avanonyme = {
-      classes = [ ]; #no homemanager on darwin
-
+      aspect = den.aspects.avanonyme.darwin-desktop;
    };
+   settings = {
+     # networking.headscale.headscaleDomain = "head.${domain}";
+   };
+};
 
+#### MICROVMS ####
+den.hosts.x86_64-linux.sealskin = { #headscale
+   intoAttr = [];
+   users.avanonyme = { aspect = [den.aspects.avanonyme.headless]; };
+   settings = {
+      networking.domain = domain;
+      networking.admin_email = admin_email;
+      networking.headscale = {
+         headscaleDomain = "head.${domain}";
+         headscalePort = 8085;
+      };
+   };
 };
 
 }

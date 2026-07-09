@@ -67,7 +67,7 @@
 
     networking.nat = {
       enable = true;
-      internalInterfaces = [ "microbr" ]; # The bridge where you want to provide Internet access
+      internalInterfaces = [ "microvm" "microbr"]; # The bridge where you want to provide Internet access
       externalInterface = "enp1s0"; # Change this to the interface with upstream Internet access
     };
   };

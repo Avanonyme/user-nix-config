@@ -57,7 +57,7 @@
 			};
 		};
  };
- den.aspects.avanonyme.desktop = {
+ den.aspects.avanonyme.linux-desktop = {
     includes = [
 			den.aspects.avanonyme.headless
 			
@@ -70,27 +70,6 @@
 			#testing
 			den.aspects.gaming.vr
     ];
-		darwin = {lib,...}:{
-			nixpkgs.config.allowUnfree = true;
-			
-			homebrew.brews = [
-				"calibre"
-
-			];
-				homebrew.casks = [
-						"vlc" 
-						"gimp"
-						"vscodium"
-						"bitwarden"
-						"signal"
-						"transmission"
-						"mullvad-vpn"
-						"brave-browser"
-					];
-				homebrew.taps = [
-				];
-
-		};
     homeManager =
     { pkgs, user, ... }:
 		{
@@ -112,7 +91,7 @@
 					tldr
 					unzip
 					tree #directory visualisation
-					vscodium #code editor
+					vscodium #code editors
 
 					feh #image viewer
 					transmission_4-qt #torrent client
@@ -125,6 +104,34 @@
 					nerd-fonts.geist-mono
 
 			];
+		};
+	};
+	den.aspects.avanonyme.darwin-desktop = {
+		includes = with den.aspects; [
+			avanonyme.headless
+			gaming
+			AI
+		];
+		darwin = {lib,...}:{
+			nixpkgs.config.allowUnfree = true;
+			
+			homebrew.brews = [
+				"calibre"
+
+			];
+				homebrew.casks = [
+						"vlc" 
+						"gimp"
+						"vscodium"
+						"bitwarden"
+						"signal"
+						"transmission"
+						"mullvad-vpn"
+						"brave-browser"
+					];
+				homebrew.taps = [
+				];
+
 		};
 	};
 }

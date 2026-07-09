@@ -14,10 +14,15 @@ den.hosts.x86_64-linux.igloo = {
    users.tux = {};
  };
 # microvm-base from: https://michael.stapelberg.ch/posts/2026-02-01-coding-agent-microvm-nix/
-den.aspects.igloo = {ipAddress, mac, tapID, workspace, ...}:{
-    nixos ={host, config}: {
+den.aspects.microvms.igloo = {ipAddress, mac, tapID, workspace, ...}:{
+    includes = with den.aspects;[
+      core.hostname
+      core.openssh
+    ];
+    nixos ={host, config,...}: {
       imports = [inputs.microvm.nixosModules.microvm];
-      #boot.loader.grub.enable = false;
+      system.stateVersion = den.default.nixos.system.stateVersion;
+
       fileSystems."/".device = "/dev/null";  # required for guest model
       fileSystems."/".fsType = "tmpfs";      # ephemeral (default)
 
@@ -68,9 +73,6 @@ den.aspects.igloo = {ipAddress, mac, tapID, workspace, ...}:{
       environment.systemPackages = [ inputs.nixpkgs.legacyPackages.x86_64-linux.htop ];
 
       microvm = {
-        credentialFiles = {
-          "sops-age-key" = config.sops.secrets."microvm/igloo_key".path;
-        };
         hypervisor = "qemu"; # default
         vcpu = 8;
         mem=4096;
@@ -96,17 +98,23 @@ den.aspects.igloo = {ipAddress, mac, tapID, workspace, ...}:{
             source = workspace;
             mountPoint = workspace;
         }];
-        config = {        
-        # Verify which exist
-        #ls /run/host-credentials/
-        #ls /run/credentials/
-        sops.age.keyFile = "/run/host-credentials/sops-age-key"; #wire credential to sops
-        sops.defaultSopsFile = ../../../secrets/secrets.yaml;
-        
-        # Now the VM can decrypt the OIDC secret and admin password!
-        sops.secrets."kanidm/admin_password" = { owner = "kanidm"; };
-        sops.secrets."kanidm/headscale_oidc_secret" = { owner = "headscale"; };
-        };
+
+        # SECRETS MANAGEMENT FOR MICROVMS
+        #First setup:
+        # `age-keygen -o igloo-age.key` on host
+        # Add the public key to your .sops.yaml root under a new entry for igloo, i.e -&microvm-igloo
+        # run `sops updatekeys secrets/secrets.yaml` to grant igloo decryption rights.
+        #  credentialFiles = {
+        #    "sops-age-key" = config.sops.secrets."microvm/sealskin_key".path;
+        #  };
+        #  config = {        
+        #    # Verify which exist
+        #    #ls /run/host-credentials/
+        #    #ls /run/credentials/
+        #    sops.age.keyFile = "/run/host-credentials/sops-age-key"; #wire credential to sops
+        #    sops.defaultSopsFile = ../../../secrets/secrets.yaml;
+        #    sops.secrets."headscale/auth_key" = { owner = "headscale"; };
+        #    };
       };
   };
  };
@@ -186,7 +194,7 @@ den.aspects.igloo = {ipAddress, mac, tapID, workspace, ...}:{
         #  {
         #    proto = "virtiofs";
         #    tag = "projects";
-        #    source = "/Users/avanonyme+/Projects";
+        #    source = "/Users/avanonyme/Projects";
         #    mountPoint = "/projects";
         #  }
         ];

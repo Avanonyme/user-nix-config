@@ -69,7 +69,7 @@
       "ddclient/password" = {};
 
       #microvms
-      microvm/sealskin_key = {};
+      "microvm/sealskin_key" = {};
     };
 
     # following https://guekka.github.io/nixos-server-2/
@@ -79,7 +79,7 @@
     
   in
   {
-    nixos = {user, config, ... }:{
+    nixos = {config, ... }:{
       imports = [
         inputs.sops-nix.nixosModules.sops
       ];
@@ -87,7 +87,7 @@
       sops = {
         defaultSopsFile = secretFile;
         age.sshKeyPaths = [];
-        age.keyFile = "/home/${user.userName}/.config/sops/age/keys.txt";
+        age.keyFile = "/home/avanonyme/.config/sops/age/keys.txt";
 
         secrets = allSecrets;
 

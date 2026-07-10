@@ -2,7 +2,7 @@
 # Headscale  microvm 
 {den,inputs,pkgs,...}:
 let
-  ipadd=10.0.83.6;
+  ipadd="10.0.83.6";
 in
 {
   #used by sealskin guest host
@@ -19,7 +19,7 @@ in
 
       networking.headscale.server
     ];
-    nixos = {host,...}:{
+    nixos = {host, lib, ...}:{
       microvm ={
 
         credentialFiles = {
@@ -29,7 +29,7 @@ in
       # Verify which exist
       #ls /run/host-credentials/
       #ls /run/credentials/
-      sops.age.keyFile = "/run/host-credentials/sops-age-key"; #wire credential to sops
+      sops.age.keyFile = lib.mkForce "/run/host-credentials/sops-age-key"; #wire credential to sops
       sops.defaultSopsFile = ../../../secrets/secrets.yaml;
       sops.secrets."headscale/auth_key" = { };
     };

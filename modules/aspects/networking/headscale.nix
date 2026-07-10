@@ -66,7 +66,7 @@
       networking.nginx 
     ];
 
-    nixos = { host, config, ... }: let
+    nixos = { host, config, lib, ... }: let
       headscaleDomain = host.settings.networking.headscale.headscaleDomain;
       headscalePort = host.settings.networking.headscale.headscalePort;
     in {
@@ -86,7 +86,7 @@
           };
         };
         
-        nginx.virtualHosts."${headscaleDomain}" = {
+        nginx.virtualHosts."${headscaleDomain}" = lib.mkForce {
           serverName = headscaleDomain;
           forceSSL = false;
           addSSL = true;

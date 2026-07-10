@@ -15,6 +15,7 @@
 
 		users.users.avanonyme.openssh.authorizedKeys.keys = [
 			"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWjooViBeUbs52l0B+9IGlbPTAWXNjtqHUKeq12PMnk avanix26@protonmail.com"
+			"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0zIwouEtcJIHzE0qPLOBY53ha89FszBC9TlUVrEAjm avanonyme@cool"
 		];	
 		#or 
 		# users.users."user".openssh.authorizedKeys.keyFiles = [

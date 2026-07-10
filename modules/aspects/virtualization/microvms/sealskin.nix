@@ -19,25 +19,19 @@ in
 
       networking.headscale.server
     ];
-    nixos = {host, lib, ...}:{
-      microvm ={
 
-        credentialFiles = {
-          "sops-age-key" = config.sops.secrets."microvm/sealskin_key".path;
-        };
-      };
-      # Verify which exist
-      #ls /run/host-credentials/
-      #ls /run/credentials/
-      sops.age.keyFile = lib.mkForce "/run/host-credentials/sops-age-key"; #wire credential to sops
-      sops.defaultSopsFile = ../../../secrets/secrets.yaml;
-      sops.secrets."headscale/auth_key" = { };
+    nixos = {host, lib, ...}: {
+      imports = [ inputs.sops-nix.nixosModules.sops ];
+      microvm.credentialFiles."sops-age-key" = "/run/secrets/microvm/sealskin_key";
+      sops.age.keyFile = lib.mkForce "/run/host-credentials/sops-age-key";
+      sops.defaultSopsFile = lib.mkForce ../../../../secrets/secrets.yaml;
+      sops.secrets."headscale/auth_key" = {};
     };
   };
 
   #the config used by the metal host
   den.aspects.virtualization.microvms.sealskin = {config,...}:{
-    nixos = {host,...}:{
+    nixos = {host,...}: {
       microvm.vms."sealskin" = {
         autostart = true;
       };
@@ -46,7 +40,8 @@ in
         forwardPorts = [
         { proto = "tcp"; sourcePort = 80;  destination = "${ipadd}:80"; }
         { proto = "tcp"; sourcePort = 443; destination = "${ipadd}:443"; }
-      ];};
+        ];
+      };
     };
   };
 

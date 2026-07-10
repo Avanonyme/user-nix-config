@@ -1,8 +1,8 @@
-{den,...}:{
+{den, lib, ...}:{
 # DDNS setup for a server without a router
 
 den.aspects.networking.ddclient = {
-  settings ={lib,...}: {
+  settings = {
     domain = lib.mkOption {
       type = lib.types.str;
       description = "Full freedns.afraid.org domain";

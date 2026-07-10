@@ -83,7 +83,7 @@ den.hosts.aarch64-darwin.arctic = {
 #### MICROVMS ####
 den.hosts.x86_64-linux.sealskin = { #headscale
    intoAttr = [];
-   users.avanonyme = { aspect = [den.aspects.avanonyme.headless]; };
+   users.tux = { aspect = [den.aspects.tux.headless]; };
    settings = {
       networking.domain = domain;
       networking.admin_email = admin_email;

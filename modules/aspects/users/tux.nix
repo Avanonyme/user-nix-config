@@ -5,7 +5,7 @@
   in
 {
   # user aspect
-  den.aspects.${username} = {
+  den.aspects.${username}.headless = {
     includes = [
       den.provides.define-user
       (den.provides.user-shell "fish")
@@ -13,9 +13,6 @@
 
     ];
     nixos = { ... }: {
-      users.users.${username} = {
-        initialPassword = ""; # or use hashedPassword
-      };
 
     };
     homeManager =

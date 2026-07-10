@@ -19,19 +19,19 @@ in
 
       networking.headscale.server
     ];
-    microvm ={
+    nixos = {host,...}:{
+      microvm ={
 
-      credentialFiles = {
-        "sops-age-key" = config.sops.secrets."microvm/sealskin_key".path;
+        credentialFiles = {
+          "sops-age-key" = config.sops.secrets."microvm/sealskin_key".path;
+        };
       };
-       config = {        
-         # Verify which exist
-         #ls /run/host-credentials/
-         #ls /run/credentials/
-        sops.age.keyFile = "/run/host-credentials/sops-age-key"; #wire credential to sops
-        sops.defaultSopsFile = ../../../secrets/secrets.yaml;
-        sops.secrets."headscale/auth_key" = { owner = "headscale"; };
-      };
+      # Verify which exist
+      #ls /run/host-credentials/
+      #ls /run/credentials/
+      sops.age.keyFile = "/run/host-credentials/sops-age-key"; #wire credential to sops
+      sops.defaultSopsFile = ../../../secrets/secrets.yaml;
+      sops.secrets."headscale/auth_key" = { };
     };
   };
 

@@ -67,6 +67,9 @@
 
       # network
       "ddclient/password" = {};
+
+      #microvms
+      microvm/sealskin_key = {};
     };
 
     # following https://guekka.github.io/nixos-server-2/

@@ -62,16 +62,11 @@
 
       #vpn
       "headscale/auth_key" = {};
-      "tailscale/auth_key" = {};
+      #"tailscale/auth_key" = {};
       "mullvad_account_number" = {};
 
       # network
-      #ddclient/password = {};
-
-      # ipfs-media peer: SSH private key used to push the .strm catalog to the
-      # gateway. Owner is set in ipfs-media.nix (provides.peer). secrets.yaml key:
-      #   ipfs_media_peer_ssh_key
-      #"ipfs-media/peer_ssh_key" = {};
+      "ddclient/password" = {};
     };
 
     # following https://guekka.github.io/nixos-server-2/

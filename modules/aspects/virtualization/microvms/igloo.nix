@@ -101,7 +101,7 @@ den.aspects.microvms.igloo = {ipAddress, mac, tapID, workspace, ...}:{
 
         # SECRETS MANAGEMENT FOR MICROVMS
         #First setup:
-        # `age-keygen -o igloo-age.key` on host
+        # `age-keygen -o igloo_age.key`
         # Add the public key to your .sops.yaml root under a new entry for igloo, i.e -&microvm-igloo
         # run `sops updatekeys secrets/secrets.yaml` to grant igloo decryption rights.
         #  credentialFiles = {

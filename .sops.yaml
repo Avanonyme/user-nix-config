@@ -1,6 +1,6 @@
 keys:
   - &admin-avanonyme age1srkgyhzrp6n6g4383rwaqvnger6dqmzxthcfgpwwx6jmrapznpaqfxxz4n
-  - &microvm-sealskin age1p7g2jsj6w5qe62tedel8g9h8g957uvt4l87jflzaq5mqm8tgu57q3pd7wp
+  - &microvm-sealskin age1478rrylz7hfvaywtucgwfp6a7zdt2y6cfd6cwz58t5ru8jtzkv9qyseegn
   # &cool-host age...
   # Generate on cool host: cat /etc/ssh/ssh_host_ed25519_key.pub | nix run nixpkgs#ssh-to-age
   # Then: sops updatekeys secrets/secrets.yaml

@@ -8,7 +8,7 @@ den.aspects.networking.ddclient = {
       description = "Full freedns.afraid.org domain";
     };
   };
-  nixos = {host,config,...}:{
+  nixos = {host, ...}: {config, pkgs, ...}: {
     services.ddclient = {
       enable = true;
       quiet=true;

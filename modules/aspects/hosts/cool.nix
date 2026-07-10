@@ -19,12 +19,12 @@
 
       disk.cool
 
+      security.sops
+
       networking.base
       networking.nginx
       #networking.headscale.client
       networking.ddclient
-
-      security.sops
 
 
       virtualization.microvm-bridge

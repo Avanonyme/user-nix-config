@@ -38,6 +38,10 @@
       url = "github:sodiboo/niri-flake/very-refactor";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-apple-container = {
+      url = "github:halfwhey/nix-apple-container";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-darwin.url = "github:LnL7/nix-darwin";
     nixflix = {
       url = "github:kiriwalawren/nixflix";

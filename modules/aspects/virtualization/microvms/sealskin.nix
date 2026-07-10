@@ -26,7 +26,7 @@ in
       };
     };
   };
-  
+
   #the config used by the metal host
   den.aspects.virtualization.microvms.sealskin = {config,...}:{
     nixos = {host,...}:{
@@ -48,8 +48,7 @@ in
    users.tux ={};
   };
   den.aspects.sealskin-runner = {
-    nixos = {
-      includes = [];
+
       nixos = {
         imports = [inputs.microvm.nixosModules.microvm];
         users.users.root.password = "";
@@ -70,7 +69,6 @@ in
             mountPoint = "/nix/.ro-store";
           }];
         };
-      };
     };
   };
 }

@@ -9,7 +9,7 @@
       services.nginx = {
         enable = true;
 
-        virutalHosts."default" = { #or default?
+        virtualHosts."default" = { #or default?
           serverName = "_";
           default = true;
           rejectSSL = true;

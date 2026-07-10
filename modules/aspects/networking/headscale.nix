@@ -91,8 +91,8 @@
           forceSSL = false;
           addSSL = true;
           enableACME = true;
-          useACMEHost = "${headscaleDomain}";
-          acmeRoot = "/var/lib/acme/challenges-${headscaleDomain}";
+          #useACMEHost = "${headscaleDomain}";
+          #acmeRoot = "/var/lib/acme/challenges-${headscaleDomain}";
           locations."/" = {
             proxyPass = "http://127.0.0.1:${toString headscalePort}";
             proxyWebsockets = true;

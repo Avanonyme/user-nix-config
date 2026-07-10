@@ -58,15 +58,15 @@ den.hosts.x86_64-linux.cool = {
       aspect = den.aspects.avanonyme.headless;   
    };
    microvm.guests = [
-      #den.hosts.x86_64-linux.sealskin # not running headscale because of CGNAT issues
+      den.hosts.x86_64-linux.sealskin
    ];
 
    settings = {
       cool.basedomain = domain;
       cool.admin_email = admin_email;
 
-      #networking.ddclient.domain = domain;
-      #networking.headscale.headscaleDomain = "head.${domain}";
+      networking.ddclient.domain = domain;
+      networking.headscale.headscaleDomain = domain; #or "head.${domain}"
    };
  };
 
@@ -88,7 +88,7 @@ den.hosts.x86_64-linux.sealskin = { #headscale
       networking.domain = domain;
       networking.admin_email = admin_email;
       networking.headscale = {
-         headscaleDomain = "head.${domain}";
+         headscaleDomain = domain; #or "head.${domain}"
          headscalePort = 8085;
       };
    };

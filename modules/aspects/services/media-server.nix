@@ -1,5 +1,7 @@
 {den, inputs, ...}:
 {
+
+	# Also, possibly use jellyswarrm
   # 1 define inputs, and add to flake.nix
  flake-file.inputs = {
 
@@ -12,7 +14,7 @@
  };
   
   # 2. Configure tailscale media server
-  den.aspects.media-server = {host,...}: {
+  den.aspects.media-server = {host,config,...}: {
    nixos = {
     imports = [
       inputs.nixflix.nixosModules.default #added inputs here cause we're in den!
@@ -51,15 +53,15 @@
 				sonarr = { # TV shows
 					enable = true;
 					config = {
-						apiKey = {_secret = den.sops.secrets."sonarr/api_key".path;};
-						hostConfig.password = {_secret = den.sops.secrets."sonarr/password".path;};
+						apiKey = {_secret = config.sops.secrets."sonarr/api_key".path;};
+						hostConfig.password = {_secret = config.sops.secrets."sonarr/password".path;};
 					};
 				};
 				radarr = { # movies
 					enable = true;
 					config = {
-						apiKey = {_secret = den.sops.secrets."radarr/api_key".path;};
-						hostConfig.password = {_secret = den.sops.secrets."radarr/password".path;};
+						apiKey = {_secret = config.sops.secrets."radarr/api_key".path;};
+						hostConfig.password = {_secret = config.sops.secrets."radarr/password".path;};
 					};
 				};
 				recyclarr = { #TRaSH guides automation
@@ -69,24 +71,24 @@
 				lidarr = { #Music
 								enable = true;
 					config = {
-						apiKey = {_secret = den.sops.secrets."lidarr/api_key".path;};
-						hostConfig.password = {_secret = den.sops.secrets."lidarr/password".path;};
+						apiKey = {_secret = config.sops.secrets."lidarr/api_key".path;};
+						hostConfig.password = {_secret = config.sops.secrets."lidarr/password".path;};
 					};
 				};
 				prowlarr = { #indexer management with 3 preconfigurations
 					enable = true;
 					config = {
-						apiKey = {_secret = den.sops.secrets."prowlarr/api_key".path;};
-						hostConfig.password = {_secret = den.sops.secrets."prowlarr/password".path;};
+						apiKey = {_secret = config.sops.secrets."prowlarr/api_key".path;};
+						hostConfig.password = {_secret = config.sops.secrets."prowlarr/password".path;};
 						indexers = [
 							{
 								name = "NZBFinder";
-								apiKey = {_secret = den.sops.secrets."indexer-api-keys/NZBFinder".path;};          
+								apiKey = {_secret = config.sops.secrets."indexer-api-keys/NZBFinder".path;};          
 							}
 									
 							{
 								name = "NzbPlanet";
-								apiKey = {_secret = den.sops.secrets."indexer-api-keys/NzbPlanet".path;};
+								apiKey = {_secret = config.sops.secrets."indexer-api-keys/NzbPlanet".path;};
 							}
 						];
 					};    
@@ -97,18 +99,18 @@
 						avanonyme = {
 							mutable = false;
 											policy.isAdministrator = true;
-											password = {_secret = den.sops.secrets."jellyfin/avanonyme_password".path;};
+											password = {_secret = config.sops.secrets."jellyfin/avanonyme_password".path;};
 						};
 					};
 				};
 				jellyseerr = { #requests management
 					enable = true;
-					apiKey = {_secret = den.sops.secrets."jellyseerr/api_key".path;};
+					apiKey = {_secret = config.sops.secrets."jellyseerr/api_key".path;};
 				};
 
 				mullvad = { # vpn
 					enable = true;
-					accountNumber = {_secret = den.sops.secrets.mullvad_account_number.path;};
+					accountNumber = {_secret = config.sops.secrets.mullvad_account_number.path;};
 					location = ["us" "nyc"];
 					dns = [
 						"94.140.14.14"

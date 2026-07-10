@@ -1,12 +1,12 @@
 {den,...}:{
   den.aspects.networking.tailscale.client = {
     nixos =
-    { host,lib, pkgs, config, ... }:
+    { host, lib, pkgs, config, ... }:
 
     {
       services.tailscale ={
         enable = true;
-        authKeyFile = config.sops.secrets."tailscale/auth_key".path;
+        #authKeyFile = config.sops.secrets."tailscale/auth_key".path;
         extraUpFlags = ["--ssh"];
       };
       environment.systemPackages = with pkgs; [
@@ -26,12 +26,12 @@
       systemd.network.wait-online.enable = false; 
       boot.initrd.systemd.network.wait-online.enable = false;
     };
-    darwin = { pkgs, config, ... }: {
+    darwin = { pkgs, ... }: {
       # 1. Enable the Tailscale daemon
+      # Note: nix-darwin's tailscale module has no authKeyFile/extraUpFlags.
+      # Auth + `--ssh` flags are handled via the macOS Tailscale GUI app.
       services.tailscale ={
         enable = true;
-        authKeyFile = config.sops.secrets."tailscale/auth_key".path;
-        extraUpFlags = ["--ssh"];
       };
       # 2. Add the CLI to your path
       environment.systemPackages = [ pkgs.tailscale ];

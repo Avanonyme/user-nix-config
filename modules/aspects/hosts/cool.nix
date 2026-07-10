@@ -20,13 +20,15 @@
       disk.cool
 
       networking.base
-
-      networking.tailscale.client
+      networking.nginx
+      #networking.headscale.client
+      networking.ddclient
 
       security.sops
 
-     # virtualization.microvm-bridge
-     # virtualization.microvms.sealskin #not running headscale anymore
+
+      virtualization.microvm-bridge
+      virtualization.microvms.sealskin
     ];
 
     # Host NixOS configuration

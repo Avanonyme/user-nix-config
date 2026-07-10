@@ -69,7 +69,11 @@
       "ddclient/password" = {};
 
       #microvms
-      "microvm/sealskin_key" = {};
+      "microvm/sealskin_key" = {
+        group = "kvm";
+        mode = "0440";
+      };
+
     };
 
     # following https://guekka.github.io/nixos-server-2/

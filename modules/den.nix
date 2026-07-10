@@ -65,7 +65,7 @@ den.hosts.x86_64-linux.cool = {
       cool.basedomain = domain;
       cool.admin_email = admin_email;
 
-      networking.ddclient.domain = domain;
+      networking.domain = domain;
       networking.headscale.headscaleDomain = domain; #or "head.${domain}"
    };
  };

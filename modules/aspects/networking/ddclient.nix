@@ -2,12 +2,6 @@
 # DDNS setup for a server without a router
 
 den.aspects.networking.ddclient = {
-  settings = {
-    domain = lib.mkOption {
-      type = lib.types.str;
-      description = "Full freedns.afraid.org domain";
-    };
-  };
   nixos = {host, ...}: {config, pkgs, ...}: {
     services.ddclient = {
       enable = true;
@@ -20,7 +14,7 @@ den.aspects.networking.ddclient = {
       username = "RustedBong";
       passwordFile = config.sops.secrets."ddclient/password".path;
 
-      domains = ["${host.settings.networking.ddclient.domain}"];
+      domains = ["${host.settings.networking.domain}"];
     };
   };
 };

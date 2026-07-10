@@ -22,7 +22,15 @@ in
 
     nixos = {host, lib, ...}: {
       imports = [ inputs.sops-nix.nixosModules.sops ];
-      microvm.credentialFiles."sops-age-key" = "/run/secrets/microvm/sealskin_key";
+      microvm={
+        credentialFiles."sops-age-key" = "/run/secrets/microvm/sealskin_key";
+
+        # source: https://blog.koch.ro/posts/2024-03-17-minimal-vms-nix-microvm.html
+        #forwardPorts = [
+        #  { from = "host"; host.port = 2222; guest.port = 22; }
+        #  { from = "guest"; host.port = 5432; guest.port = 5432; } # postgresql
+        #];
+      };
       sops.age.keyFile = lib.mkForce "/run/host-credentials/sops-age-key";
       sops.defaultSopsFile = lib.mkForce ../../../../secrets/secrets.yaml;
       sops.secrets."headscale/auth_key" = {};

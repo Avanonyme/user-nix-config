@@ -23,7 +23,7 @@ den.aspects.microvms.igloo = {ipAddress, mac, tapID, workspace, ...}:{
       imports = [inputs.microvm.nixosModules.microvm];
       system.stateVersion = den.default.nixos.system.stateVersion;
 
-      fileSystems."/".device = "/dev/null";  # required for guest model
+      fileSystems."/".device = "tmpfs";  # required for guest model
       fileSystems."/".fsType = "tmpfs";      # ephemeral (default)
 
       services.resolved.enable = true;

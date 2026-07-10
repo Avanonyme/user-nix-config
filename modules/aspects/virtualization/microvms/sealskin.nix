@@ -14,7 +14,7 @@ in
         ipAddress = "${ipadd}"; 
         mac ="02:00:00:00:00:06" ;
         tapID = "microvm6"; 
-        workspace = "/srv/sealskin"; #or elsewhere
+        workspace = "/srv/sealskin"; #or elsewhere, then services.headscale.settings.acl.policy.path = "/srv/sealskin/acls.yaml";
       })
 
       networking.headscale.server

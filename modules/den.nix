@@ -84,6 +84,7 @@ den.hosts.aarch64-darwin.arctic = {
 den.hosts.x86_64-linux.sealskin = { #headscale
    intoAttr = [];
    users.tux = { aspect = [den.aspects.tux.headless]; };
+   users.avanonyme = { aspect = [den.aspects.avanonyme.headless]; };
    settings = {
       networking.domain = domain;
       networking.admin_email = admin_email;

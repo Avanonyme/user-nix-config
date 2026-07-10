@@ -9,10 +9,6 @@
 		];
 		nixos ={lib, pkgs, ...}: 
     {
-		#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
-		#to disable as well in boreal.nix and gaming.nix
-		#--> should we move this to homemanager ?
-    nixpkgs.config.allowUnfree = true;
 
 		home-manager.useGlobalPkgs = true; #force home-manager to use nixos modulr pkgs and allow unfree
 		home-manager.useUserPackages = true; #pkgs are installed through nixos user
@@ -28,17 +24,6 @@
 		# TODO: change to an encrypted secrets (already in secrets.yaml) 
 		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
 
-		services.kanidm.provision = {
-			groups."vpn.users" = {
-				members = [ "avanonyme" ];
-			};
-
-			persons."avanonyme" = {
-				displayName = "avanonyme";
-				mailAddresses = [ "avanix26@protonmail.com" ];
-				groups = [ "vpn.users" ];
-			};
-		};
 		};
 		homeManager = {
 			programs.git = {
@@ -70,6 +55,13 @@
 			#testing
 			den.aspects.gaming.vr
     ];
+		nixos ={host, ...}:{
+			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
+			#to disable as well in boreal.nix and gaming.nix
+			#--> should we move this to homemanager ?
+			nixpkgs.config.allowUnfree = true;
+
+		};
     homeManager =
     { pkgs, user, ... }:
 		{

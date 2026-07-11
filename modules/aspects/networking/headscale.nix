@@ -88,23 +88,14 @@
         
         nginx.virtualHosts."${headscaleDomain}" = lib.mkForce {
           serverName = headscaleDomain;
-          forceSSL = false;
-          addSSL = true;
+          forceSSL = true;
           enableACME = true;
-          #useACMEHost = "${headscaleDomain}";
-          #acmeRoot = "/var/lib/acme/challenges-${headscaleDomain}";
           locations."/" = {
             proxyPass = "http://127.0.0.1:${toString headscalePort}";
             proxyWebsockets = true;
             recommendedProxySettings = true;
           };
         };
-      };
-
-      security.acme.certs."${headscaleDomain}" = {
-        webroot = "/var/lib/acme/challenges-${headscaleDomain}";
-        email = host.settings.networking.admin_email;
-        group = "nginx";
       };
     };
   };

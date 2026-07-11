@@ -73,13 +73,15 @@ den.aspects.microvms.igloo = {ipAddress, mac, tapID, workspace, ...}:{
         }
       ];
 
-      # Use SSH host keys mounted from outside the VM (remain identical).
-      services.openssh.hostKeys = [
-        {
-          path = "/etc/ssh/host-keys/ssh_host_ed25519_key";
-          type = "ed25519";
-        }
+      systemd.tmpfiles.rules = [
+        "d /var/lib/ssh 0700 root root -"
       ];
+
+      # Use SSH host keys stored on persistent /var (survives reboots).
+      services.openssh.hostKeys = [{
+        path = "/var/lib/ssh/ssh_host_ed25519_key";
+        type = "ed25519";
+      }];
 
       environment.systemPackages = [ inputs.nixpkgs.legacyPackages.x86_64-linux.htop ];
 

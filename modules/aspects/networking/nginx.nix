@@ -27,12 +27,6 @@
       security.acme = {
         acceptTerms = true;
         defaults.email = host.settings.networking.admin_email;
-
-        certs."${domain}" = {
-          webroot = "/var/lib/acme/challenges-${domain}";
-          email = host.settings.networking.admin_email;
-          group = "nginx";
-        };
       };
       networking.firewall.allowedTCPPorts = [
         80 #HTTP

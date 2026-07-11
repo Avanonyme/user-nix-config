@@ -27,8 +27,9 @@ den.aspects.microvms.igloo = {ipAddress, mac, tapID, workspace, ...}:{
       fileSystems."/".fsType = "tmpfs";      # ephemeral (default)
 
       # to relax restrictions for ssh
-      systemd.tmpfiles.settings."fix-root-perms"."/".options.mode = "0755";
-
+      systemd.tmpfiles.settings."fix-root-perms" = {
+        "/" = { mode = "0755"; user = "root"; group = "root"; };
+      };   
       services.resolved.enable = true;
       networking.useDHCP = false;
       networking.useNetworkd = true;

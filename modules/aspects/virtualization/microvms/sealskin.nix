@@ -45,6 +45,7 @@ in
       };
       networking.nat = {
         enable = true;
+        externalInterface = "enp1s0";
         forwardPorts = [
         { proto = "tcp"; sourcePort = 80;  destination = "${ipadd}:80"; }
         { proto = "tcp"; sourcePort = 443; destination = "${ipadd}:443"; }

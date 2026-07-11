@@ -37,6 +37,13 @@
       networking.hostId = "727b3488";
 
       networking.useDHCP = lib.mkDefault false;
+      networking.interfaces.enp1s0.ipv4.addresses = [{
+        address = "192.168.2.79";
+        prefixLength = 24;
+      }];
+      networking.defaultGateway = "192.168.2.1";
+      networking.nameservers = [ "1.1.1.1" "8.8.8.8" ];
+      networking.networkmanager.unmanaged = [ "interface-name:enp1s0" ];
 
       nix.settings.experimental-features = ["nix-command" "flakes"];
       nix.settings.trusted-users = [ "avanonyme" ];

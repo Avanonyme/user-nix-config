@@ -26,6 +26,9 @@ den.aspects.microvms.igloo = {ipAddress, mac, tapID, workspace, ...}:{
       fileSystems."/".device = "tmpfs";  # required for guest model
       fileSystems."/".fsType = "tmpfs";      # ephemeral (default)
 
+      # to relax restrictions for ssh
+      systemd.tmpfiles.settings."fix-root-perms"."/".options.mode = "0755";
+
       services.resolved.enable = true;
       networking.useDHCP = false;
       networking.useNetworkd = true;

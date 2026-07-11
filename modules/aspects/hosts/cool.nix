@@ -23,7 +23,7 @@
 
       networking.base
       networking.nginx
-      #networking.headscale.client
+      networking.headscale.client
       networking.ddclient
 
 

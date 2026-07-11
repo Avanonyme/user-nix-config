@@ -28,8 +28,15 @@ den.aspects.microvms.igloo = {ipAddress, mac, tapID, workspace, ...}:{
 
       # to relax restrictions for ssh
       systemd.tmpfiles.settings."fix-root-perms" = {
-        "/" = { mode = "0755"; user = "root"; group = "root"; };
+        "/" = {
+          z = { 
+            mode = "0755"; 
+            user = "root"; 
+            group = "root"; 
+          };
+        };
       };   
+      
       services.resolved.enable = true;
       networking.useDHCP = false;
       networking.useNetworkd = true;

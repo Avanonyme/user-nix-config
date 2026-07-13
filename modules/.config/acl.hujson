@@ -1,22 +1,40 @@
 {
+  "groups": {
+    "group:admin": ["avanonyme@"],
+  },
 
-  "groups":[
-    "group:admin":["arctic" "boreal"]
-  ],
+  "tagOwners": {
+    "tag:server": ["group:admin"],
+    "tag:workstation": ["group:admin"],
+  },
+
   "acls": [
     {
       "action": "accept",
       "src": ["autogroup:member"],
       "dst": ["autogroup:self:*"],
     },
+    {
+      // Allows normal ssh(1) / OpenSSH on TCP 22.
+      "action": "accept",
+      "proto": "tcp",
+      "src": ["group:admin"],
+      "dst": ["tag:server:22", "tag:workstation:22"],
+    },
   ],
 
   "ssh": [
     {
-    // Note: autogroup:self excludes tagged machines.
       "action": "accept",
       "src": ["autogroup:member"],
       "dst": ["autogroup:self"],
+      "users": ["autogroup:nonroot"],
+    },
+    {
+      // Tailscale SSH, not OpenSSH authorization.
+      "action": "accept",
+      "src": ["group:admin"],
+      "dst": ["tag:server", "tag:workstation"],
       "users": ["autogroup:nonroot"],
     },
   ],

@@ -83,7 +83,7 @@
               nameservers.global = [ "1.1.1.1" "9.9.9.9" ];
             };
             server_url = "https://${headscaleDomain}";
-            policy.path = "../../.config/acl.hujson";
+            policy.path = ../../.config/acl.hujson;
           };
         };
         

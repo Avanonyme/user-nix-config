@@ -74,7 +74,7 @@
         adminUser = lib.mkOption {
           type = lib.types.str;
           default = "avanonyme";
-          description = "Username for the headscale admin user"
+          description = "Username for the headscale admin user";
         };
       };
       services = {

@@ -18,6 +18,7 @@
       core.openssh
 
       disk.cool
+      disk.gc
 
       security.sops
 

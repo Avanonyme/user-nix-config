@@ -70,17 +70,9 @@
       headscaleDomain = host.settings.networking.headscale.headscaleDomain;
       headscalePort = host.settings.networking.headscale.headscalePort;
     in {
-      options.services.headscale = {
-        adminUser = lib.mkOption {
-          type = lib.types.str;
-          default = "avanonyme";
-          description = "Username for the headscale admin user";
-        };
-      };
       services = {
         headscale = {
           enable = true;
-          adminUser = "avanonyme";
           address = "0.0.0.0";
           port = headscalePort;
           settings = {

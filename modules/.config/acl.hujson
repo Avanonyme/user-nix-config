@@ -1,0 +1,19 @@
+{
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self:*"],
+    },
+  ],
+
+  "ssh": [
+    {
+    // Note: autogroup:self excludes tagged machines.
+      "action": "accept",
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self"],
+      "users": ["autogroup:nonroot"],
+    },
+  ],
+}

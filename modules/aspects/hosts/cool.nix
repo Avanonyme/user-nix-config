@@ -22,7 +22,6 @@
       security.sops
 
       networking.base
-      networking.nginx
       networking.headscale.client
       networking.ddclient
 
@@ -38,10 +37,10 @@
 
       networking.useDHCP = lib.mkDefault false;
       networking.interfaces.enp1s0.ipv4.addresses = [{
-        address = "192.168.2.79";
+        address = "192.168.50.2";
         prefixLength = 24;
       }];
-      networking.defaultGateway = "192.168.2.1";
+      networking.defaultGateway = "192.168.50.1";
       networking.nameservers = [ "1.1.1.1" "8.8.8.8" ];
       networking.networkmanager.unmanaged = [ "interface-name:enp1s0" ];
 

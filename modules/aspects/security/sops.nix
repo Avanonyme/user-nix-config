@@ -37,7 +37,7 @@
 #      The key name inside the file uses underscores (not /).
 #      Secret "deepseek/api_key" → looks up deepseek_api_key in ai.yaml
 
-    allSecrets = {
+    commonSecrets = {
       # media 
       #"sonarr/api_key" = {};
       #"sonarr/password" = {};
@@ -67,13 +67,12 @@
 
       # network
       "ddclient/password" = {};
-
-      #microvms
+    };
+    nixosOnlySecrets = {
       "microvm/sealskin_key" = {
         group = "kvm";
         mode = "0440";
       };
-
     };
 
     # following https://guekka.github.io/nixos-server-2/
@@ -93,7 +92,7 @@
         age.sshKeyPaths = [];
         age.keyFile = "/home/avanonyme/.config/sops/age/keys.txt";
 
-        secrets = allSecrets;
+        secrets = commonSecrets // nixosOnlySecrets;
 
         templates."hermes.env" = {
           content = ''
@@ -112,7 +111,7 @@
         defaultSopsFile = secretFile;
         age.sshKeyPaths = [];
         age.keyFile = "/Users/${user.userName}/.config/sops/age/keys.txt";
-        secrets = allSecrets;
+        secrets = commonSecrets;
       };
     };
 
@@ -126,7 +125,7 @@
           then "/Users/${user.userName}/.config/sops/age/keys.txt"
           else "/home/${user.userName}/.config/sops/age/keys.txt";
 
-        secrets = allSecrets;
+        secrets = commonSecrets;
       };
 
     };

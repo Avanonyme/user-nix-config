@@ -17,6 +17,17 @@
   };
 
   den.aspects.networking.headscale.client = {
+  """
+  Manual Enrollment (in flake directory with correct decryption keys):
+
+  sudo tailscale up \
+  --auth-key="$(sudo cat "$(nix eval --raw .#darwinConfigurations.arctic.config.sops.secrets.headscale/auth_key.path)")" \
+  --login-server="https://rustedbonghomeserver.mooo.com" \
+  --ssh
+  tailscale status
+  tailscale netcheck
+
+  """
     nixos =
     { host,lib, pkgs, config, ... }:
 
@@ -40,6 +51,8 @@
       # 1. Enable the Tailscale daemon
       services.tailscale ={
         enable = true;
+        openFirewall = true;
+
         authKeyFile = config.sops.secrets."headscale/auth_key".path;
         extraUpFlags = ["--ssh" "--login-server=${host.settings.networking.headscale.headscaleDomain}"];
       };

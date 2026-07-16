@@ -17,7 +17,7 @@
   };
 
   den.aspects.networking.headscale.client = {
-  """
+  /*
   Manual Enrollment (in flake directory with correct decryption keys):
 
   sudo tailscale up \
@@ -27,7 +27,7 @@
   tailscale status
   tailscale netcheck
 
-  """
+  */
     nixos =
     { host,lib, pkgs, config, ... }:
 

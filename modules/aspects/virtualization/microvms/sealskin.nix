@@ -63,7 +63,7 @@ in
 
       nixos = {
         imports = [inputs.microvm.nixosModules.microvm];
-        users.users.root.password = "";
+        users.users.root.password = ""; #all right for a one off runner
 
         microvm = {
           hypervisor = "stratovirt";

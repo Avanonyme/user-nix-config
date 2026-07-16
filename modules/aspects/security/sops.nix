@@ -38,6 +38,7 @@
 #      Secret "deepseek/api_key" → looks up deepseek_api_key in ai.yaml
 
     commonSecrets = {
+      "avanonyme_password" = {};
       # media 
       #"sonarr/api_key" = {};
       #"sonarr/password" = {};

@@ -35,7 +35,7 @@
       in
       {
         environment.systemPackages = [
-          inputs.determinate-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+          inputs.determinate.packages.${pkgs.stdenv.hostPlatform.system}.default
           microvmRunWrapper
         ];
       };

@@ -1,5 +1,5 @@
 {den,...}:{
-  den.aspects.disk.gc = {
+  den.aspects.disk.gc.nixos = {
     boot.loader.grub.configurationLimit = 10;
     nix.gc = {
       automatic = true;

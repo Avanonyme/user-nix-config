@@ -22,7 +22,7 @@
                         "custom-shader" = builtins.readFile ./shaders/prism-window-resize.glsl;
                     };
 
-                }
+                };
             };
         };
     };

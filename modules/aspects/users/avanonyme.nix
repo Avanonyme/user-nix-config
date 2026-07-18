@@ -75,6 +75,7 @@
 					htop #resources monitoring
 
 					gh #github in the terminal
+					ghostty
 					#davinci-resolve #video editing 
 					neovim
 					fastfetch #sys info

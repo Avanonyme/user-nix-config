@@ -1,286 +1,230 @@
+config_version = 2
+
 [audio]
-enable_overdrive = false
-enable_sounds = false
-notification_sound = ""
-sound_volume = 0.5
-volume_change_sound = ""
+enable_overdrive = true
+enable_sounds = true
 
 [backdrop]
-blur_intensity = 0.5
-enabled = false
-tint_intensity = 0.30000001192092896
+blur_intensity = 0.13999999687075615
+enabled = true
+tint_intensity = 0.53999998793005943
 
 [bar]
-order = [ "main" ]
+order = [ "main", "leftbar" ]
+
+    [bar.leftbar]
+    auto_hide = true
+    background_opacity = 0.25999999418854713
+    capsule = true
+    center = []
+    contact_shadow = true
+    enabled = true
+    end = [ "active_window", "custom_button_2", "custom_button_3", "custom_button_4" ]
+    layer = "overlay"
+    margin_ends = 300
+    padding = 30
+    position = "left"
+    reserve_space = false
+    start = [ "clipboard", "screenshot", "tray" ]
 
     [bar.main]
-    auto_hide = false
-    background_opacity = 0.75
-    border = "outline"
-    border_width = 0.0
-    capsule = true
-    capsule_fill = "surface_variant"
-    capsule_opacity = 1.0
-    capsule_padding = 6.0
-    capsule_thickness = 0.75999999046325684
-    center = [ "date", "control-center", "clock" ]
-    concave_edge_corners = false
-    contact_shadow = false
-    enabled = true
-    end = [ "media", "weather", "tray", "group:g1" ]
-    font_weight = 500
-    hover_highlight = true
-    layer = "top"
-    margin_edge = 10
-    margin_ends = 10
-    margin_opposite_edge = 0
-    padding = 10
-    panel_overlap = 2
-    position = "top"
-    radius = 12
-    radius_bottom_left = 6
-    radius_bottom_right = 6
-    radius_top_left = 6
-    radius_top_right = 6
-    reserve_space = true
-    scale = 1.0
-    shadow = true
-    show_on_workspace_switch = true
-    start = [ "launcher", "workspaces" ]
-    thickness = 30
-    widget_spacing = 4
-
-        [bar.main.dead_zone]
-        command = ""
-        middle_command = ""
-        right_command = ""
-        scroll_down_command = ""
-        scroll_up_command = ""
-
-        [bar.main.monitor.DP-2]
-        auto_hide = false
-        background_opacity = 0.75
-        border = "outline"
-        border_width = 0.0
-        capsule = true
-        capsule_fill = "surface_variant"
-        capsule_opacity = 1.0
-        capsule_padding = 6.0
-        capsule_thickness = 0.75999999046325684
-        center = [ "date", "control-center", "clock" ]
-        concave_edge_corners = false
-        contact_shadow = false
-        enabled = true
-        end = [ "group:g1" ]
-        font_weight = 500
-        hover_highlight = true
-        layer = "top"
-        margin_edge = 10
-        margin_ends = 10
-        margin_opposite_edge = 0
-        match = "DP-2"
-        padding = 10
-        panel_overlap = 2
-        position = "bottom"
-        radius = 12
-        radius_bottom_left = 6
-        radius_bottom_right = 6
-        radius_top_left = 6
-        radius_top_right = 6
-        reserve_space = true
-        scale = 1.0
-        shadow = true
-        show_on_workspace_switch = true
-        start = [ "privacy", "workspaces" ]
-        thickness = 30
-        widget_spacing = 4
-
-            [bar.main.monitor.DP-2.dead_zone]
-            command = ""
-            middle_command = ""
-            right_command = ""
-            scroll_down_command = ""
-            scroll_up_command = ""
-
-            [[bar.main.monitor.DP-2.capsule_group]]
-            enabled = true
-            fill = "surface_variant"
-            id = "g1"
-            members = [ "network_rx", "ram", "temp" ]
-            opacity = 1.0
-            padding = 6.0
+    end = [ "cat", "media", "weather", "tray", "volume", "group:g1" ]
+    smart_auto_hide = true
+    start = [ "launcher", "workspaces", "group:g2" ]
 
         [[bar.main.capsule_group]]
         enabled = true
         fill = "surface_variant"
         id = "g1"
-        members = [ "clipboard", "notifications", "volume", "bluetooth", "network", "battery" ]
+        members = [ "network", "clipboard", "bluetooth", "battery", "notifications" ]
         opacity = 1.0
         padding = 6.0
 
-[battery]
-warning_threshold = 20
+        [[bar.main.capsule_group]]
+        border = ""
+        enabled = true
+        fill = "surface_variant"
+        id = "g2"
+        members = [ "wallhaven", "wallpaper" ]
+        opacity = 0.69999998807907104
+        padding = 6.0
 
 [brightness]
-enable_ddcutil = true
-ignore_mmids = []
-minimum_brightness = 0.0
-sync_all_monitors = false
+sync_all_monitors = true
 
 [calendar]
 enabled = true
-refresh_minutes = 15
 
-    [calendar.account.personal_google]
-    calendars = []
-    color = ""
-    name = "Gmail Main"
-    provider = ""
-    server_url = ""
+    [calendar.account.home_nextcloud]
+    name = "Victor"
     type = "google"
-    username = ""
-[control_center]
-hidden_tabs = []
-sidebar = "full"
-sidebar_section = "full"
-width = 800
 
-    [control_center.calendar]
-    show_events_card = true
+[[control_center.shortcuts]]
+type = "wifi"
 
-    [[control_center.shortcuts]]
-    type = "wifi"
+[[control_center.shortcuts]]
+type = "notification"
 
-    [[control_center.shortcuts]]
-    type = "bluetooth"
+[[control_center.shortcuts]]
+type = "clipboard"
 
-    [[control_center.shortcuts]]
-    type = "power_profile"
+[[control_center.shortcuts]]
+type = "keyboard_layout"
 
-    [[control_center.shortcuts]]
-    type = "dark_mode"
+[[control_center.shortcuts]]
+type = "audio"
 
-    [[control_center.shortcuts]]
-    type = "notification"
-
-    [[control_center.shortcuts]]
-    type = "nightlight"
+[[control_center.shortcuts]]
+type = "mic_mute"
 
 [desktop_widgets]
-enabled = true
-schema_version = 1
+schema_version = 2
+widget_order = [
+    "desktop-widget-0000000000000002",
+    "desktop-widget-0000000000000004",
+    "desktop-widget-0000000000000005",
+    "desktop-widget-0000000000000003",
+    "desktop-widget-0000000000000006"
+]
 
     [desktop_widgets.grid]
     cell_size = 16
     major_interval = 4
-    visible = true
+    visible = false
+
+    [desktop_widgets.widget.desktop-widget-0000000000000002]
+    box_height = 16.0
+    box_width = 2118.5595703125
+    cx = 1031.905517578125
+    cy = 1075.927978515625
+    output = "HDMI-A-1"
+    rotation = -3.1397311687469482
+    type = "audio_visualizer"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000002.settings]
+        background_opacity = 0.0
+        bands = 116
+        show_when_idle = true
+
+    [desktop_widgets.widget.desktop-widget-0000000000000003]
+    box_height = 84.3984375
+    box_width = 275.2734375
+    cx = 151.77734375
+    cy = 75.61328125
+    output = "HDMI-A-1"
+    rotation = 0.0
+    type = "clock"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000003.settings]
+        background_color = "surface"
+        background_opacity = 0.5
+        background_padding = 0
+        background_radius = 0
+        center_text = true
+        clock_style = "digital"
+        color = "primary"
+        format = "{:%H:%M}"
+        shadow = true
+
+    [desktop_widgets.widget.desktop-widget-0000000000000004]
+    box_height = 171.9375
+    box_width = 61.05859375
+    cx = 258.166015625
+    cy = 204.0234375
+    output = "HDMI-A-1"
+    rotation = -0.0
+    type = "clock"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000004.settings]
+        background_opacity = 0.5
+        background_padding = 0
+        background_radius = 0
+        center_text = true
+        clock_style = "digital"
+        format = "{:%d%n%m%n %y }"
+
+    [desktop_widgets.widget.desktop-widget-0000000000000005]
+    box_height = 172.26171875
+    box_width = 213.34375
+    cx = 121.2890625
+    cy = 203.248046875
+    output = "HDMI-A-1"
+    rotation = 0.0
+    type = "weather"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000005.settings]
+        background_opacity = 0.5
+        background_padding = 4
+        background_radius = 0
+        color = "on_surface"
+        forecast_days = 3
+        show_forecast = true
+
+    [desktop_widgets.widget.desktop-widget-0000000000000006]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 960.0
+    cy = 280.234375
+    output = "HDMI-A-1"
+    rotation = 0.0
+    type = "fancy_audio_visualizer"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000006.settings]
+        background = false
+        bar_width = 0.69999999999999996
+        bloom_intensity = 0.95000000000000007
+        inner_diameter = 0.75
+        ring_opacity = 0.60000000000000009
+        sensitivity = 1.1000000000000001
+        visualization_mode = "bars_rings"
 
 [dock]
 active_monitor_only = true
-active_opacity = 1.0
-active_scale = 1.0
-auto_hide = true
-background_opacity = 0.75
-concave_edge_corners = false
-cross_axis_padding = 8
-enabled = true
-icon_size = 30
-inactive_opacity = 1.0
-inactive_scale = 1.0
-item_spacing = 4
-launcher_custom_image = ""
-launcher_custom_image_colorize = false
-launcher_icon = "grid-dots"
+auto_hide = false
 launcher_position = "start"
-magnification = true
-magnification_scale = 1.4500000476837158
-main_axis_padding = 16
-margin_edge = 8
-margin_ends = 0
-monitors = []
-pinned = []
-position = "bottom"
-radius = 8
-radius_bottom_left = 16
-radius_bottom_right = 16
-radius_top_left = 16
-radius_top_right = 16
 reserve_space = false
-shadow = true
-show_dots = false
-show_instance_count = true
-show_running = true
+show_dots = true
+smart_auto_hide = true
 
-[hooks]
-battery_charging = []
-battery_discharging = []
-battery_percentage_changed = []
-battery_plugged = []
-bluetooth_disabled = []
-bluetooth_enabled = []
-colors_changed = []
-logging_out = []
-power_profile_changed = []
-rebooting = []
-session_locked = []
-session_unlocked = []
-shutting_down = []
-started = []
-theme_mode_changed = []
-wallpaper_changed = []
-wifi_disabled = []
-wifi_enabled = []
+[hot_corners]
+enabled = true
+
+    [hot_corners.bottom_left]
+    action = "launcher"
+
+    [hot_corners.top_left]
+    action = "window_switcher"
+
+    [hot_corners.top_right]
+    action = "control_center"
 
 [idle]
 behavior_order = [ "lock", "screen-off" ]
-pre_action_fade_seconds = 2.0
 
     [idle.behavior.lock]
     action = "lock"
     command = "noctalia:screen-lock"
-    enabled = false
-    resume_command = ""
+    enabled = true
     timeout = 600.0
 
     [idle.behavior.screen-off]
     action = "screen_off"
     command = "noctalia:dpms-off"
-    enabled = false
+    enabled = true
     resume_command = "noctalia:dpms-on"
-    timeout = 660.0
-
-[keybinds]
-cancel = [ "Escape" ]
-down = [ "Down" ]
-left = [ "Left" ]
-right = [ "Right" ]
-tab_next = [ "Tab" ]
-tab_previous = [ "Shift+Tab", "ISO_Left_Tab" ]
-up = [ "Up" ]
-validate = [ "Return", "KP_Enter" ]
+    timeout = 1000.0
 
 [location]
-address = "Montreal, Canada"
-auto_locate = false
-sunrise = ""
-sunset = ""
+address = "Montreal"
 
 [lockscreen]
-allow_empty_password = false
-blur_intensity = 0.5
-blurred_desktop = false
-enabled = true
-fingerprint = false
-monitors = []
-tint_intensity = 0.30000001192092896
-wallpaper = ""
+blurred_desktop = true
 
 [lockscreen_widgets]
 enabled = true
-schema_version = 1
+schema_version = 2
 widget_order = [
-    "lockscreen-login-box@DP-2",
-    "lockscreen-login-box@DP-1",
+    "lockscreen-login-box@HDMI-A-1",
     "lockscreen-widget-0000000000000001",
     "lockscreen-widget-0000000000000002",
     "lockscreen-widget-0000000000000003"
@@ -291,456 +235,196 @@ widget_order = [
     major_interval = 4
     visible = true
 
-    [lockscreen_widgets.widget."lockscreen-login-box@DP-1"]
-    box_height = 96.0
-    box_width = 448.0
-    cx = 1024.0
-    cy = 1040.0
-    enabled = true
-    output = "DP-1"
+    [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1"]
+    box_height = 70.0
+    box_width = 400.0
+    cx = 960.0
+    cy = 957.0
+    output = "HDMI-A-1"
     rotation = 0.0
     type = "login_box"
 
-        [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
+        [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
         show_caps_lock = true
         show_keyboard_layout = true
         show_login_button = true
         show_password_hint = true
 
     [lockscreen_widgets.widget.lockscreen-widget-0000000000000001]
-    box_height = 128.0
-    box_width = 288.0
-    cx = 208.0
-    cy = 256.0
-    enabled = true
-    output = "DP-1"
+    box_height = 176.0
+    box_width = 192.0
+    cx = 960.0
+    cy = 108.0
+    output = "HDMI-A-1"
     rotation = 0.0
-    type = "weather"
+    type = "clock"
 
         [lockscreen_widgets.widget.lockscreen-widget-0000000000000001.settings]
-        background_opacity = 0.80000000000000004
+        background_color = "on_surface"
+        background_opacity = 0.0
+        center_text = false
+        clock_style = "analog"
+        color = "on_surface"
         forecast_days = 3
         shadow = false
         show_forecast = false
 
     [lockscreen_widgets.widget.lockscreen-widget-0000000000000002]
-    box_height = 96.0
-    box_width = 288.0
-    cx = 208.45285034179688
-    cy = 112.0
-    enabled = true
-    output = "DP-1"
-    rotation = 0.0
-    type = "clock"
-
-        [lockscreen_widgets.widget.lockscreen-widget-0000000000000002.settings]
-        clock_style = "digital"
-        format = "{:%-I:%M %p}"
-
-    [lockscreen_widgets.widget.lockscreen-widget-0000000000000003]
-    box_height = 128.0
-    box_width = 288.0
-    cx = 208.0
-    cy = 416.0
-    enabled = true
-    output = "DP-1"
+    box_height = 144.0
+    box_width = 544.0
+    cx = 128.0
+    cy = 1008.0
+    output = "HDMI-A-1"
     rotation = 0.0
     type = "sysmon"
 
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000002.settings]
+        background_opacity = 0.0
+        clock_style = "digital"
+        format = "{:%-I:%M %p}"
+        stat = "cpu_usage"
+        stat2 = "cpu_temp"
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000003]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 960.0
+    cy = 222.0
+    output = "HDMI-A-1"
+    rotation = 0.0
+    type = "weather"
+
         [lockscreen_widgets.widget.lockscreen-widget-0000000000000003.settings]
+        background_opacity = 0.0
+        shadow = false
+        show_forecast = false
         stat = "net_rx"
         stat2 = ""
 
 [nightlight]
-enabled = false
-force = false
-temperature_day = 6500
-temperature_night = 4900
+enabled = true
 
 [notification]
-background_opacity = 0.75
-collapse_on_dismiss = true
-enable_daemon = true
-layer = "top"
-monitors = [ "DP-1" ]
-offset_x = 10
-offset_y = 10
-position = "top_right"
-scale = 1.0
-show_actions = true
-show_app_name = true
+layer = "overlay"
 
-[osd]
-background_opacity = 0.75
-monitors = [ "DP-2" ]
-offset_x = 10
-offset_y = 10
-orientation = "horizontal"
-position = "bottom_right"
-position_vertical = "top_center"
-scale = 1.0
-
-    [osd.kinds]
-    bluetooth = true
-    brightness = true
-    caffeine = true
-    dnd = true
-    keyboard_layout = true
-    lock_keys = true
-    media = false
-    nightlight = true
-    power_profile = true
-    privacy = true
-    volume = true
-    volume_input = true
-    volume_output = true
-    wifi = true
+[plugin_settings."noctalia/wallhaven"]
+api_key = "X3sguUcft78OWq8tJq1wdUlyeQxWz1pL"
+download_dir = "~/Pictures/wallpapers"
 
 [plugins]
-enabled = []
+enabled = [ "noctalia/bongocat", "noctalia/wallhaven" ]
 
     [[plugins.source]]
     auto_update = true
-    enabled = true
     kind = "git"
     location = "https://github.com/noctalia-dev/official-plugins"
     name = "official"
 
     [[plugins.source]]
     auto_update = true
-    enabled = true
     kind = "git"
     location = "https://github.com/noctalia-dev/community-plugins"
     name = "community"
 
 [shell]
-app_icon_colorize = false
-clipboard_auto_paste = "auto"
-clipboard_confirm_clear_history = false
-clipboard_enabled = true
-clipboard_history_max_entries = 50
-clipboard_image_action_command = ""
-corner_radius_scale = 0.5
-date_format = "%A, %x"
-disable_mipmaps = false
-external_ip_enabled = true
-font_family = "Noto Sans"
-lang = "en"
-launch_apps_as_systemd_services = false
-launch_apps_custom_command = ""
-middle_click_opens_widget_settings = true
-niri_overview_type_to_launch_enabled = true
-offline_mode = false
-password_style = "random"
+app_icon_color = "secondary"
 polkit_agent = true
 screen_time_enabled = true
-settings_show_advanced = true
-setup_wizard_enabled = true
-shared_gl_context = true
-show_location = true
-telemetry_enabled = true
-time_format = "{:%-I:%M %p}"
-ui_scale = 1.0
-
-    [shell.animation]
-    enabled = true
-    speed = 1.0
+settings_show_advanced = false
 
     [shell.greeter_sync]
-    auto_sync = true
+    auto_sync = false
 
     [shell.launcher]
-    app_grid = false
-    categories = true
-    compact = false
-    session_search = true
-    show_icons = true
-    sort_by_usage = true
-
-        [shell.launcher.dmenu]
-
-    [shell.mpris]
-    blacklist = []
+    app_grid = true
 
     [shell.panel]
-    borders = false
-    clipboard_placement = "attached"
-    clipboard_position = "center"
-    control_center_placement = "attached"
-    control_center_position = "auto"
-    floating_offset = 8
-    launcher_placement = "floating"
-    launcher_position = "center"
-    open_near_click_clipboard = true
-    open_near_click_control_center = false
-    open_near_click_launcher = false
-    open_near_click_session = false
-    open_near_click_wallpaper = false
-    polkit_placement = "floating"
-    polkit_position = "center"
-    session_placement = "attached"
-    session_position = "auto"
-    shadow = true
-    transparency_mode = "glass"
-    wallpaper_placement = "attached"
-    wallpaper_position = "auto"
-
-    [shell.privacy]
-    cam_filter_regex = ""
-    mic_filter_regex = ""
-    screen_filter_regex = ""
-
-    [shell.screen_corners]
-    enabled = false
-    size = 32
-
-    [shell.screenshot]
-    confirm_region = true
-    copy_to_clipboard = true
-    directory = "/home/packet/Pictures/Screenshots"
-    filename_pattern = "screenshot-%Y-%m-%d-%H-%M-%S"
-    freeze_screen = true
-    pipe_command = ""
-    pipe_to_command = false
-    save_to_file = true
-
-    [shell.session.power]
-
-    [[shell.session.actions]]
-    action = "lock"
-    command = ""
-    countdown_seconds = 0.0
-    enabled = true
-    glyph = ""
-    label = ""
-    shortcut = "1"
-    variant = "default"
-
-    [[shell.session.actions]]
-    action = "logout"
-    command = ""
-    countdown_seconds = 0.0
-    enabled = true
-    glyph = ""
-    label = ""
-    shortcut = "2"
-    variant = "default"
-
-    [[shell.session.actions]]
-    action = "suspend"
-    command = ""
-    countdown_seconds = 0.0
-    enabled = true
-    glyph = ""
-    label = ""
-    shortcut = "3"
-    variant = "default"
-
-    [[shell.session.actions]]
-    action = "reboot"
-    command = ""
-    countdown_seconds = 0.0
-    enabled = true
-    glyph = ""
-    label = ""
-    shortcut = "4"
-    variant = "default"
-
-    [[shell.session.actions]]
-    action = "shutdown"
-    command = ""
-    countdown_seconds = 0.0
-    enabled = true
-    glyph = ""
-    label = ""
-    shortcut = "5"
-    variant = "destructive"
-
-    [shell.shadow]
-    alpha = 0.5
-    direction = "down_left"
-
-[system.monitor]
-cpu_poll_seconds = 2.0
-cpu_temp_activity_threshold = 60.0
-cpu_temp_critical_threshold = 85.0
-cpu_temp_sensor_path = ""
-cpu_usage_activity_threshold = 10.0
-cpu_usage_critical_threshold = 100.0
-disk_pct_activity_threshold = 80.0
-disk_pct_critical_threshold = 99.0
-disk_poll_seconds = 10.0
-enabled = true
-gpu_poll_seconds = 5.0
-gpu_temp_activity_threshold = 60.0
-gpu_temp_critical_threshold = 85.0
-gpu_usage_activity_threshold = 40.0
-gpu_usage_critical_threshold = 70.0
-gpu_vram_activity_threshold = 20.0
-gpu_vram_critical_threshold = 80.0
-memory_poll_seconds = 2.0
-net_rx_activity_threshold = 0.20000000000000001
-net_rx_critical_threshold = 10.0
-net_tx_activity_threshold = 0.20000000000000001
-net_tx_critical_threshold = 10.0
-network_poll_seconds = 3.0
-ram_pct_activity_threshold = 30.0
-ram_pct_critical_threshold = 90.0
-swap_pct_activity_threshold = 70.0
-swap_pct_critical_threshold = 90.0
+    launcher_app_grid = true
+    launcher_placement = "attached"
+    launcher_position = "auto"
+    launcher_session_search = true
+    polkit_placement = "attached"
+    session_placement = "floating"
 
 [theme]
-builtin = "Noctalia"
-community_palette = "Osaka jade"
-custom_palette = ""
 mode = "dark"
 source = "wallpaper"
-wallpaper_scheme = "m3-tonal-spot"
+wallpaper_scheme = "vibrant"
 
     [theme.templates]
-    builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "qt" ]
-    community_ids = []
-    enable_builtin_templates = true
-    enable_community_templates = true
+    builtin_ids = [ "ghostty", "niri" ]
+    community_ids = [ "obsidian", "vscode" ]
 
 [wallpaper]
-directory = "~/Pictures/Wallpapers"
-directory_dark = ""
-directory_light = ""
-edge_smoothness = 0.30000001192092896
-enabled = true
-fill_color = ""
-fill_mode = "crop"
-per_monitor_directories = false
-transition = [ "honeycomb" ]
-transition_duration = 1500.0
+directory = "/home/avanonyme/Pictures/Wallpapers"
+transition_duration = 9600
 transition_on_startup = true
 
     [wallpaper.automation]
-    enabled = false
-    interval_seconds = 1800
-    order = "random"
-    recursive = true
+    enabled = true
+
+    [wallpaper.default]
+    path = "/home/avanonyme/Pictures/Wallpapers/958232.jpg"
+
+    [wallpaper.last]
+    path = "/home/avanonyme/Pictures/Wallpapers/958232.jpg"
+
+    [wallpaper.monitors.HDMI-A-1]
+    path = "/home/avanonyme/Pictures/Wallpapers/958232.jpg"
 
 [weather]
-effects = true
-enabled = true
-refresh_minutes = 30
-unit = "imperial"
+unit = "metric"
 
-[widget.active_window]
-icon_size = 14.0
-max_length = 260.0
-min_length = 80.0
-title_scroll = "none"
-type = "active_window"
-
-[widget.audio_visualizer]
-anchor = true
-type = "audio_visualizer"
-
-[widget.bongocat]
+[widget.cat]
 audio_spectrum = true
-script = "scripts/bongocat.lua"
+scale = 1.5
 tappy_mode = true
-type = "scripted"
-
-[widget.brightness]
-show_label = false
-type = "brightness"
-
-[widget.clock]
-format = "{:%-I:%M %p}"
-type = "clock"
+type = "noctalia/bongocat:cat"
+use_mpris_filter = true
 
 [widget.control-center]
-anchor = true
-glyph = "paw-filled"
-type = "control-center"
+glyph = "leaf-2"
 
-[widget.cpu]
-stat = "cpu_usage"
-type = "sysmon"
+[widget.custom_button_2]
+glyph = "hexagon-number-1"
+type = "custom_button"
 
-[widget.date]
-format = "{:%A %e %b %Y}"
-type = "clock"
+[widget.custom_button_3]
+glyph = "hexagon-number-2"
+type = "custom_button"
 
-[widget.input_volume]
-device = "input"
-type = "volume"
+[widget.custom_button_4]
+glyph = "hexagon-number-3"
+type = "custom_button"
 
-[widget.keyboard_layout]
-cycle_command = ""
-hide_when_single_layout = false
-type = "keyboard_layout"
-
-[widget.lock_keys]
-display = "short"
-hide_when_off = false
-show_caps_lock = true
-show_num_lock = true
-show_scroll_lock = false
-type = "lock_keys"
+[widget.launcher]
+custom_image_colorize = true
+glyph = "grid-dots"
 
 [widget.media]
-art_size = 16.0
+album_art_only = true
 hide_when_no_media = true
-max_length = 220.0
-min_length = 80.0
-title_scroll = "always"
-type = "media"
 
-[widget.network]
-show_label = false
-type = "network"
+[widget.taskbar]
+group_by_workspace = true
+only_active_workspace = true
 
-[widget.network_rx]
-stat = "net_rx"
-type = "sysmon"
+[widget.wallhaven]
+glyph = "photo-down"
+type = "noctalia/wallhaven:wallhaven"
 
-[widget.network_tx]
-stat = "net_tx"
-type = "sysmon"
-
-[widget.output_volume]
-device = "output"
-type = "volume"
-
-[widget.privacy]
-anchor = true
-type = "privacy"
-
-[widget.ram]
-stat = "ram_used"
-type = "sysmon"
-
-[widget.spacer]
-type = "spacer"
-
-[widget.sysmon]
-stat = "cpu_temp"
-type = "sysmon"
-
-[widget.temp]
-stat = "cpu_temp"
-type = "sysmon"
-
-[widget.tray]
-drawer = true
-drawer_columns = 5
-match_adjacent_spacing = true
-type = "tray"
-
-[widget.volume]
-show_label = false
-type = "volume"
-
-[widget.weather]
-show_condition = false
-type = "weather"
+[widget.wallpaper]
+capsule = true
+glyph = "brand-google-photos"
+interactive = false
 
 [widget.workspaces]
 display = "name"
-max_label_chars = 10
-type = "workspaces"
+hide_when_empty = true
+labels_only_when_occupied = true

@@ -10,7 +10,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.zen-browser = {
+  den.aspects.apps.zen-browser = {
     homeManager = {pkgs, user,...}: 
     let
       system = pkgs.stdenv.hostPlatform.system;

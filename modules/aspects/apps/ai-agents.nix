@@ -33,7 +33,7 @@ in
     };
   };
 
-  den.aspects.AI = {
+  den.aspects.apps.ai = {
     includes = [
       den.aspects.hermes
       den.provides.obsidian
@@ -235,8 +235,6 @@ in
     #obsidian should come here when this is ready
     #includes = [den.provides.obsidian];
     nixos.services.hermes-agent ={
-      #for platforms requiring oauth
-      authFile = config.sops.secrets."hermes/auth.json".path;
 
       settings = {
         display = { compact = false; personality = "kawaii"; };
@@ -254,7 +252,7 @@ in
           env.GITHUB_PERSONAL_ACCESS_TOKEN = "\${GITHUB_TOKEN}"; # resolved from .env
         };
       };
-      extraPlugins = {};
+      #extraPlugins = {};
       settings.plugins.enabled = [];
 
       extraDependencyGroups = ["matrix"];

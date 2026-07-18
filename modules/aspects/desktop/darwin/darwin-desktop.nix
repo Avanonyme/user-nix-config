@@ -1,6 +1,6 @@
 { den, ... }:
 {
-  den.aspects.darwin-desktop = {
+  den.aspects.desktop.darwin-desktop = {
     includes = [
       den.aspects.hardware.darwin #hardware/
     ];

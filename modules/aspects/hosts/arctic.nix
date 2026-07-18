@@ -5,8 +5,8 @@
      includes = with den.aspects; [
       core.hostname
      # <core/dev-laptop>
-      darwin-desktop
-      microvm-darwin
+      desktop.darwin-desktop
+      virtualization.microvm-darwin
       networking.tailscale.client
       security.sops
     ];

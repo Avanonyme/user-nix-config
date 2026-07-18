@@ -5,7 +5,7 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.stylix = {
+  den.aspects.desktop.stylix = {
     nixos = { pkgs, lib, ... }: {
       imports = [
         inputs.stylix.nixosModules.stylix
@@ -15,7 +15,7 @@
       stylix = {
         enable = true;
         polarity = "dark";
-        image = /home/avanonyme/Pictures/Wallpapers/wp8457149-solarpunk-wallpapers.jpg;
+        image = ../../.config/wp8457149-solarpunk-wallpapers.jpg;
         cursor = {
           name = "Bibata-Modern-Ice";
           package = pkgs.bibata-cursors;
@@ -44,7 +44,17 @@
         targets.qt.enable  = false;
         targets.kmscon.enable = false; 
         targets.gnome.enable = false;
+        targets.gtk.enable = false;
       };
     };
+     homeManager = { ... }: {
+
+       xdg.configFile."gtk-3.0/gtk.css" = {
+         force = true;
+       };
+       xdg.configFile."gtk-4.0/gtk.css" = {
+         force = true;
+       };
+     };
   };
 }

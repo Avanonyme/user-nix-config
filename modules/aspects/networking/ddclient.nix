@@ -2,7 +2,7 @@
 # DDNS setup for a server without a router
 
 den.aspects.networking.ddclient = {
-  nixos = {host, ...}: {config, pkgs, ...}: {
+  nixos = {host,config, pkgs, ...}: {
     services.ddclient = {
       enable = true;
       quiet=true;

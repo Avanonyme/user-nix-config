@@ -44,17 +44,17 @@
 		};
  };
  den.aspects.avanonyme.linux-desktop = {
-    includes = [
-			den.aspects.avanonyme.headless
+    includes = with den.aspects; [
+			avanonyme.headless
 			
-			den.aspects.noctalia-desktop
-      den.aspects.zen-browser
-      den.aspects.gaming
-			den.aspects.AI
-			den.aspects.stylix
+			desktop.noctalia
+			apps.zen-browser
+			apps.gaming
+			apps.ai
+
 
 			#testing
-			den.aspects.gaming.vr
+			#apps.gaming.vr
     ];
 		nixos ={host, ...}:{
 			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
@@ -102,8 +102,8 @@
 	den.aspects.avanonyme.darwin-desktop = {
 		includes = with den.aspects; [
 			avanonyme.headless
-			gaming
-			AI
+			apps.gaming
+			apps.ai
 		];
 		darwin = {lib,...}:{
 			nixpkgs.config.allowUnfree = true;

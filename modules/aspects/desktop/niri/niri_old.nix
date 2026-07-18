@@ -11,7 +11,7 @@
     };
   };
 
-  den.aspects.niri = {
+  den.aspects.desktop.niri_old = {
 
     nixos = { host, pkgs, lib, config, ...}: {
       imports = [inputs.niri.nixosModules.niri];
@@ -195,11 +195,9 @@
         prefer-no-csd = true;
         screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d_%H-%M-%S.png";	
         spawn-at-startup = [
-          {
-          #argv = ["mako"]; #mako should spawn by itself
-          command = [ "noctalia" ];
-          #TODO: greetd seems blocked
-          }
+          {command = [ "noctalia" ];}
+          #start all systemd services tied to the graphical session, e.g, polkit
+          {command = ["systemctl" "--user" "start" "graphical-session.target"];} 
         ];
 
         input = {

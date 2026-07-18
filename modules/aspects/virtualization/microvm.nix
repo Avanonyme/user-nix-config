@@ -16,7 +16,7 @@
       # expose declaredrunner for each hosts as flake output
       (import "${inputs.den}/templates/microvm/modules/microvm-runners.nix") 
     ];
-  den.aspects.microvm-darwin= {inputs, ...}: {
+  den.aspects.virtualization.microvm-darwin= {inputs, ...}: {
     #includes = [den.aspects.microvm-bridge]; #metal side aspect
 
     # https://github.com/aspauldingcode/.dotfiles/blob/master/modules/microvm.nix

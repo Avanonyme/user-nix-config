@@ -50,6 +50,11 @@ den.hosts.x86_64-linux.boreal= {
       aspect = den.aspects.avanonyme.linux-desktop;
    };
    users.gamer = {}; #gaming user
+
+   settings = {
+      networking.domain = domain;
+      networking.headscale.headscaleDomain = domain; #or "head.${domain}"
+   };
  };
 
 # cool - server

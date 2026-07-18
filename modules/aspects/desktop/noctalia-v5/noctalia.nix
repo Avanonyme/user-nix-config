@@ -5,9 +5,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.noctalia-desktop = {
-    includes = [
-      den.aspects.niri
+  den.aspects.desktop.noctalia = {
+    includes = with den.aspects; [
+      core.sound
+      security.polkit
+      desktop.niri
+      desktop.noctalia-greeter
       ];
 
     nixos = { host, pkgs, ... }: {
@@ -30,7 +33,7 @@
       
       programs.noctalia = {
         enable = true;
-        settings = builtins.fromJSON (builtins.readFile ./../../.config/noctalia.json);
+        settings = builtins.readFile ./noctalia.toml;
 
       };
     };

@@ -1,0 +1,26 @@
+{ inputs, ... }:
+{
+  den.aspects.desktop.niri-keybinds = {
+    imports = [ inputs.niri-nix.homeModules.default ];
+
+    homeManager = {
+      wayland.windowManager.niri.settings.binds = {
+        # Niri
+        "Mod+Shift+Slash".show-hotkey-overlay = [ ];
+        "Ctrl+Alt+Delete".quit = [ ];
+        "Mod+O".toggle-overview = [ ];
+        "Mod+Q".close-window = [ ];
+        "Mod+Alt+Q".close-window = [ ];
+
+        # Applications
+        "Mod+B".spawn = "zen-twilight";
+        "MOD+Return".spawn = [ "ghostty" ];
+
+        "Mod+E".spawn = [
+          "nautilus"
+          "--new-window"
+        ];
+      };
+    };
+  };
+}

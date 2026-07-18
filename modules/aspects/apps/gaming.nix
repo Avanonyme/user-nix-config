@@ -3,19 +3,25 @@
   # NAMED MODULE EXPORT
   # ─────────────────────────────────────────────────────────────────────────
 
- den.aspects.gaming = {
+ den.aspects.apps.gaming = {
 
     config.allowUnfree = true;
 
 
-    nixos = {pkgs, host, ... }: {
+    nixos = {pkgs, user, ... }: {
+      environment.sessionVariables = {
+        PROTON_ENABLE_WAYLAND = 1;
+      };
 
       # Steam with Proton support
       programs.steam = {
         enable = true;
         remotePlay.openFirewall = true;
         dedicatedServer.openFirewall = true;
-        gamescopeSession.enable = false;
+        localNetworkGameTransfers.openFirewall = true;
+
+        extraCompatPackages = with pkgs; [ proton-ge-bin ];
+        extraPackages = with pkgs; [ hidapi ];
       };
 
       # Gamemode for performance optimization
@@ -61,6 +67,16 @@
         
         # Performance monitoring
         nvtopPackages.amd
+
+        # emulators
+        azahar
+        cemu
+        dolphin-emu
+        melonds
+        pcsx2
+        ppsspp-sdl-wayland
+        rmg-wayland
+        ryubing
       ];
     };
     darwin = { pkgs, lib, ... }: {

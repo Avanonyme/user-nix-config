@@ -1,0 +1,70 @@
+{
+  "providers": {
+    "anthropic": {
+      "apiKey": "$ANTHROPIC_API_KEY"
+    },
+    "deepseek": {
+      "apiKey": "$DEEPSEEK_API_KEY"
+    },
+    "kimi": {
+      "apiKey": "$KIMI_API_KEY"
+    },
+    "openrouter": {
+      "baseUrl": "https://openrouter.ai",
+      "apiKey": "$OPENROUTER_API_KEY",
+      "models": [
+        {
+          "id": "openrouter/free",
+          "name": "Auto Free Models Router (OpenRouter)",
+          "contextWindow": 128000
+        },
+        {
+          "id": "openai/gpt-5.6-sol",
+          "name": "GPT-5.6 Sol (OpenRouter)",
+          "contextWindow": 1050000,
+          "vision": "text+image"
+        },
+        {
+          "id": "openai/gpt-5.6-terra",
+          "name": "GPT-5.6 Terra (OpenRouter)",
+          "contextWindow": 1050000,
+          "vision": "text+image"
+        },
+        {
+          "id": "openai/gpt-5.6-terra-pro",
+          "name": "GPT-5.6 Terra Pro (OpenRouter)",
+          "contextWindow": 1050000,
+          "vision": "text+image"
+        },
+        {
+          "id": "openai/gpt-5.6-luna",
+          "name": "GPT-5.6 Luna (OpenRouter)",
+          "contextWindow": 1050000,
+          "vision": "text+image"
+        },
+        {
+          "id": "openai/gpt-5.6-luna-pro",
+          "name": "GPT-5.6 Luna Pro (OpenRouter)",
+          "contextWindow": 1050000,
+          "vision": "text+image"
+        },
+                {
+          "id": "qwen/qwen3.7-plus",
+          "name": "Qwen 3.7 Plus (OpenRouter)",
+          "contextWindow": 1000000,
+          "vision": "text+image"
+        },
+        {
+          "id": "qwen/qwen3-coder:free",
+          "name": "Qwen 3 Coder 480B (OpenRouter)",
+          "contextWindow": 256000
+        },
+        {
+          "id": "qwen/qwen3.6-flash",
+          "name": "Qwen 3.6 Flash (OpenRouter)",
+          "contextWindow": 1000000
+        }
+      ]
+    }
+  }
+}

@@ -3,6 +3,9 @@
     ### Headscale server — include on the NixOS host acting as the coordinator ###
     # Source: https://carlosvaz.com/posts/setting-up-headscale-on-nixos/
     #         https://www.youtube.com/watch?v=ph5zQYx3HS8
+let
+  tailnet_domain = "tnet.loc";
+in
 {
   den.aspects.networking.headscale.settings = {
     headscaleDomain = lib.mkOption {
@@ -51,10 +54,10 @@
       # 1. Enable the Tailscale daemon
       services.tailscale ={
         enable = true;
-        openFirewall = true;
+        #openFirewall = true;
 
-        authKeyFile = config.sops.secrets."headscale/auth_key".path;
-        extraUpFlags = ["--ssh" "--login-server=${host.settings.networking.headscale.headscaleDomain}"];
+        #authKeyFile = config.sops.secrets."headscale/auth_key".path;
+        #extraUpFlags = ["--ssh" "--login-server=${host.settings.networking.headscale.headscaleDomain}"];
       };
       # 2. Add the CLI to your path
       environment.systemPackages = [ pkgs.tailscale ];
@@ -92,7 +95,7 @@
             logtail.enabled = false;
             dns = {
               magic_dns = true;
-              base_domain = "tnet.loc";
+              base_domain = "${tailnet_domain}";
               nameservers.global = [ "1.1.1.1" "9.9.9.9" ];
             };
             server_url = "https://${headscaleDomain}";

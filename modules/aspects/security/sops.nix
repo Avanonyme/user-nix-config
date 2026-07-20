@@ -58,8 +58,8 @@
       #"usenet/eweka/password" = {};
 
       # AI
-      "hermes_env/deepseek/api_key" = {};
-      "hermes_env/anthropic/api_key" = {};
+      "ai_env/deepseek/api_key" = {};
+      "ai_env/anthropic/api_key" = {};
 
       #vpn
       "headscale/auth_key" = {};
@@ -95,10 +95,10 @@
 
         secrets = commonSecrets // nixosOnlySecrets;
 
-        templates."hermes.env" = {
+        templates."ai.env" = {
           content = ''
-            DEEPSEEK_API_KEY=${config.sops.placeholder."hermes_env/deepseek/api_key"}
-            ANTHROPIC_API_KEY=${config.sops.placeholder."hermes_env/anthropic/api_key"}
+            DEEPSEEK_API_KEY=${config.sops.placeholder."ai_env/deepseek/api_key"}
+            ANTHROPIC_API_KEY=${config.sops.placeholder."ai_env/anthropic/api_key"}
           '';
         };
 

@@ -43,89 +43,29 @@
 			};
 		};
  };
- den.aspects.avanonyme.linux-desktop = {
+ den.aspects.avanonyme.desktop = {
     includes = with den.aspects; [
 			avanonyme.headless
 			
 			desktop.noctalia
-			apps.zen-browser
-			apps.gaming
-			apps.ai
-
+			app-bundles.full
 
 			#testing
 			#apps.gaming.vr
     ];
-		nixos ={host, ...}:{
+		
 			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
 			#to disable as well in boreal.nix and gaming.nix
 			#--> should we move this to homemanager ?
-			nixpkgs.config.allowUnfree = true;
+		nixos.nixpkgs.config.allowUnfree = true;
 
-		};
+		darwin.nixpkgs.config.allowUnfree = true;
+			
     homeManager =
     { pkgs, user, ... }:
 		{
 			#nix.settings.builders = "ssh://avanonyme@100.x.y.z x86_64-linux - - - - -";
-
-			home.packages = with pkgs; [
-			]
-			++ lib.optionals stdenv.isLinux [
-					bat #moder replacemement for cat
-					htop #resources monitoring
-
-					gh #github in the terminal
-					ghostty
-					#davinci-resolve #video editing 
-					neovim
-					fastfetch #sys info
-					obsidian
-
-					synergy #same keyboard for local network
-					tldr
-					unzip
-					tree #directory visualisation
-					vscodium #code editors
-
-					feh #image viewer
-					transmission_4-qt #torrent client
-					qemu #virtualization
-					gimp #image editing
-									vlc #media player
-
-					#fonts
-					geist-font 
-					nerd-fonts.geist-mono
-
-			];
 		};
 	};
-	den.aspects.avanonyme.darwin-desktop = {
-		includes = with den.aspects; [
-			avanonyme.headless
-			apps.gaming
-			apps.ai
-		];
-		darwin = {lib,...}:{
-			nixpkgs.config.allowUnfree = true;
-			
-			homebrew.brews = [
-				"calibre"
 
-			];
-				homebrew.casks = [
-						"vlc" 
-						"gimp"
-						"vscodium"
-						"bitwarden"
-						"signal"
-						"transmission"
-						"mullvad-vpn"
-						"brave-browser"
-					];
-				homebrew.taps = [
-				];
-
-		};
-	};
 }

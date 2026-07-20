@@ -5,7 +5,7 @@ let
   ipadd="10.0.83.6";
 in
 {
-  #used by sealskin guest host
+  #used by microvm guest host
   den.aspects.sealskin ={config, ...}:{ 
     includes = with den.aspects;[
       security.sops

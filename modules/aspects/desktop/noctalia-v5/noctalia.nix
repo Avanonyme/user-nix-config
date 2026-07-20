@@ -7,7 +7,7 @@
 
   den.aspects.desktop.noctalia = {
     includes = with den.aspects; [
-      core.sound
+      #core.sound
       security.polkit
       desktop.niri
       desktop.noctalia-greeter

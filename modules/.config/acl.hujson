@@ -6,6 +6,9 @@
   "tagOwners": {
     "tag:server": ["group:admin"],
     "tag:workstation": ["group:admin"],
+    
+    // Vms + containers
+    "tag:microvm": ["group:admin"],
   },
 
   "acls": [
@@ -19,7 +22,7 @@
       "action": "accept",
       "proto": "tcp",
       "src": ["group:admin"],
-      "dst": ["tag:server:22", "tag:workstation:22"],
+      "dst": ["tag:server:22", "tag:workstation:22", "tag:microvm:22"],
     },
   ],
 
@@ -38,4 +41,16 @@
       "users": ["autogroup:nonroot"],
     },
   ],
+  "grants": [
+    {
+    "src": ["tag:microvm","autogroup:member"],
+    "dst": ["tag:microvm"],
+    "ip": ["9000"] // production port
+    },
+    {
+    "src": ["group:admin"],
+    "dst": ["tag:microvm"],
+    "ip": ["8999"] //dev port
+    }
+  ]
 }

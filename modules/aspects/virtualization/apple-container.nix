@@ -1,10 +1,4 @@
 {den,...}:{
-#recursive type function
-#modularity at its limit
-#essence mod-> aspect
-#aspect id-> essence 
-#is the monad cycle from which emerge the nameless
-#this long causal chain, the finite in infinite direcitons.
 
 #https://github.com/halfwhey/nix-apple-container
 

@@ -1,19 +1,49 @@
 {den, ... }:
 {
-  den.aspects.desktop.full = {
+  den.aspects.app-bundles.full = {
     includes = with den.aspects;[
     #  bitwarden
     
     #  proton
     #  sunshine
-      networking.headscale.client
+      app-bundles.ai
       apps.zen-browser
+      apps.obsidian
+      apps.gaming
     ];
 
     nixos =
       { pkgs, user, ... }:
+      #these packages will eventually be moved to their own bundles
       {
+                      nixpkgs.config.permittedInsecurePackages = [
+                "electron-40.10.5"
+              ];
         users.users.${user.userName}.packages = with pkgs; [
+          bat #moder replacemement for cat
+					htop #resources monitoring
+
+					gh #github in the terminal
+					ghostty
+					#davinci-resolve #video editing 
+					neovim
+					fastfetch #sys info
+
+					synergy #same keyboard for local network
+					tldr
+					unzip
+					tree #directory visualisation
+					vscodium #code editors
+
+					feh #image viewer
+					qemu #virtualization
+					gimp #image editing
+					vlc #media player
+
+					#fonts
+					geist-font 
+					nerd-fonts.geist-mono
+
           # https://apps.gnome.org/
           baobab
           eyedropper
@@ -33,13 +63,11 @@
           element-desktop
           cider-2
           firefox
-          obsidian
           qbittorrent
           libreoffice-qt
           hunspell
           signal-desktop
           thunderbird
-          veracrypt
           vesktop
           vlc
           zoom-us
@@ -54,12 +82,22 @@
           "element"
           "iina"
           "obs"
-          "obsidian"
           "qbittorrent"
           "stats"
-          "veracrypt"
           "zoom"
+
+          "vlc" 
+          "gimp"
+          "vscodium"
+          "bitwarden"
+          "signal"
+          "transmission"
+          "mullvad-vpn"
+          "brave-browser"
         ];
+        brews = [
+				"calibre"
+			  ];
 
         masApps = {
           # "Affinity Designer 2" = 1616831348;

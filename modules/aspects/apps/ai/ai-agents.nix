@@ -14,6 +14,9 @@ let
     # Host as seen from inside apple containers (vmnet NAT gateway).
     # Verify with: container run --rm alpine ip route | head -1
     containerGatewayIP = "192.168.64.1";
+
+    ollamaModels = [ "gemma4:e4b" "qwen3.6:27b" "nomic-embed-text" ];
+
   };
 
   # State dir for the CONTAINERIZED hermes instance.
@@ -78,7 +81,7 @@ in
         };
 
         #secrets 
-        environmentFiles = [  config.sops.templates."hermes.env".path];
+        environmentFiles = [  config.sops.templates."ai.env".path];
         
         # make cli share state with gateway
         addToSystemPackages = true;
@@ -221,7 +224,7 @@ in
         # TODO(secrets): copy the sops-rendered hermes env into place.
         # The container reads /opt/data/.env. Point this at your darwin
         # sops template path once wired, e.g.:
-        #   cp /run/secrets/rendered/hermes.env ${hermesContainerState}/.env
+        #   cp /run/secrets/rendered/ai.env ${hermesContainerState}/.env
         if [ ! -f ${hermesContainerState}/.env ]; then
           echo "# DEEPSEEK_API_KEY=..." > ${hermesContainerState}/.env
           chmod 600 ${hermesContainerState}/.env
@@ -256,16 +259,6 @@ in
       settings.plugins.enabled = [];
 
       extraDependencyGroups = ["matrix"];
-    };
-  };
-  den.provides.obsidian = {
-    darwin = { ... }: { homebrew.casks = [ "obsidian" ]; };
-    nixos = { pkgs, ... }: { 
-      environment.systemPackages = with pkgs; [ obsidian ];
-      #services.hermes-agent.documents = {
-      #  "Obsidian_vault" = "";
-      #  "USER.md" = "";
-      #};
     };
   };
 }

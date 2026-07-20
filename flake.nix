@@ -29,6 +29,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     import-tree.url = "github:vic/import-tree";
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     mac-app-util.url = "github:hraban/mac-app-util";
     microvm = {
       url = "github:astro/microvm.nix";
@@ -58,6 +62,14 @@
     };
     noctalia-greeter = {
       url = "github:noctalia-dev/noctalia-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    obsidian-plugins = {
+      url = "github:cjavad/nixpille-obsidian-community-plugins";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pi = {
+      url = "github:lukasl-dev/pi.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {

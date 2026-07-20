@@ -28,10 +28,11 @@ order = [ "main", "leftbar" ]
     start = [ "clipboard", "screenshot", "tray" ]
 
     [bar.main]
-    end = [ "cat", "media", "weather", "tray", "volume", "group:g1" ]
-    smart_auto_hide = true
+    center = [ "clock", "control-center", "weather" ]
+    end = [ "cat", "media", "tray", "volume", "group:g1" ]
     reserve_space = false
-    start = [ "launcher", "workspaces", "group:g2" ]
+    smart_auto_hide = true
+    start = [ "session", "launcher", "workspaces", "group:g2" ]
 
         [[bar.main.capsule_group]]
         enabled = true
@@ -110,8 +111,8 @@ widget_order = [
     [desktop_widgets.widget.desktop-widget-0000000000000003]
     box_height = 84.3984375
     box_width = 275.2734375
-    cx = 151.77734375
-    cy = 75.61328125
+    cx = 157.36328125
+    cy = 108.50390625
     output = "HDMI-A-1"
     rotation = 0.0
     type = "clock"
@@ -130,8 +131,8 @@ widget_order = [
     [desktop_widgets.widget.desktop-widget-0000000000000004]
     box_height = 171.9375
     box_width = 61.05859375
-    cx = 258.166015625
-    cy = 204.0234375
+    cx = 263.751953125
+    cy = 236.9140625
     output = "HDMI-A-1"
     rotation = -0.0
     type = "clock"
@@ -142,13 +143,14 @@ widget_order = [
         background_radius = 0
         center_text = true
         clock_style = "digital"
+        color = "primary"
         format = "{:%d%n%m%n %y }"
 
     [desktop_widgets.widget.desktop-widget-0000000000000005]
     box_height = 172.26171875
     box_width = 213.34375
-    cx = 121.2890625
-    cy = 203.248046875
+    cx = 126.3984375
+    cy = 236.751953125
     output = "HDMI-A-1"
     rotation = 0.0
     type = "weather"
@@ -182,6 +184,7 @@ widget_order = [
 [dock]
 active_monitor_only = true
 auto_hide = false
+enabled = true
 launcher_position = "start"
 reserve_space = false
 show_dots = true
@@ -228,7 +231,9 @@ widget_order = [
     "lockscreen-login-box@HDMI-A-1",
     "lockscreen-widget-0000000000000001",
     "lockscreen-widget-0000000000000002",
-    "lockscreen-widget-0000000000000003"
+    "lockscreen-widget-0000000000000003",
+    "lockscreen-widget-0000000000000004",
+    "lockscreen-widget-0000000000000005"
 ]
 
     [lockscreen_widgets.grid]
@@ -308,6 +313,38 @@ widget_order = [
         stat = "net_rx"
         stat2 = ""
 
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000004]
+    box_height = 48.0
+    box_width = 48.0
+    cx = 784.0
+    cy = 1036.0
+    output = "HDMI-A-1"
+    rotation = 0.0
+    type = "button"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000004.settings]
+        background = true
+        command = """loginctl terminate-session $(loginctl user-status | head -n 1 | awk '{print $1}')
+"""
+        glyph = "logout"
+        label = ""
+        variant = "default"
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000005]
+    box_height = 48.0
+    box_width = 48.0
+    cx = 840.0
+    cy = 1036.0
+    output = "HDMI-A-1"
+    rotation = 0.0
+    type = "button"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000005.settings]
+        background = true
+        command = "reboot"
+        glyph = "reboot"
+        variant = "default"
+
 [nightlight]
 enabled = true
 
@@ -371,13 +408,13 @@ transition_on_startup = true
     enabled = true
 
     [wallpaper.default]
-    path = "/home/avanonyme/Pictures/Wallpapers/958232.jpg"
+    path = "/home/avanonyme/Pictures/Wallpapers/wp8457145-solarpunk-wallpapers.jpg"
 
     [wallpaper.last]
-    path = "/home/avanonyme/Pictures/Wallpapers/958232.jpg"
+    path = "/home/avanonyme/Pictures/Wallpapers/wp8457145-solarpunk-wallpapers.jpg"
 
     [wallpaper.monitors.HDMI-A-1]
-    path = "/home/avanonyme/Pictures/Wallpapers/958232.jpg"
+    path = "/home/avanonyme/Pictures/Wallpapers/wp8457145-solarpunk-wallpapers.jpg"
 
 [weather]
 unit = "metric"
@@ -424,6 +461,10 @@ type = "noctalia/wallhaven:wallhaven"
 capsule = true
 glyph = "brand-google-photos"
 interactive = false
+
+[widget.weather]
+max_length = 90
+show_condition = false
 
 [widget.workspaces]
 display = "name"

@@ -1,0 +1,20 @@
+{
+    "defaultProvider": "deepseek",
+    "defaultmodel": "deepseek-v4-flash",
+
+    "quietStartup": true,
+    
+    "externaleditor":"codium --wait",
+
+    "packages": [ 
+        "npm:pi-web-access",
+        "npm:pi-mcp-adapter"
+    ],
+    "themes":[
+        "npm:@ayulab/oh-my-pi"
+    ],
+    "extensions":[
+        "npm:bigpowers",
+        "npm:@dietrichgebert/ponytail"
+    ]
+}

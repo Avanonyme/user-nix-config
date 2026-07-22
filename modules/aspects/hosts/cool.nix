@@ -71,23 +71,37 @@
         efiInstallAsRemovable = true;
       };
       boot.kernelParams = [ "nomodeset" ];   #its an old computer 
+
+      # Daily reboot at 05:00 (local) — clears stuck tailscaled/headscale/microvm
+      # state so a failure while you're away self-heals within 24h.
+      # sealskin has autostart = true, so the headscale microvm comes back up
+      # on its own after each reboot.
+      systemd.timers.daily-reboot = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "*-*-* 05:00:00"; # system timezone (America/Toronto)
+          Persistent = true;             # catch up if the machine was off
+        };
+      };
+      systemd.services.daily-reboot = {
+        serviceConfig.Type = "oneshot";
+        script = ''
+          ${pkgs.systemd}/bin/systemctl reboot
+        '';
+      };
+
+      # Optional — actually refresh the config daily from git + reboot if the
+      # generation changed. Needs cool to have read access to the repo (it's
+      # private: use a read-only deploy key in /root/.ssh, or make it public).
+      # system.autoUpgrade = {
+      #   enable = true;
+      #   flake = "github:Avanonyme/user-nix-config/main#cool";
+      #   dates = "04:30";               # runs before the 05:00 reboot
+      #   allowReboot = true;
+      #   rebootWindow = { lower = "04:00"; upper = "06:00"; };
+      #   operation = "switch";          # or "boot" to only activate on reboot
+      # };
     };
-
-
-    # Auto-update from git repo (uncomment to enable):
-    # systemd.services.nixos-auto-update = {
-    #   path = [ pkgs.git pkgs.nix ];
-    #   script = ''
-    #     cd /var/lib/nixos-config
-    #     git pull --ff-only
-    #     nixos-rebuild switch --flake .#cool
-    #   '';
-    #   serviceConfig.Type = "oneshot";
-    # };
-    # systemd.timers.nixos-auto-update = {
-    #   wantedBy = [ "timers.target" ];
-    #   timerConfig.OnCalendar = "weekly";
-    # };
 
     homeManager = { pkgs, ... }: {
       home.packages = with pkgs; [

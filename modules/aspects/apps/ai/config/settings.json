@@ -1,6 +1,7 @@
 {
     "defaultProvider": "deepseek",
     "defaultmodel": "deepseek-v4-flash",
+    "defaultThinkingLevel": "medium",
 
     "quietStartup": true,
     
@@ -11,7 +12,8 @@
         "npm:pi-mcp-adapter"
     ],
     "themes":[
-        "npm:@ayulab/oh-my-pi"
+        "npm:@ayulab/oh-my-pi",
+        "git:https://github.com/hasit/pi-community-themes"
     ],
     "extensions":[
         "npm:bigpowers",

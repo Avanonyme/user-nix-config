@@ -9,6 +9,11 @@
     nixos.nixpkgs.overlays = [
         inputs.obsidian-plugins.overlays.default
       ];
+    # home-manager uses the host pkgs (useGlobalPkgs), so darwin hosts
+    # need the overlay too or pkgs.obsidianPlugins is missing there
+    darwin.nixpkgs.overlays = [
+        inputs.obsidian-plugins.overlays.default
+      ];
     homeManager = { user, pkgs, ... }: {
       programs.obsidian = {
         enable = true;

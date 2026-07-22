@@ -1,4 +1,4 @@
-{den, inputs, __findFile, ...}:
+{den, inputs, lib, ...}:
 {
 
  den.aspects.avanonyme.headless = {
@@ -26,6 +26,10 @@
 		users.users.avanonyme.hashedPassword = "$6$WXmKgQx7.qV1slLz$dBZcKato2pr4rST6SWmLnCFd9OdjCYpvl6yq4VFBRXya9mc/LUT9je7npNpNaj4NQmdlRnvwBuQGPL3uP5ow7/";
 
 		};
+		darwin = { ... }: {
+			home-manager.useGlobalPkgs = true; #same as the nixos block: HM shares the darwin pkgs (gets allowUnfree)
+			home-manager.useUserPackages = true;
+		};
 		homeManager = {
 			programs.git = {
 				enable = true;
@@ -43,17 +47,15 @@
 			};
 		};
  };
- den.aspects.avanonyme.desktop = {
-    includes = with den.aspects; [
-			avanonyme.headless
-			
-			desktop.noctalia
-			app-bundles.full
+den.aspects.avanonyme.desktop = {
+  includes =
+    with den.aspects;
+    [
+      avanonyme.headless
+      app-bundles.full
 
-			#testing
-			#apps.gaming.vr
+      # apps.gaming.vr
     ];
-		
 			#normally this logic is handled by den.provides.unfree but error: attribute 'hjem' missing when uncommenting it and nix flake check
 			#to disable as well in boreal.nix and gaming.nix
 			#--> should we move this to homemanager ?
@@ -67,5 +69,14 @@
 			#nix.settings.builders = "ssh://avanonyme@100.x.y.z x86_64-linux - - - - -";
 		};
 	};
+
+# Linux-only desktop additions. NOTE: user.aspect must be a plain attrset —
+# a function-valued aspect ({ host, ... }: ...) is silently dropped by den.
+den.aspects.avanonyme.desktop-linux = {
+  includes = with den.aspects; [
+    avanonyme.desktop
+    desktop.noctalia
+  ];
+};
 
 }

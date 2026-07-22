@@ -1,4 +1,4 @@
-{inputs, den, ...}:
+{inputs, den, lib, ...}:
 let
   aiConfig = {
     dataDir        = "/data/ai_models";
@@ -7,6 +7,35 @@ let
     tailscaleIP    = "100.x.x.x"; # replace with your microvm's tailscale IP
     tailnet_domain = "tnet.loc"; #see headscale.nix
     pi_port        = 8999; #dev port; prod port 9000
+  };
+
+  # immediate subdirectories of `dir`, as paths (pi's skills/extensions
+  # options are listOf path — plain dir-name strings are rejected)
+  dirPaths = dir:
+    map (name: dir + "/${name}") (
+      builtins.attrNames (
+        lib.filterAttrs (_: type: type == "directory") (builtins.readDir dir)
+      )
+    );
+
+  # pi's environment option takes tagged values: { file = …; } reads the
+  # file at runtime (for sops secrets), { value = …; } is a literal.
+  sopsEnv = config: {
+    ANTHROPIC_API_KEY.file  = config.sops.secrets."ai_env/anthropic/api_key".path;
+    DEEPSEEK_API_KEY.file   = config.sops.secrets."ai_env/deepseek/api_key".path;
+    MOONSHOT_API_KEY.file   = config.sops.secrets."ai_env/kimi/api_key".path; #check
+    OPENROUTER_API_KEY.file = config.sops.secrets."ai_env/openrouter/api_key".path;
+  };
+
+  common = {
+    rules = ./config/BASE_PROMPT.md;
+    # recursive read of directory ./config/skills
+    skills = dirPaths ./config/skills;
+    extensions = dirPaths ./config/extensions;
+
+    models = ./config/models.json;
+    # settings is type `attrs`, not a path — import the JSON
+    settings = lib.importJSON ./config/settings.json; #https://pi.dev/docs/latest/settings
   };
 in
 {
@@ -20,40 +49,18 @@ in
     includes = with den.aspects; [
       security.sops
       #services.ollama
-      #apps.ai-UIs.full
-      #etc.
     ];
-    nixos = {config, host, user, home, lib, ...}:{    
+    nixos = {config, host, user, lib, pkgs, ...}:{    
       imports = [ inputs.pi.nixosModules.default ];
 
-      programs.pi.coding-agent = {
+      programs.pi.coding-agent = common // {
         enable = true;
-        rules = ./config/BASE_PROMPT.md;
-        # skills = [ ./skills/my-skill ];
-        skills = builtins.attrNames (
-          lib.filterAttrs (_: type: type == "directory")
-            (builtins.readDir ./config/skills)
-        );
-        # extensions = [ ./extensions/my-extension.ts ];
-        extensions = builtins.attrNames (
-          lib.filterAttrs (_: type: type == "directory")
-            (builtins.readDir ./config/extensions)
-        );
-        
-        models = ./config/models.json;
-        settings = ./config/settings.json; #https://pi.dev/docs/latest/settings
 
-
-
-        extraArgs = [ "--mode" "rpc" "--bind" "${aiConfig.tailscaleIP}:${aiConfig.pi_port}" ];
-        environment = {
-            ANTHROPIC_API_KEY  = config.sops.secrets."ai_env/anthropic/api_key".path;
-            DEEPSEEK_API_KEY   = config.sops.secrets."ai_env/deepseek/api_key".path;
-            KIMI_API_KEY       = config.sops.secrets."ai_env/kimi/api_key".path;
-            OPENROUTER_API_KEY = config.sops.secrets."ai_env/openrouter/api_key".path;
-
-            PI_SHARE_VIEWER_URL = "https://pi.${host.hostName}.${aiConfig.tailnet_domain}/session/"; #magic DNS
+        environment = (sopsEnv config) // {
+          PI_SHARE_VIEWER_URL.value = "https://pi.${host.hostName}.${aiConfig.tailnet_domain}/session/"; #magic DNS
         };
+
+        extraArgs = [ "--mode" "rpc" "--bind" "${aiConfig.tailscaleIP}:${toString aiConfig.pi_port}" ];
 
         jail.enable = true;
         jail.permissions = combinators: with combinators; [
@@ -68,6 +75,24 @@ in
         ];
       };
 
+    };
+
+    # inputs.pi.homeModules.default is a *home-manager* module (it sets
+    # home.packages) — it belongs in the homeManager class, NOT the darwin
+    # (nix-darwin system) class. Guarded to darwin so NixOS hosts don't get
+    # a second pi install on top of the nixos module above.
+    homeManager = {config, user, lib, pkgs, ...}: {
+      imports = [ inputs.pi.homeModules.default ];
+
+      config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+        programs.pi.coding-agent = common // {
+          enable = true;
+
+          environment = sopsEnv config;
+
+          # no jail outside linux
+        };
+      };
     };
   };
 }

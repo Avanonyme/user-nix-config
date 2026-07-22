@@ -60,6 +60,8 @@
       # AI
       "ai_env/deepseek/api_key" = {};
       "ai_env/anthropic/api_key" = {};
+      "ai_env/kimi/api_key" = {};
+      "ai_env/openrouter/api_key" = {};
 
       #vpn
       "headscale/auth_key" = {};

@@ -59,7 +59,6 @@
       };
     };
 
-### Metal host - Make sure your matchConfig matches just the interfaces you want
     systemd.network.networks."11-microvm-tap" = {
       matchConfig.Name = "microvm*";
       networkConfig.Bridge = "microvm";

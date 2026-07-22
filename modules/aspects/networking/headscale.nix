@@ -51,13 +51,14 @@ in
       };
     };
     darwin = { host,lib, pkgs, config, ... }: {
+      # nix-darwin's services.tailscale has NO authKeyFile/extraUpFlags options
+      # (only enable/package/overrideLocalDns), so the NixOS config can't be
+      # copied 1:1. Enrollment is done by the activation script below instead.
+
       # 1. Enable the Tailscale daemon
       services.tailscale ={
         enable = true;
-        #openFirewall = true;
-
-        #authKeyFile = config.sops.secrets."headscale/auth_key".path;
-        #extraUpFlags = ["--ssh" "--login-server=${host.settings.networking.headscale.headscaleDomain}"];
+        overrideLocalDns = true; # MagicDNS: sets 100.100.100.100 as resolver
       };
       # 2. Add the CLI to your path
       environment.systemPackages = [ pkgs.tailscale ];
@@ -70,9 +71,31 @@ in
         allowSignedApp = true;
       };
 
-      # 4. Tailscale macOS-specific tweak (Optional)
-      # Fixes local DNS issues if MagicDNS isn't working
-      services.tailscale.overrideLocalDns = true;
+      # 4. Auto-enroll into the tailnet on activation (mirrors the NixOS block).
+      #    Runs at the end of darwin-rebuild; no-op once logged in (state is
+      #    persisted in /var/lib/tailscale across reboots).
+      #    Requires a *reusable* auth key in sops (headscale/auth_key) and
+      #    settings.networking.headscale.headscaleDomain set on the host.
+      system.activationScripts.postActivation.text = lib.mkAfter ''
+        ts=${pkgs.tailscale}/bin/tailscale
+        state="$($ts status --json 2>/dev/null | ${pkgs.jq}/bin/jq -r '.BackendState // ""' 2>/dev/null || true)"
+        if [ "$state" != "Running" ]; then
+          keyfile="${config.sops.secrets."headscale/auth_key".path}"
+          if [ -r "$keyfile" ]; then
+            echo "tailscale: not logged in — enrolling with headscale..."
+            for _ in 1 2 3 4 5; do
+              $ts up \
+                --auth-key="$(cat "$keyfile")" \
+                --login-server="https://${host.settings.networking.headscale.headscaleDomain}" \
+                --ssh \
+                --reset && break
+              sleep 2
+            done
+          else
+            echo "tailscale: $keyfile not readable — enroll manually (see comment in headscale.nix)"
+          fi
+        fi
+      '';
     };
   };
 

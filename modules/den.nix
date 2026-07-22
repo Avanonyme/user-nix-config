@@ -47,7 +47,7 @@ den.reservedKeys = ["settings"]; #options in aspects; see http://gist.github.com
 # boreal - desktop
 den.hosts.x86_64-linux.boreal= {
    users.avanonyme = {
-      aspect = den.aspects.avanonyme.desktop;
+      aspect = den.aspects.avanonyme.desktop-linux;
    };
    users.gamer = {}; #gaming user
 
@@ -81,7 +81,7 @@ den.hosts.aarch64-darwin.arctic = {
       aspect = den.aspects.avanonyme.desktop;
    };
    settings = {
-     # networking.headscale.headscaleDomain = "head.${domain}";
+     networking.headscale.headscaleDomain = "${domain}";
    };
 };
 

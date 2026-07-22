@@ -5,10 +5,10 @@
 
  den.aspects.apps.gaming = {
 
-    config.allowUnfree = true;
 
 
     nixos = {pkgs, user, ... }: {
+      nixpkgs.config.allowUnfree = true;
       environment.sessionVariables = {
         PROTON_ENABLE_WAYLAND = 1;
       };
@@ -80,6 +80,7 @@
       ];
     };
     darwin = { pkgs, lib, ... }: {
+      nixpkgs.config.allowUnfree = true;
 
       # Steam has no nix-darwin module — install via homebrew cask
       homebrew.casks = [

@@ -7,6 +7,7 @@
      # <core/dev-laptop>
       desktop.darwin-desktop
       virtualization.microvm-darwin
+      networking.base
       networking.headscale.client
       security.sops
     ];

@@ -6,8 +6,8 @@
     "deepseek": {
       "apiKey": "$DEEPSEEK_API_KEY"
     },
-    "kimi": {
-      "apiKey": "$KIMI_API_KEY"
+    "moonshotai": {
+      "apiKey": "$MOONSHOT_API_KEY"
     },
     "openrouter": {
       "baseUrl": "https://openrouter.ai",

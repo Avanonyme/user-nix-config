@@ -80,6 +80,7 @@
 
         enforcePolicy = pkgs.writeShellApplication {
           name = "jellyfin-enforce-transcode-policy";
+          # key="$(cat "${config.sops.secrets."jellyfin/api_key".path}")"
           runtimeInputs = [ pkgs.curl pkgs.jq ];
           text = ''
             set -eu

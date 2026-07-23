@@ -10,9 +10,17 @@
   # ext4 root). On ZFS hosts (boreal) prefer real datasets in the disk
   # aspect instead — tmpfiles runs at sysinit and would be shadowed by the
   # dataset mounts anyway.
+  # Layout convention (uniform across hosts):
+  #   /data        root:root 0755  — container only, nothing writable here
+  #   /data/local  1000:100  0775  — THIS host's own media (writable branch)
+  #   /data/media  (mountpoint)    — published view: mergerfs union on the
+  #                                  gateway; never written to directly
   den.aspects.disk.data =
     { path ? "/data"
-    , dirs ? [ "media" ]
+    , dirs ? [ "local" ]
+    , rootOwner ? "root"
+    , rootGroup ? "root"
+    , rootMode ? "0755"
     , owner ? "1000"   # avanonyme
     , group ? "100"    # users
     , dirMode ? "0775" # group-writable: drop media in from any admin user
@@ -20,7 +28,7 @@
     {
       nixos = { ... }: {
         systemd.tmpfiles.rules =
-          [ "d ${path} 0755 ${owner} ${group} -" ]
+          [ "d ${path} ${rootMode} ${rootOwner} ${rootGroup} -" ]
           ++ map (d: "d ${path}/${d} ${dirMode} ${owner} ${group} -") dirs;
       };
     };

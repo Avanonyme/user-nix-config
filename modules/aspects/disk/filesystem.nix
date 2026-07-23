@@ -122,9 +122,9 @@
                   mountpoint = "legacy";
                 };
               };
-              # Media library — exported ro to the tailnet by nfs-media.peer.
-              # Tuned for large immutable files: big records, no atime.
-              media = {
+              # This host's own media branch — exported ro to the tailnet
+              # by nfs-media.peer. Tuned for large immutable files.
+              local = {
                 type = "zfs_fs";
                 options = {
                   mountpoint = "legacy";
@@ -147,20 +147,18 @@
       fsType = "zfs";
       options = ["zfsutil" "nofail"];
     };
-    fileSystems."/data/media" = {
-      device = "data/media";
+    fileSystems."/data/local" = {
+      device = "data/local";
       fsType = "zfs";
       options = ["zfsutil" "nofail"];
     };
-    # Non-recursive: dataset roots only. The old recursive `chown -R` /
-    # `chmod -R 777` made every boot slower as the library grows and
-    # world-writable files are unnecessary — 0775 root dirs are enough
-    # (Jellyfin reads ro over NFS with all_squash).
+    # Non-recursive, dataset roots only. /data stays root:root 0755 (pure
+    # container); the writable branch /data/local is 0775 group users.
     systemd.services.fix-data-perms = {
       wantedBy = [ "multi-user.target" ];
-      after = [ "zfs-mount.service" "data.mount" "data-media.mount" ];
+      after = [ "zfs-mount.service" "data.mount" "data-local.mount" ];
       serviceConfig.Type = "oneshot";
-      script = "chown 1000:100 /data /data/media && chmod 0755 /data && chmod 0775 /data/media";
+      script = "chown root:root /data && chmod 0755 /data && chown 1000:100 /data/local && chmod 0775 /data/local";
     };
 
 
@@ -183,10 +181,11 @@
   };
 
   den.aspects.disk.cool = {
-    # /data/local = cool's own media branch, /data/media = mergerfs mountpoint
-    # (see test/mergerfs-media.nix). Plain dirs on ext4 — no extra disk.
+    # /data/local = cool's own media branch (writable). /data/media is the
+    # mergerfs mountpoint — auto-created by the fileSystems entry when
+    # test/mergerfs-media.nix is wired, no tmpfiles line needed.
     includes = [
-      (den.aspects.disk.data { dirs = [ "local" "media" ]; })
+      (den.aspects.disk.data { dirs = [ "local" ]; })
     ];
 
     nixos = {

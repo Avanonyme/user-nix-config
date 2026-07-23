@@ -1,4 +1,4 @@
-{ inputs, lib,... }:
+{ den, inputs, lib,... }:
 {
   flake-file.inputs.disko = {
     url = "github:nix-community/disko";
@@ -122,23 +122,45 @@
                   mountpoint = "legacy";
                 };
               };
+              # Media library — exported ro to the tailnet by nfs-media.peer.
+              # Tuned for large immutable files: big records, no atime.
+              media = {
+                type = "zfs_fs";
+                options = {
+                  mountpoint = "legacy";
+                  compression = "zstd";
+                  recordsize = "1M";
+                  atime = "off";
+                  "com.sun:auto-snapshot" = "true";
+                };
+              };
             };
             postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^data@blank$' || zfs snapshot data@blank";
           };
         };
       };
-    # MOUNT /mnt/data with the correct permission
-    fileSystems."/mnt/data" = {
+    # Mount the pool root at /data (the shared-folder convention used by
+    # disk.data / nfs-media / mergerfs-media) — dataset mountpoints are
+    # legacy, so mounts are declared here, not by ZFS automount.
+    fileSystems."/data" = {
       device = "data";
       fsType = "zfs";
       options = ["zfsutil" "nofail"];
     };
-    #moved to boreal.nix
+    fileSystems."/data/media" = {
+      device = "data/media";
+      fsType = "zfs";
+      options = ["zfsutil" "nofail"];
+    };
+    # Non-recursive: dataset roots only. The old recursive `chown -R` /
+    # `chmod -R 777` made every boot slower as the library grows and
+    # world-writable files are unnecessary — 0775 root dirs are enough
+    # (Jellyfin reads ro over NFS with all_squash).
     systemd.services.fix-data-perms = {
       wantedBy = [ "multi-user.target" ];
-      after = [ "zfs-mount.service" "data.mount" ];
+      after = [ "zfs-mount.service" "data.mount" "data-media.mount" ];
       serviceConfig.Type = "oneshot";
-      script = "chown -R 1000:100 /mnt/data && chmod -R 777 /mnt/data";
+      script = "chown 1000:100 /data /data/media && chmod 0755 /data && chmod 0775 /data/media";
     };
 
 
@@ -160,7 +182,14 @@
 
   };
 
-  den.aspects.disk.cool.nixos = {
+  den.aspects.disk.cool = {
+    # /data/local = cool's own media branch, /data/media = mergerfs mountpoint
+    # (see test/mergerfs-media.nix). Plain dirs on ext4 — no extra disk.
+    includes = [
+      (den.aspects.disk.data { dirs = [ "local" "media" ]; })
+    ];
+
+    nixos = {
     imports = [ inputs.disko.nixosModules.disko ];
 
     disko.devices = {
@@ -198,6 +227,7 @@
           };
         };
       };
+    };
     };
   };
 }

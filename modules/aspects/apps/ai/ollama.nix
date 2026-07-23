@@ -1,6 +1,6 @@
 {...}:
 let  aiConfig = {
-    dataDir = "/mnt/data/ai_models";
+    dataDir = "/data/ai_models";
     ollamaHost = "127.0.0.1";
     # Listen address for the host ollama launchd agent. 0.0.0.0 so apple
     # containers can reach it (they see the host at the vmnet gateway IP,
@@ -30,7 +30,9 @@ in
       port = aiConfig.ollamaPort;
       #openFirewall = true; #to serve on tailnet
     };
-systemd.services.fix-data-perms = {
+# Scoped to ollama's own subdir — must NOT chown/chmod all of /data
+# (that's a shared pool root owned 1000:100, see disk/filesystem.nix).
+systemd.services.ollama-data-perms = {
   wantedBy = [ "multi-user.target" ];
   after = [ "zfs-mount.service" "data.mount" ];
   requires = [ "data.mount" ];
@@ -42,8 +44,9 @@ systemd.services.fix-data-perms = {
   };
 
   script = ''
-    chown -R ollama:ollama /mnt/data
-    chmod -R u+rwX,go-rwx /mnt/data
+    mkdir -p ${aiConfig.dataDir}
+    chown ollama:ollama ${aiConfig.dataDir}
+    chmod u+rwX,go-rwx ${aiConfig.dataDir}
   '';
 };
   };

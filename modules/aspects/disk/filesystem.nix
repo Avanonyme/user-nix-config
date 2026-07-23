@@ -108,6 +108,11 @@
             mode = "mirror";
             rootFsOptions = {
               compression = "zstd";
+              # Media-dominated pool: big records, no atime. Inherited by
+              # everything (including /data/local and /data/media, which are
+              # plain directories — see below).
+              recordsize = "1M";
+              atime = "off";
               "com.sun:auto-snapshot" = "true";
               mountpoint = "legacy"; # mounted via fileSystems in boreal.nix, not ZFS auto-mount
             };
@@ -122,18 +127,11 @@
                   mountpoint = "legacy";
                 };
               };
-              # This host's own media branch — exported ro to the tailnet
-              # by nfs-media.peer. Tuned for large immutable files.
-              local = {
-                type = "zfs_fs";
-                options = {
-                  mountpoint = "legacy";
-                  compression = "zstd";
-                  recordsize = "1M";
-                  atime = "off";
-                  "com.sun:auto-snapshot" = "true";
-                };
-              };
+              # NOTE: /data/local and /data/media are deliberately PLAIN
+              # DIRECTORIES on the pool root, not datasets — publishing is
+              # `mv /data/local/x /data/media/`, and cross-dataset moves are
+              # copy+delete (separate filesystems), which for multi-GB media
+              # defeats the whole workflow. Same fs = instant rename.
             };
             postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^data@blank$' || zfs snapshot data@blank";
           };
@@ -147,18 +145,21 @@
       fsType = "zfs";
       options = ["zfsutil" "nofail"];
     };
-    fileSystems."/data/local" = {
-      device = "data/local";
-      fsType = "zfs";
-      options = ["zfsutil" "nofail"];
-    };
-    # Non-recursive, dataset roots only. /data stays root:root 0755 (pure
-    # container); the writable branch /data/local is 0775 group users.
+    # Non-recursive, roots only. Runs after the pool is mounted because the
+    # dirs live ON the pool (tmpfiles at sysinit would be shadowed by the
+    # mount). /data stays root:root 0755 (pure container); both branches are
+    # user-writable — /data/local is private, /data/media is the published
+    # channel that nfs-media.peer exports ro to the tailnet.
     systemd.services.fix-data-perms = {
       wantedBy = [ "multi-user.target" ];
-      after = [ "zfs-mount.service" "data.mount" "data-local.mount" ];
+      after = [ "zfs-mount.service" "data.mount" ];
       serviceConfig.Type = "oneshot";
-      script = "chown root:root /data && chmod 0755 /data && chown 1000:100 /data/local && chmod 0775 /data/local";
+      script = ''
+        chown root:root /data && chmod 0755 /data
+        mkdir -p /data/local /data/media
+        chown 1000:100 /data/local /data/media
+        chmod 0775 /data/local /data/media
+      '';
     };
 
 
@@ -181,11 +182,12 @@
   };
 
   den.aspects.disk.cool = {
-    # /data/local = cool's own media branch (writable). /data/media is the
-    # mergerfs mountpoint — auto-created by the fileSystems entry when
+    # /data/local = private scratch (games, …), /data/media = cool's own
+    # published branch (both user-writable). /data/merged is the mergerfs
+    # mountpoint — auto-created by the fileSystems entry when
     # test/mergerfs-media.nix is wired, no tmpfiles line needed.
     includes = [
-      (den.aspects.disk.data { dirs = [ "local" ]; })
+      (den.aspects.disk.data { dirs = [ "local" "media" ]; })
     ];
 
     nixos = {

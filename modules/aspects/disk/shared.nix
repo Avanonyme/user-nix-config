@@ -11,13 +11,16 @@
   # aspect instead — tmpfiles runs at sysinit and would be shadowed by the
   # dataset mounts anyway.
   # Layout convention (uniform across hosts):
-  #   /data        root:root 0755  — container only, nothing writable here
-  #   /data/local  1000:100  0775  — THIS host's own media (writable branch)
-  #   /data/media  (mountpoint)    — published view: mergerfs union on the
-  #                                  gateway; never written to directly
+  #   /data        root:root 0755 — container only, nothing writable here
+  #   /data/local  1000:100  0775 — private scratch (games, …), NOT exported
+  #   /data/media  1000:100  0775 — "publish here": exported ro to the
+  #                                 tailnet on peers; merged into /data/merged
+  #                                 on the gateway (mergerfs), which is what
+  #                                 Jellyfin scans. Publishing = mv local→media
+  #                                 (same filesystem → instant rename).
   den.aspects.disk.data =
     { path ? "/data"
-    , dirs ? [ "local" ]
+    , dirs ? [ "local" "media" ]
     , rootOwner ? "root"
     , rootGroup ? "root"
     , rootMode ? "0755"

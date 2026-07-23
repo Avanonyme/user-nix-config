@@ -45,10 +45,25 @@
         default = "UTC";
         description = "TZ inside the container (affects library scan scheduling, etc.)";
       };
-      enableTranscoding = lib.mkOption {
+      disableVideoTranscoding = lib.mkOption {
         type = lib.types.bool;
-        default = false;
-        description = "Whether to allow transcoding. When false, JELLYFIN_FFMPEG is set to /bin/false so any transcode attempt fails — clients must direct-play.";
+        default = true;
+        description = ''
+          Disable video transcoding for all users while keeping audio
+          transcoding (cheap, often needed for codec compatibility).
+          Enforced declaratively via a oneshot unit that patches every user's
+          UserPolicy through the Jellyfin API (EnableVideoPlaybackTranscoding=false,
+          EnableAudioPlaybackTranscoding=true).
+
+          Bootstrap (chicken-and-egg: the key can only be created once
+          Jellyfin is up):
+            1. Rebuild, finish the setup wizard at https://<host>.<tailnet>
+            2. Dashboard -> API Keys -> create one
+            3. sudo install -m 0400 /dev/stdin /var/lib/jellyfin/api_key
+               (paste the key, Ctrl-D)
+            4. systemctl start jellyfin-enforce-transcode-policy (or reboot)
+          Until the keyfile exists the oneshot is a graceful no-op.
+        '';
       };
     };
 
@@ -62,6 +77,42 @@
           then cfg.jellyfinDomain
           else "${host.hostName}.${tailnetDomain}";
         jellyfinPort = cfg.jellyfinPort;
+
+        enforcePolicy = pkgs.writeShellApplication {
+          name = "jellyfin-enforce-transcode-policy";
+          runtimeInputs = [ pkgs.curl pkgs.jq ];
+          text = ''
+            set -eu
+            url="http://127.0.0.1:${toString jellyfinPort}"
+            keyfile=/var/lib/jellyfin/api_key
+
+            if [ ! -r "$keyfile" ]; then
+              echo "jellyfin: $keyfile missing — create an API key in the dashboard"
+              echo "and install it there (mode 0400); see services/jellyfin.nix. No-op."
+              exit 0
+            fi
+            key="$(cat "$keyfile")"
+
+            # Wait for the API (container may still be initializing)
+            for _ in $(seq 1 60); do
+              curl -fsS -H "X-Emby-Token: $key" "$url/System/Info" >/dev/null 2>&1 && break
+              sleep 4
+            done
+
+            # Patch every user's policy: video transcoding off, audio stays on.
+            # GET the full user object so the POST preserves all other fields.
+            curl -fsS -H "X-Emby-Token: $key" "$url/Users" | jq -r '.[].Id' | while read -r uid; do
+              curl -fsS -H "X-Emby-Token: $key" "$url/Users/$uid" \
+                | jq '.Policy.EnableVideoPlaybackTranscoding = false
+                    | .Policy.EnableAudioPlaybackTranscoding = true
+                    | .Policy' \
+                | curl -fsS -X POST -H "X-Emby-Token: $key" \
+                    -H "Content-Type: application/json" -d @- \
+                    "$url/Users/$uid/Policy" >/dev/null
+              echo "patched policy for user $uid"
+            done
+          '';
+        };
       in
       {
         virtualisation.oci-containers.containers.jellyfin = {
@@ -84,13 +135,23 @@
             TZ = cfg.timezone;
             # Advertise the tailnet URL so clients/DLNA generate correct links
             JELLYFIN_PublishedServerUrl = "https://${jellyfinDomain}";
-          } // lib.optionalAttrs (!cfg.enableTranscoding) {
-            JELLYFIN_FFMPEG = "/bin/false";
           };
+        };
 
-          # Hardware transcoding (VA-API/QSV): enable on hosts with /dev/dri
-          # (not needed on cool, no GPU). e.g.:
-          # extraOptions = [ "--device=/dev/dri" ];
+        # Enforce per-user transcoding policy after each (re)start:
+        # video transcoding OFF (cool has no GPU — software video transcode
+        # is CPU-bound), audio transcoding ON (cheap, needed for codec compat).
+        # Idempotent; re-applies on boot so users created later get patched too.
+        systemd.services.jellyfin-enforce-transcode-policy = lib.mkIf cfg.disableVideoTranscoding {
+          description = "Disable video transcoding (keep audio) for all Jellyfin users";
+          after = [ "podman-jellyfin.service" ];
+          requires = [ "podman-jellyfin.service" ];
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            ExecStart = "${enforcePolicy}/bin/jellyfin-enforce-transcode-policy";
+          };
         };
       };
   };

@@ -49,6 +49,11 @@
       #"indexer-api-keys/NZBFinder" = {};
       #"indexer-api-keys/NzbPlanet" = {};
       #"jellyfin/avanonyme_password" = {};
+      # NOTE: jellyfin/api_key is deliberately NOT declared here — a declared
+      # secret missing from secrets.yaml fails activation on ALL hosts using
+      # this aspect (darwin included). The services.jellyfin transcode-policy
+      # oneshot reads the key from /var/lib/jellyfin/api_key instead; move it
+      # into sops once it exists in the yaml if you want it managed.
       #"jellyseerr/api_key" = {};
       #"sabnzbd/api_key" = {};
       #"sabnzbd/nzb_key" = {};

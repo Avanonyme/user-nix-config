@@ -45,10 +45,15 @@
         default = "UTC";
         description = "TZ inside the container (affects library scan scheduling, etc.)";
       };
+      enableTranscoding = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Whether to allow transcoding. When false, JELLYFIN_FFMPEG is set to /bin/false so any transcode attempt fails — clients must direct-play.";
+      };
     };
 
     nixos =
-      { host, pkgs, ... }:
+      { host, lib, pkgs, ... }:
       let
         cfg = host.settings.services.jellyfin;
         tailnetDomain = host.settings.networking.headscale.tailnet_domain;
@@ -79,6 +84,8 @@
             TZ = cfg.timezone;
             # Advertise the tailnet URL so clients/DLNA generate correct links
             JELLYFIN_PublishedServerUrl = "https://${jellyfinDomain}";
+          } // lib.optionalAttrs (!cfg.enableTranscoding) {
+            JELLYFIN_FFMPEG = "/bin/false";
           };
 
           # Hardware transcoding (VA-API/QSV): enable on hosts with /dev/dri

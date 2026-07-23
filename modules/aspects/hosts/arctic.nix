@@ -12,6 +12,18 @@
       security.sops
     ];
 
+    # Auto-included into avanonyme's USER scope on this host via the
+    # user-aspect-auto-include policy in aspects/defaults.nix.
+    # NOTE: homeManager blocks only apply from user-scope includes —
+    # putting them in the host includes above silently drops them.
+    avanonyme = {
+      homeManager.imports = [
+        # Trampoline home-manager apps (obsidian, zen-browser, ghostty…)
+        # into ~/Applications so Spotlight/Launchpad can find them.
+        inputs.mac-app-util.homeManagerModules.default
+      ];
+    };
+
     darwin =
     { pkgs, config, ... }:
     {
@@ -41,14 +53,7 @@
       # Add ability to used TouchID for sudo authentication
       security.pam.services.sudo_local.touchIdAuth = true;
 
-      # Create /etc/zshrc that loads the nix-darwin environment.
-      # this is required if you want to use darwin's default shell - zsh
-      programs.zsh.enable = true;
-    };
-    homeManager =
-    { pkgs, ... }:
-    {
-    
+      # Fish is the default shell — enabled via apps.fish + den.provides.user-shell "fish"
     };
   };
 }

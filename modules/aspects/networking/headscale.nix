@@ -3,14 +3,21 @@
     ### Headscale server — include on the NixOS host acting as the coordinator ###
     # Source: https://carlosvaz.com/posts/setting-up-headscale-on-nixos/
     #         https://www.youtube.com/watch?v=ph5zQYx3HS8
-let
-  tailnet_domain = "tnet.loc";
-in
 {
+  # NOTE: settings must be a plain attrset — the schema walker in
+  # modules/schema/host.nix inspects den.aspects statically and cannot apply
+  # functions. The domain fallback is resolved in each class block below,
+  # where `host` is legitimately in scope.
   den.aspects.networking.headscale.settings = {
+    tailnet_domain = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = "tnet.loc";  
+      description = "magicDNS domain";  
+    };
     headscaleDomain = lib.mkOption {
-      type = lib.types.str;
-      description = "Full headscale domain (e.g. head.example.com)";
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Full headscale domain (e.g. head.example.com). Defaults to headscale.<networking.domain> when null.";
     };
     headscalePort = lib.mkOption {
       type = lib.types.port;
@@ -20,25 +27,31 @@ in
   };
 
   den.aspects.networking.headscale.client = {
-  /*
-  Manual Enrollment (in flake directory with correct decryption keys):
+    /*
+    Manual Enrollment (in flake directory with correct decryption keys):
 
-  sudo tailscale up \
-  --auth-key="$(sudo cat "$(nix eval --raw .#darwinConfigurations.arctic.config.sops.secrets.headscale/auth_key.path)")" \
-  --login-server="https://rustedbonghomeserver.mooo.com" \
-  --ssh
-  tailscale status
-  tailscale netcheck
+    sudo tailscale up \
+    --auth-key="$(sudo cat "$(nix eval --raw .#darwinConfigurations.arctic.config.sops.secrets.headscale/auth_key.path)")" \
+    --login-server="https://rustedbonghomeserver.mooo.com" \
+    --ssh
+    tailscale status
+    tailscale netcheck
 
-  */
+    */
     nixos =
     { host,lib, pkgs, config, ... }:
-
+    let
+      cfg = host.settings.networking.headscale;
+      headscaleDomain =
+        if cfg.headscaleDomain != null
+        then cfg.headscaleDomain
+        else "headscale.${host.settings.networking.domain}";
+    in
     {
       services.tailscale ={
         enable = true;
         authKeyFile = config.sops.secrets."headscale/auth_key".path;
-        extraUpFlags = ["--ssh" "--login-server=${host.settings.networking.headscale.headscaleDomain}"];
+        extraUpFlags = ["--ssh" "--login-server=${headscaleDomain}"];
       };
       environment.systemPackages = with pkgs; [
         tailscale
@@ -50,7 +63,15 @@ in
         allowedUDPPorts = [ config.services.tailscale.port ]; # allow the Tailscale UDP port through the firewall
       };
     };
-    darwin = { host,lib, pkgs, config, ... }: {
+    darwin = { host,lib, pkgs, config, ... }:
+    let
+      cfg = host.settings.networking.headscale;
+      headscaleDomain =
+        if cfg.headscaleDomain != null
+        then cfg.headscaleDomain
+        else "headscale.${host.settings.networking.domain}";
+    in
+    {
       # nix-darwin's services.tailscale has NO authKeyFile/extraUpFlags options
       # (only enable/package/overrideLocalDns), so the NixOS config can't be
       # copied 1:1. Enrollment is done by the activation script below instead.
@@ -74,8 +95,9 @@ in
       # 4. Auto-enroll into the tailnet on activation (mirrors the NixOS block).
       #    Runs at the end of darwin-rebuild; no-op once logged in (state is
       #    persisted in /var/lib/tailscale across reboots).
-      #    Requires a *reusable* auth key in sops (headscale/auth_key) and
-      #    settings.networking.headscale.headscaleDomain set on the host.
+      #    Requires a *reusable* auth key in sops (headscale/auth_key).
+      #    Uses settings.networking.headscale.headscaleDomain, falling back
+      #    to headscale.<networking.domain> when unset.
       system.activationScripts.postActivation.text = lib.mkAfter ''
         ts=${pkgs.tailscale}/bin/tailscale
         state="$($ts status --json 2>/dev/null | ${pkgs.jq}/bin/jq -r '.BackendState // ""' 2>/dev/null || true)"
@@ -86,7 +108,7 @@ in
             for _ in 1 2 3 4 5; do
               $ts up \
                 --auth-key="$(cat "$keyfile")" \
-                --login-server="https://${host.settings.networking.headscale.headscaleDomain}" \
+                --login-server="https://${headscaleDomain}" \
                 --ssh \
                 --reset && break
               sleep 2
@@ -106,8 +128,12 @@ in
     ];
 
     nixos = { host, config, lib, ... }: let
-      headscaleDomain = host.settings.networking.headscale.headscaleDomain;
-      headscalePort = host.settings.networking.headscale.headscalePort;
+      cfg = host.settings.networking.headscale;
+      headscaleDomain =
+        if cfg.headscaleDomain != null
+        then cfg.headscaleDomain
+        else "headscale.${host.settings.networking.domain}";
+      headscalePort = cfg.headscalePort;
     in {
       services = {
         headscale = {
@@ -118,7 +144,7 @@ in
             logtail.enabled = false;
             dns = {
               magic_dns = true;
-              base_domain = "${tailnet_domain}";
+              base_domain = "${host.settings.networking.headscale.tailnet_domain}";
               nameservers.global = [ "1.1.1.1" "9.9.9.9" ];
             };
             server_url = "https://${headscaleDomain}";

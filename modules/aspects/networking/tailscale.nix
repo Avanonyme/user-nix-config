@@ -49,4 +49,29 @@
       services.tailscale.overrideLocalDns = true;
     };
   };
+
+  # Parametric provider: expose a localhost port on the tailnet (HTTPS, node
+  # MagicDNS name) via `tailscale serve`. Usage in an aspect:
+  #   includes = [ (den.provides.tailscale-serve { port = 8096; }) ];
+  # Note: `port`/`afterUnits` are NOT NixOS module args — they must be provider
+  # args, because class modules only receive {host, config, pkgs, lib, ...}.
+  den.provides.tailscale-serve =
+    { port, afterUnits ? [ ] }:
+    {
+      nixos = { pkgs, ... }: {
+        systemd.services."tailscale-serve-${toString port}" = {
+          description = "Expose localhost:${toString port} on the tailnet via Tailscale Serve";
+          after = [ "tailscaled.service" ] ++ afterUnits;
+          wants = [ "tailscaled.service" ];
+          wantedBy = [ "multi-user.target" ];
+
+          serviceConfig = {
+            Type = "simple";
+            # foreground serve: HTTPS on <node>.<tailnet_domain> -> localhost:port
+            ExecStart = "${pkgs.tailscale}/bin/tailscale serve ${toString port}";
+            Restart = "on-failure";
+          };
+        };
+      };
+    };
 }

@@ -6,6 +6,7 @@
 			den.provides.define-user
 	  	den.provides.primary-user 
       (den.provides.user-shell "fish")
+		  den.aspects.apps.fish
 		];
 		nixos ={lib, pkgs, ...}: 
     {
@@ -53,6 +54,9 @@ den.aspects.avanonyme.desktop = {
     [
       avanonyme.headless
       app-bundles.full
+      # user-scope includes: their homeManager blocks actually apply here
+      # (host-scope includes silently drop homeManager class blocks)
+      apps.ghostty
 
       # apps.gaming.vr
     ];

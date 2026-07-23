@@ -81,14 +81,16 @@ in
     # home.packages) — it belongs in the homeManager class, NOT the darwin
     # (nix-darwin system) class. Guarded to darwin so NixOS hosts don't get
     # a second pi install on top of the nixos module above.
-    homeManager = {config, user, lib, pkgs, ...}: {
+    homeManager = {config, osConfig, user, lib, pkgs, ...}: {
       imports = [ inputs.pi.homeModules.default ];
 
       config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
         programs.pi.coding-agent = common // {
           enable = true;
 
-          environment = sopsEnv config;
+          # Use osConfig to reference darwin system sops paths (/run/secrets/…)
+          # instead of home-manager sops paths (~/.config/sops-nix/secrets/…)
+          environment = sopsEnv osConfig;
 
           # no jail outside linux
         };

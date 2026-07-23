@@ -3,6 +3,7 @@
 {den,inputs,pkgs,...}:
 let
   ipadd="10.0.83.6";
+
 in
 {
   #used by microvm guest host
@@ -24,12 +25,6 @@ in
       imports = [ inputs.sops-nix.nixosModules.sops ];
       microvm={
         credentialFiles."sops-age-key" = "/run/secrets/microvm/sealskin_key";
-
-        # source: https://blog.koch.ro/posts/2024-03-17-minimal-vms-nix-microvm.html
-        #forwardPorts = [
-        #  { from = "host"; host.port = 2222; guest.port = 22; }
-        #  { from = "guest"; host.port = 5432; guest.port = 5432; } # postgresql
-        #];
       };
       sops.age.keyFile = lib.mkForce "/run/host-credentials/sops-age-key";
       sops.defaultSopsFile = lib.mkForce ../../../../secrets/secrets.yaml;
@@ -46,7 +41,7 @@ in
       networking.nat = {
         enable = true;
         externalInterface = "enp1s0";
-        forwardPorts = [
+        forwardPorts = [  # source: https://blog.koch.ro/posts/2024-03-17-minimal-vms-nix-microvm.html
         { proto = "tcp"; sourcePort = 80;  destination = "${ipadd}:80"; }
         { proto = "tcp"; sourcePort = 443; destination = "${ipadd}:443"; }
         ];

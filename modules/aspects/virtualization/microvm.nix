@@ -48,11 +48,11 @@
 
     systemd.network.netdevs."10-microbr".netdevConfig = {
       Kind = "bridge";
-      Name = "microvm";
+      Name = "microbr";
     };
 
     systemd.network.networks."10-microbr" = {
-      matchConfig.Name = "microvm";
+      matchConfig.Name = "microbr";
       addresses = [ { Address = "10.0.83.1/24"; } ];
       networkConfig = {
         ConfigureWithoutCarrier = true;
@@ -61,37 +61,13 @@
 
     systemd.network.networks."11-microvm-tap" = {
       matchConfig.Name = "microvm*";
-      networkConfig.Bridge = "microvm";
+      networkConfig.Bridge = "microbr";
     };
 
     networking.nat = {
       enable = true;
-      internalInterfaces = [ "microvm" "microbr"]; # The bridge where you want to provide Internet access
+      internalInterfaces = ["microbr"]; # The bridge where you want to provide Internet access
       externalInterface = "enp1s0"; # Change this to the interface with upstream Internet access
     };
   };
-
-# Defined in networking.nix
-/* Port forwarding
-Isolating your public Internet services is a great use-case for virtualization. 
-But how does traffic get to you when your MicroVMs have private IP addresses 
-behind NAT?
-
-NixOS has got you covered with the networking.nat.forwardPorts option! 
-This example forwards TCP ports 80 (HTTP) and 443 (HTTPS) to other hosts:
-networking.nat = {
-  enable = true;
-  forwardPorts = [ {
-    proto = "tcp";
-    sourcePort = 80;
-    destination = my-addresses.http-reverse-proxy.ip4;
-  } {
-    proto = "tcp";
-    sourcePort = 443;
-    destination = my-addresses.https-reverse-proxy.ip4;
-  } ];
-};
-
-*/
-
 }

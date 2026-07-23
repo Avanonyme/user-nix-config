@@ -1,157 +1,370 @@
 /**
- * Infrastructure topology viewer — visualize the full homelab layout:
- * hosts, microVMs, services, network relationships.
+ * Infrastructure topology viewer.
  *
  * Commands:
- *   /infra               — full topology tree
- *   /infra hosts         — just the host list
- *   /infra services      — running services
- *   /infra microvms      — microVM status
+ *   /infra              Full static topology and local observations
+ *   /infra hosts        Hosts
+ *   /infra services     Services declared for this host; local status if supported
+ *   /infra microvms     MicroVM inventory
+ *   /infra networks     Networks
  *
- * Tools (for agent use):
- *   infra-topology       — full topology as JSON
- *   infra-service-status — check if a service is running
+ * Agent tools:
+ *   infra_topology      Full topology plus local observations
+ *   infra_service_status  Query one local systemd service (Linux only)
  */
 
-import { execSync } from "node:child_process";
-import { hostname } from "node:os";
-import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
+import { execFileSync } from "node:child_process";
+import { hostname, platform } from "node:os";
+import { Type } from "typebox";
+import type {
+  ExtensionAPI,
+  ExtensionCommandContext,
+} from "@earendil-works/pi-coding-agent";
 
-const TOPOLOGY = {
+type Host = {
+  name: string;
+  role: string;
+  os: string;
+  ip: string;
+  services: string[];
+};
+
+type MicroVM = {
+  name: string;
+  ip: string;
+  role: string;
+  metal: string;
+  autostart: boolean;
+};
+
+type Network = {
+  name: string;
+  type: string;
+  controller?: string;
+  subnet?: string;
+  metal?: string;
+  entry?: string;
+  ddns?: string;
+};
+
+const TOPOLOGY: {
+  hosts: Host[];
+  microvms: MicroVM[];
+  networks: Network[];
+} = {
   hosts: [
     {
       name: "boreal",
       role: "desktop",
       os: "NixOS x86_64",
       ip: "tailnet",
-      services: ["pi-coding-agent", "kubo", "headscale-client", "niri", "noctalia"],
+      services: [
+        "pi-coding-agent",
+        "kubo",
+        "headscale-client",
+        "niri",
+        "noctalia",
+      ],
     },
     {
       name: "cool",
       role: "server",
       os: "NixOS x86_64",
       ip: "192.168.50.2 + tailnet",
-      services: ["nginx", "ddclient", "nat-forward", "microvm-host"],
+      services: [
+        "nginx",
+        "ddclient",
+        "nat-forward",
+        "microvm-host",
+      ],
     },
     {
       name: "arctic",
       role: "laptop",
       os: "nix-darwin aarch64",
       ip: "tailnet",
-      services: ["hermes-container", "ollama", "headscale-client"],
+      services: [
+        "hermes-container",
+        "ollama",
+        "headscale-client",
+      ],
     },
   ],
+
   microvms: [
-    { name: "sealskin", ip: "10.0.83.6", role: "Headscale server", metal: "cool", autostart: true },
-    { name: "qimmit", ip: "10.0.83.7", role: "AI agents (planned)", metal: "cool", autostart: false },
+    {
+      name: "sealskin",
+      ip: "10.0.83.6",
+      role: "Headscale server",
+      metal: "cool",
+      autostart: true,
+    },
+    {
+      name: "qimmit",
+      ip: "10.0.83.7",
+      role: "AI agents (planned)",
+      metal: "cool",
+      autostart: false,
+    },
   ],
+
   networks: [
-    { name: "tailnet", type: "WireGuard", controller: "sealskin (10.0.83.6)", domain: "tnet.loc" },
-    { name: "microvm-bridge", type: "bridge", subnet: "10.0.83.0/24", metal: "cool" },
-    { name: "public", type: "internet", entry: "cool -> sealskin:80/443 (NAT)", ddns: "rustedbonghomeserver.mooo.com" },
+    {
+      name: "tailnet",
+      type: "WireGuard",
+      controller: "sealskin (10.0.83.6)",
+    },
+    {
+      name: "microvm-bridge",
+      type: "bridge",
+      subnet: "10.0.83.0/24",
+      metal: "cool",
+    },
+    {
+      name: "public",
+      type: "internet",
+      entry: "cool -> sealskin:80/443 (NAT)",
+      ddns: "rustedbonghomeserver.mooo.com",
+    },
   ],
 };
 
-function systemdRunning(service: string): boolean {
+type ServiceObservation =
+  | { supported: true; service: string; running: boolean }
+  | { supported: false; service: string; reason: string };
+
+function isLinux(): boolean {
+  return platform() === "linux";
+}
+
+function systemdStatus(service: string): ServiceObservation {
+  if (!isLinux()) {
+    return {
+      supported: false,
+      service,
+      reason: `Local service status unavailable on ${platform()}: systemd is Linux-only`,
+    };
+  }
+
   try {
-    execSync(`systemctl is-active --quiet ${service} 2>/dev/null`, { timeout: 3000 });
-    return true;
+    execFileSync(
+      "systemctl",
+      ["is-active", "--quiet", service],
+      {
+        stdio: "ignore",
+        timeout: 3000,
+      },
+    );
+
+    return { supported: true, service, running: true };
   } catch {
-    return false;
+    return { supported: true, service, running: false };
   }
 }
 
-function renderTree(): string {
-  const lines: string[] = [];
+function localHost(): Host | undefined {
+  return TOPOLOGY.hosts.find((host) => host.name === hostname());
+}
+
+function localObservations() {
+  const host = localHost();
+
+  return {
+    hostname: hostname(),
+    platform: platform(),
+    topologyHost: host?.name ?? null,
+    serviceStatusSupported: isLinux(),
+    services: host
+      ? host.services.map(systemdStatus)
+      : [],
+  };
+}
+
+function statusGlyph(observation: ServiceObservation): string {
+  if (!observation.supported) return "?";
+  return observation.running ? "●" : "○";
+}
+
+function renderHosts(): string {
   const me = hostname();
-  lines.push(`Infrastructure Topology (seen from ${me})`);
-  lines.push("═══════════════════════════════════════");
-  lines.push("");
 
-  // Networks
-  lines.push("── Networks ──");
-  for (const net of TOPOLOGY.networks) {
-    lines.push(`  🌐 ${net.name}  (${net.type})`);
-    lines.push(`     ${net.controller || net.entry || net.subnet}`);
+  return TOPOLOGY.hosts
+    .map((host) => {
+      const marker = host.name === me ? "★" : "•";
+      return `${marker} ${host.name}  ${host.role}  [${host.os}]  ${host.ip}`;
+    })
+    .join("\n");
+}
+
+function renderNetworks(): string {
+  return TOPOLOGY.networks
+    .map((network) => {
+      const detail =
+        network.controller ??
+        network.entry ??
+        network.subnet ??
+        "No detail";
+
+      const extras = [
+        network.metal && `metal: ${network.metal}`,
+        network.ddns && `ddns: ${network.ddns}`,
+      ]
+        .filter(Boolean)
+        .join("; ");
+
+      return `🌐 ${network.name}  (${network.type})\n   ${detail}${
+        extras ? `\n   ${extras}` : ""
+      }`;
+    })
+    .join("\n");
+}
+
+function renderMicroVMs(): string {
+  return TOPOLOGY.microvms
+    .map((vm) => {
+      const state = vm.autostart ? "● autostart" : "○ manual";
+      return `${state}  ${vm.name}  ${vm.ip}  (${vm.role})  on ${vm.metal}`;
+    })
+    .join("\n");
+}
+
+function renderServices(): string {
+  const host = localHost();
+
+  if (!host) {
+    return [
+      `Local hostname: ${hostname()}`,
+      "No matching host exists in the static topology.",
+      "No local service inventory is available.",
+    ].join("\n");
   }
-  lines.push("");
 
-  // Hosts + running services
-  lines.push("── Hosts ──");
-  for (const h of TOPOLOGY.hosts) {
-    const marker = h.name === me ? "★" : "•";
-    lines.push(`  ${marker} ${h.name}  [${h.os}]  ${h.ip}`);
-    for (const svc of h.services) {
-      const running = h.name === "boreal" ? systemdRunning(svc) : false;
-      const status = running ? "●" : "○";
-      lines.push(`     ${status} ${svc}`);
+  const lines = [
+    `Services declared for ${host.name}`,
+    `Status backend: ${isLinux() ? "systemd" : `unavailable (${platform()})`}`,
+    "",
+  ];
+
+  for (const observation of host.services.map(systemdStatus)) {
+    if (observation.supported) {
+      lines.push(
+        `${statusGlyph(observation)} ${observation.service}  ${
+          observation.running ? "active" : "inactive/unknown"
+        }`,
+      );
+    } else {
+      lines.push(`? ${observation.service}  ${observation.reason}`);
     }
-  }
-  lines.push("");
-
-  // MicroVMs
-  lines.push("── MicroVMs ──");
-  for (const vm of TOPOLOGY.microvms) {
-    const status = vm.autostart ? "●" : "○";
-    lines.push(`  ${status} ${vm.name}  ${vm.ip}  (${vm.role})  on ${vm.metal}`);
   }
 
   return lines.join("\n");
 }
 
-export default function (pi: ExtensionAPI) {
+function renderTopology(): string {
+  return [
+    `Infrastructure topology (seen from ${hostname()} on ${platform()})`,
+    "════════════════════════════════════════════════════════",
+    "",
+    "── Networks ──",
+    renderNetworks(),
+    "",
+    "── Hosts ──",
+    renderHosts(),
+    "",
+    "── Local services ──",
+    renderServices(),
+    "",
+    "── MicroVMs ──",
+    renderMicroVMs(),
+  ].join("\n");
+}
+
+const SERVICE_STATUS_PARAMS = Type.Object({
+  service: Type.String({
+    minLength: 1,
+    description: "Local systemd unit name, e.g. nginx.service",
+  }),
+});
+
+export default function infrastructureTopologyExtension(
+  pi: ExtensionAPI,
+) {
   pi.registerCommand("infra", {
-    description: "Display the full homelab topology: hosts, microVMs, services, networks",
+    description:
+      "Show infrastructure topology. Usage: /infra [hosts|services|microvms|networks]",
     handler: async (args: string, ctx: ExtensionCommandContext) => {
-      const sub = args.trim().toLowerCase();
+      const subcommand = args.trim().toLowerCase();
 
-      if (sub === "hosts") {
-        return TOPOLOGY.hosts
-          .map((h) => `${h.name}  ${h.role}  ${h.os}  ${h.ip}`)
-          .join("\n");
-      }
+      const output = (() => {
+        switch (subcommand) {
+          case "":
+            return renderTopology();
 
-      if (sub === "services") {
-        const me = hostname();
-        const localHost = TOPOLOGY.hosts.find((h) => h.name === me);
-        if (!localHost) return "Can't determine local host";
-        const results: string[] = [];
-        for (const svc of localHost.services) {
-          const running = systemdRunning(svc);
-          results.push(`${running ? "●" : "○"} ${svc}`);
+          case "hosts":
+            return renderHosts();
+
+          case "services":
+            return renderServices();
+
+          case "microvms":
+            return renderMicroVMs();
+
+          case "networks":
+            return renderNetworks();
+
+          default:
+            return [
+              `Unknown infra view: ${subcommand}`,
+              "Usage: /infra [hosts|services|microvms|networks]",
+            ].join("\n");
         }
-        return results.join("\n");
-      }
+      })();
 
-      if (sub === "microvms") {
-        return TOPOLOGY.microvms
-          .map((vm) => `${vm.autostart ? "●" : "○"} ${vm.name}  ${vm.ip}  ${vm.role}`)
-          .join("\n");
-      }
-
-      return renderTree();
+      ctx.ui.notify(output, "info");
     },
   });
 
-  pi.registerTool("infra-topology", {
-    description: "Get the full infrastructure topology as structured data",
-    handler: async () => {
-      return TOPOLOGY;
+  pi.registerTool({
+    name: "infra_topology",
+    label: "Infrastructure Topology",
+    description:
+      "Return the static homelab inventory and local runtime observations. Host, network, and MicroVM data are declarative inventory, not live remote discovery.",
+    parameters: Type.Object({}),
+    async execute() {
+      const result = {
+        topology: TOPOLOGY,
+        localObservations: localObservations(),
+      };
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+        details: result,
+      };
     },
   });
 
-  pi.registerTool("service-status", {
-    description: "Check if a systemd service is running on the local machine",
-    parameters: {
-      type: "object",
-      properties: {
-        service: { type: "string", description: "systemd service name" },
-      },
-    },
-    handler: async (params: Record<string, unknown>) => {
-      const svc = params.service as string;
-      if (!svc) throw new Error("service is required");
-      return { service: svc, running: systemdRunning(svc) };
+  pi.registerTool({
+    name: "infra_service_status",
+    label: "Local Service Status",
+    description:
+      "Check whether a named local systemd unit is active. Only supported on Linux hosts using systemd; it does not perform remote checks.",
+    parameters: SERVICE_STATUS_PARAMS,
+    async execute(_toolCallId, params) {
+      const result = systemdStatus(params.service);
+
+      const text = result.supported
+        ? `${result.service}: ${result.running ? "active" : "inactive or unknown"}`
+        : `${result.service}: ${result.reason}`;
+
+      return {
+        content: [{ type: "text", text }],
+        details: result,
+      };
     },
   });
 }

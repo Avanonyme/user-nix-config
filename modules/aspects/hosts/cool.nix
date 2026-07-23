@@ -26,6 +26,7 @@
       networking.headscale.client
       networking.ddclient
 
+      services.jellyfin # podman container, tailnet-only via tailscale serve
 
       virtualization.microvm-bridge
       virtualization.microvms.sealskin
@@ -56,7 +57,9 @@
         vim
         git
         htop
+        logrotate
       ];
+      services.logrotate.enable = true;
 
       # TODO: set timezone
       time.timeZone = "America/Toronto";
@@ -106,6 +109,7 @@
     homeManager = { pkgs, ... }: {
       home.packages = with pkgs; [
         ghostty
+        vim
       ];
     };
   };

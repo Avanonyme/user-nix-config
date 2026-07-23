@@ -14,6 +14,7 @@
  */
 
 import { execSync } from "node:child_process";
+import { Type } from "typebox";
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 
 function run(cmd: string): string {
@@ -89,28 +90,38 @@ export default function (pi: ExtensionAPI) {
 
   // ── Tools ──────────────────────────────────────────────────────────────
 
-  pi.registerTool("tailnet-status", {
+  pi.registerTool({
+    name: "tailnet-status",
+    label: "Tailnet Status",
     description: "List all nodes on the tailnet with their IPs and online status",
-    handler: async () => {
+    parameters: Type.Object({}),
+    async execute() {
       const raw = run("tailscale status");
-      return { nodes: parseStatus(raw), raw };
+      const nodes = parseStatus(raw);
+      return {
+        content: [{ type: "text", text: JSON.stringify({ nodes, raw }, null, 2) }],
+        details: { nodes, raw },
+      };
     },
   });
 
-  pi.registerTool("tailnet-ping", {
+  pi.registerTool({
+    name: "tailnet-ping",
+    label: "Tailnet Ping",
     description: "Ping a node over the tailnet to check reachability and latency",
-    parameters: {
-      type: "object",
-      properties: {
-        target: { type: "string", description: "Hostname or tailscale IP" },
-        count: { type: "number", description: "Number of pings", default: 3 },
-      },
-    },
-    handler: async (params: Record<string, unknown>) => {
-      const target = params.target as string;
-      const count = (params.count as number) ?? 3;
+    parameters: Type.Object({
+      target: Type.String({ description: "Hostname or tailscale IP" }),
+      count: Type.Optional(Type.Number({ description: "Number of pings", default: 3 })),
+    }),
+    async execute(_toolCallId, params: { target: string; count?: number }) {
+      const target = params.target;
+      const count = params.count ?? 3;
       if (!target) throw new Error("target is required");
-      return run(`tailscale ping --c ${count} ${target}`).trim();
+      const result = run(`tailscale ping --c ${count} ${target}`).trim();
+      return {
+        content: [{ type: "text", text: result }],
+        details: result,
+      };
     },
   });
 }

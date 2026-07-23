@@ -34,8 +34,6 @@
 #      which owner this api key belongs to according to .sops.yaml
 #      sopsFile: 
 #      Tells sops-nix which file to decrypt. 
-#      The key name inside the file uses underscores (not /).
-#      Secret "deepseek/api_key" → looks up deepseek_api_key in ai.yaml
 
     commonSecrets = {
       "avanonyme_password" = {};
@@ -114,7 +112,12 @@
         defaultSopsFile = secretFile;
         age.sshKeyPaths = [];
         age.keyFile = "/Users/${user.userName}/.config/sops/age/keys.txt";
-        secrets = commonSecrets;
+        secrets = commonSecrets // {
+          "ai_env/deepseek/api_key"    = { owner = user.userName; };
+          "ai_env/anthropic/api_key"   = { owner = user.userName; };
+          "ai_env/kimi/api_key"        = { owner = user.userName; };
+          "ai_env/openrouter/api_key"  = { owner = user.userName; };
+        };
       };
     };
 

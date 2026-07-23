@@ -6,7 +6,6 @@
       apps.pi
       apps.hyprwhispr
       apps.aionui
-      #apps.ohmypi
     ];
   };
 }

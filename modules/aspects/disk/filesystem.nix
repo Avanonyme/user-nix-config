@@ -108,16 +108,6 @@
             mode = "mirror";
             rootFsOptions = {
               compression = "zstd";
-              # Media-dominated pool: big records, no atime. Inherited by
-              # everything (including /data/local and /data/media, which are
-              # plain directories — see below).
-              # NOTE: /data/local also holds games (many small files, random
-              # reads). That's fine here: small files still use small blocks
-              # (recordsize is a MAX), and atime=off helps game loads too.
-              # If game I/O ever feels zstd-CPU-bound, the no-rebuild escape
-              # hatch is: zfs set compression=lz4 data  (applies to new writes).
-              recordsize = "1M";
-              atime = "off";
               "com.sun:auto-snapshot" = "true";
               mountpoint = "legacy"; # mounted via fileSystems in boreal.nix, not ZFS auto-mount
             };
